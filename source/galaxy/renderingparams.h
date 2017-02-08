@@ -9,7 +9,7 @@ public:
     int size() const;
     void setSize(int size);
 
-    GamerCamera camera() const;
+    GamerCamera& camera();
     void setCamera(const GamerCamera &camera);
 
     float rayStep() const;
@@ -25,7 +25,7 @@ private:
     float m_detailLevel = 0.01;
     float m_noiseDetail = 1;
     float m_seed;
-    int m_size = 64; // pixels
+    int m_size = 100; // pixels
     float m_exposure = 1;
     float m_gamma = 1;
     float m_saturation = 1;
@@ -39,7 +39,7 @@ private:
 
     QString m_currentScene = "";
 
-    float m_rayStep;
+    float m_rayStep = 0.01;
     float m_rayStepPreview;
     float m_rayStepNormal;
     QVector3D color = QVector3D(1,1,1);

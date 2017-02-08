@@ -102,6 +102,15 @@ float Util::clamp(float val, float mi, float ma) {
     return val;
 }
 
+QVector3D Util::clamp(QVector3D val, float min, float max)
+{
+    QVector3D v = val;
+    v.setX(clamp(val.x(),min,max));
+    v.setY(clamp(val.y(),min,max));
+    v.setZ(clamp(val.z(),min,max));
+    return v;
+}
+
 
 float Util::smoothstep(float edge0, float edge1, float x)
 {

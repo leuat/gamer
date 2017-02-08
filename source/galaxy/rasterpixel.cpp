@@ -1,6 +1,6 @@
 #include "rasterpixel.h"
 
-QVector3D RasterPixel::I() const
+QVector3D& RasterPixel::I()
 {
     return m_I;
 }

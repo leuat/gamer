@@ -7,7 +7,7 @@ GalaxyInstance::GalaxyInstance() {
 
 void GalaxyInstance::SetGalaxy(Galaxy* g) {
     m_galaxy = g;
-    m_galaxyName = "m_galaxy->displayName()"; }
+    m_galaxyName = m_galaxy->galaxyParams().name(); }
 
 QVector3D GalaxyInstance::orientation() const
 {
@@ -29,7 +29,7 @@ void GalaxyInstance::setPosition(const QVector3D &position)
     m_position = position;
 }
 
-QQuaternion GalaxyInstance::rotmat() const
+QQuaternion& GalaxyInstance::rotmat()
 {
     return m_rotmat;
 }
@@ -67,8 +67,7 @@ GalaxyInstance* GalaxyInstance::Clone() {
 
 
 void GalaxyInstance::setupQuaternions() {
-    m_rotmat = QQuaternion::fromDirection(m_orientation,QVector3D(0,1,0));//Matrix4x4.TRS(Vector3.zero, quat, Vector3.one);
-
+    m_rotmat = QQuaternion::rotationTo(QVector3D(0,1,0),m_orientation);
 }
 
 GalaxyInstance::GalaxyInstance(Galaxy* g, QString n, QVector3D p, QVector3D o, float ins, float rs) {

@@ -20,6 +20,7 @@ protected:
 
     ComponentParams m_componentParams;
     ComponentSpectrum* m_spectrum = nullptr;
+
     float m_keep;
 		
     float m_strength;
@@ -61,7 +62,9 @@ public:
     float getTheta( QVector3D p );
     float getWinding( float rad);
 
-    ComponentParams getComponentParams() const;
+    ComponentParams& getComponentParams();
+    ComponentSpectrum *getSpectrum() const;
+    void setSpectrum(ComponentSpectrum *spectrum);
 };
 
 

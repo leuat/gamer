@@ -13,7 +13,7 @@ public:
     RasterPixel(RasterPixel* o);
     RasterPixel();
     void Floor(float f);
-    QVector3D I() const;
+    QVector3D& I();
     void setI(const QVector3D &I);
     float getScale() const;
     void setScale(float value);

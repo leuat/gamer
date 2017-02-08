@@ -40,7 +40,6 @@ public:
         return s;
     }
 
-    QVector3D m_camera;
     int m_randShiftX, m_randShiftY;
 
     float m_diskStarModifier;

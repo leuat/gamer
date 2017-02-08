@@ -10,7 +10,7 @@ void RenderingParams::setSize(int size)
     m_size = size;
 }
 
-GamerCamera RenderingParams::camera() const
+GamerCamera  &RenderingParams::camera()
 {
     return m_camera;
 }

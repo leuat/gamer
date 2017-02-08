@@ -4,7 +4,7 @@
 #include "source/galaxy/rasterizer.h"
 #include "source/util/util.h"
 #include "source/galaxy/galaxycomponent.h"
-
+#include "source/util/util.h"
 
 QImage *Rasterizer::getBuffer() const
 {
@@ -13,7 +13,7 @@ QImage *Rasterizer::getBuffer() const
 
 void Rasterizer::prepareRenderList() {
 
-    qDebug() << "Preparing buffer of size " << m_renderingParams.size();
+//    qDebug() << "Preparing buffer of size " << m_renderingParams.size();
     m_renderList.resize(m_renderingParams.size() * m_renderingParams.size());
     for (int i = 0; i < m_renderingParams.size() * m_renderingParams.size(); i++)
         m_renderList[i] = i;
@@ -50,7 +50,7 @@ void Rasterizer::setNewSize(int s)
 */
 void Rasterizer::prepareBuffer()
 {
-    qDebug() << "Preparing buffer of size "<< m_renderingParams.size();
+//    qDebug() << "Preparing buffer of size "<< m_renderingParams.size();
     if (m_buffer == nullptr || m_buffer->width() != m_renderingParams.size()) {
         m_buffer = new QImage(m_renderingParams.size(), m_renderingParams.size(),QImage::Format_ARGB32);
     }
@@ -71,6 +71,9 @@ void Rasterizer::Prepare() {
             );
             //            buffer = new ColorBuffer2D(m_renderingParams.size, m_renderingParams.size);
 */
+    for (GalaxyInstance* gi : m_galaxies)
+        gi->GetGalaxy()->SetupComponents();
+
     prepareBuffer();
     //buffer.reference.Set(0);
     prepareRenderList();
@@ -78,8 +81,8 @@ void Rasterizer::Prepare() {
 
 
 /*    for (GalaxyInstance* g : m_galaxies)
-        g->GetGalaxy()->SetupSpectra();*/
-
+        g->GetGalaxy()->SetupSpectra();
+*/
 
     m_renderingParams.camera().setupViewmatrix();
 }
@@ -126,14 +129,16 @@ Galaxy* Rasterizer::AddGalaxy(GalaxyInstance* gi) {
 
 
 void Rasterizer::RenderPixels() {
-    qDebug() <<m_renderList.size();
     for (int k=0;k<pow(m_renderingParams.size(),2);k++) {
         int idx = m_renderList[ k ];
         QVector3D dir = setupCamera(idx);
         RasterPixel rp = renderPixel(dir, m_galaxies);
+        float s= 10;
+        QVector3D c = Util::clamp(rp.I()*s, 0, 255);
 
-        QColor rgb = QColor((int) (rp.I().x()*255.0), (int)(rp.I().y()*255.0), (int)(rp.I().z()*255.0));
-//        m_buffer->setColor(idx,rgb.rgba());
+
+        QColor rgb = QColor(c.x(), c.y(),c.z());
+
         int i = idx%(int)m_renderingParams.size();
         int j = (idx-i)/(int)m_renderingParams.size();
 
@@ -265,32 +270,35 @@ QVector3D Rasterizer::setupCamera(int idx) {
     int i = idx%(int)m_renderingParams.size();
     int j = (idx-i)/(int)m_renderingParams.size();
 
-    QVector3D p = QVector3D(i,j,0);
-    return m_renderingParams.camera().coord2ray(p.x(), p.y(), m_renderingParams.size(), m_renderingParams.size())*-1;
+    return m_renderingParams.camera().coord2ray(i,j, m_renderingParams.size(), m_renderingParams.size());
 }
 
 
 
 RasterPixel* Rasterizer::renderPixel(QVector3D dir, QVector<GalaxyInstance*> gals) {
     QVector3D isp1, isp2;
+    dir*=-1;
     RasterPixel* rp = new RasterPixel();
     for (int i=0;i<gals.size();i++) {
-
+//        qDebug() << dir;
         GalaxyInstance* gi = gals[i];
 
         Galaxy* g = gi->GetGalaxy();
         float t1, t2;
         bool intersects = Util::IntersectSphere(m_renderingParams.camera().camera() - gi->position(), dir,
                                                 g->galaxyParams().axis(), isp1, isp2, t1, t2);
-        //if (intersects)
-        //	Debug.Log (intersects);
+/*        qDebug() << dir;
+        qDebug() << intersects;*/
         if (t1<0) {
             isp2 = m_renderingParams.camera().camera()- gi->position();// + m_renderingParams.direction*
         }
-        if (t1>0 && t2>0)
+/*        if (t1>0 && t2>0)
             intersects = false;
+*/
         if (intersects) {
+//            rp->I().setX(100);
             getIntensity(gi, rp, isp1, isp2, m_renderingParams.camera().camera());
+  //          qDebug() << "Getting intensity " << rp->I();
         }
     }
     return rp;
@@ -315,6 +323,7 @@ void Rasterizer::getIntensity(GalaxyInstance* gi, RasterPixel* rp, QVector3D isp
 
         step = m_renderingParams.rayStep();
         for ( GalaxyComponent* gc : g->components()) {
+//            qDebug() << "Looping throgh gc " << gc->getComponentParams().className();
             if (gc->getComponentParams().active()==1)
                 gc->calculateIntensity( rp, p, gi, step*200);
         }

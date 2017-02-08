@@ -20,7 +20,7 @@ GalaxyComponent* Galaxy::instantiate(QString className) {
         ngc = (GalaxyComponent*)new GalaxyComponentDisk();
 
     if (className=="dust")
-        ngc = (GalaxyComponent*)new GalaxyComponentDisk();
+        ngc = (GalaxyComponent*)new GalaxyComponentDust();
 
     if (className=="stars")
         ngc = (GalaxyComponent*)new GalaxyComponentStars();
@@ -63,6 +63,18 @@ void Galaxy::setGalaxyParams(const GalaxyParams &galaxyParams)
     m_galaxyParams = galaxyParams;
 }
 
+void Galaxy::SetupSpectra()
+{
+    for (GalaxyComponent* gc : m_components) {
+        gc->setSpectrum(Spectra::FindSpectrum(gc->getComponentParams().spectrum()));
+            if (gc->getSpectrum() == nullptr) {
+                qDebug() << "ERROR Could not find spectrum : " << gc->getComponentParams().spectrum();
+                exit(1);
+            }
+        }
+
+}
+
 void Galaxy::SetupComponents() {
 
     m_components.clear();
@@ -71,7 +83,7 @@ void Galaxy::SetupComponents() {
         ngc->Initialize(cp, &m_galaxyParams);
         m_components.append (ngc);
     }
-    //SetupSpectra();
+    SetupSpectra();
 }
 /*	public void SetupSpectra() {
     foreach (GalaxyComponent gc in components) {

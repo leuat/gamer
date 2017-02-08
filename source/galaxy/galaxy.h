@@ -75,6 +75,7 @@ public:
     void setDisplayName(const QString &displayName);
     void setComponentParams(const QVector<ComponentParams* > &componentParams);
     void setGalaxyParams(const GalaxyParams &galaxyParams);
+    void SetupSpectra();
 };
 
 

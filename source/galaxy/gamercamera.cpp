@@ -2,7 +2,7 @@
 #include "source/galaxy/gamercamera.h"
 #include "math.h"
 
-QVector3D GamerCamera::camera() const
+QVector3D& GamerCamera::camera()
 {
     return m_camera;
 }
@@ -12,7 +12,7 @@ void GamerCamera::setCamera(const QVector3D &camera)
     m_camera = camera;
 }
 
-QVector3D GamerCamera::target() const
+QVector3D& GamerCamera::target()
 {
     return m_target;
 }
@@ -22,7 +22,7 @@ void GamerCamera::setTarget(const QVector3D &target)
     m_target = target;
 }
 
-QVector3D GamerCamera::up() const
+QVector3D& GamerCamera::up()
 {
     return m_up;
 }
@@ -42,7 +42,7 @@ void GamerCamera::setPerspective(float perspective)
     m_perspective = perspective;
 }
 
-QMatrix4x4 GamerCamera::rotMatrix() const
+QMatrix4x4& GamerCamera::rotMatrix()
 {
     return m_rotMatrix;
 }
@@ -50,6 +50,16 @@ QMatrix4x4 GamerCamera::rotMatrix() const
 void GamerCamera::setRotMatrix(const QMatrix4x4 &rotMatrix)
 {
     m_rotMatrix = rotMatrix;
+}
+
+QMatrix4x4& GamerCamera::viewMatrix()
+{
+    return m_viewMatrix;
+}
+
+void GamerCamera::setViewMatrix(const QMatrix4x4 &viewMatrix)
+{
+    m_viewMatrix = viewMatrix;
 }
 
 void GamerCamera::setRotation(QVector3D& v) {
@@ -144,6 +154,7 @@ void GamerCamera::setupViewmatrix() {
     QVector3D xaxis = (QVector3D::crossProduct(m_up,zaxis)).normalized();
     QVector3D yaxis = (QVector3D::crossProduct(zaxis,xaxis)).normalized();
 
+
     QMatrix4x4 M;
     M.setToIdentity();
     M(0,0) = xaxis.x();
@@ -162,11 +173,14 @@ void GamerCamera::setupViewmatrix() {
     M(3,1) = -m_camera.y();
     M(3,2) = -m_camera.z();
 
-    //            Debug.Log(rotMatrix);
-
-    m_viewMatrix = m_rotMatrix*M;
 
 
+//    m_viewMatrix = m_rotMatrix*M;
+//    QMatrix4x4 M;
+//    M.lookAt(m_camera, m_target, m_up);
+  //  qDebug() << M;
+    m_viewMatrix = M;//m_rotMatrix*M;
+    m_viewMatrixInv = m_viewMatrix.inverted();
 }
 
 void GamerCamera::RotateVertical(float angle) {
@@ -191,13 +205,12 @@ QVector3D GamerCamera::coord2ray(float x, float y, float width, float height) {
 
     float aspect_ratio = 1;
     float FOV = m_perspective / 360.0f * 2 * M_PI; // convert to radians
-    float dx=tan(FOV*0.5f)*(x/(width/2)-1.0f)/aspect_ratio;
-    float dy=tan(FOV*0.5f)*(1- y/(width/2));
-
+    float dx=tan(FOV*0.5f)*(x/(width/2.0)-1.0f)/aspect_ratio;
+    float dy=tan(FOV*0.5f)*(1.0- y/(width/2.0));
 
     float far = 10;
 
-    QVector3D Pfar = QVector3D(dx*far, dy*far, far);
+    QVector3D Pfar = QVector3D(dx*far, dy*far, -far);
     QVector3D res = m_viewMatrix*Pfar;
     res = res.normalized();
 

@@ -16,7 +16,8 @@ MainWindow::MainWindow(QWidget *parent) :
     m_galaxy.AddComponent();
     PrepareNewGalaxy();
     // Adding a single galaxy to the rasterizer
-    m_rasterizer.AddGalaxy(new GalaxyInstance(&m_galaxy, m_galaxy.galaxyParams().name(), QVector3D(0,0,0), QVector3D(0,1,0), 1, 0)  );
+    m_rasterizer.AddGalaxy(new GalaxyInstance(&m_galaxy, m_galaxy.galaxyParams().name(),
+                                              QVector3D(0,0,0), QVector3D(0,1,0).normalized(), 1, 0)  );
 
 }
 
@@ -309,5 +310,12 @@ void MainWindow::PrepareNewGalaxy()
         m_curComponentParams = m_galaxy.componentParams()[0];
     UpdateGUI();
     UpdateComponentsGUI();
+
+}
+
+void MainWindow::on_actionRender_triggered()
+{
+    m_rasterizer.Render();
+    ui->myGLWidget->SetTexture(m_rasterizer.getBuffer());
 
 }

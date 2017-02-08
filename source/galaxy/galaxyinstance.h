@@ -37,7 +37,7 @@ public:
     void setIntensityScale(float intensityScale);
     float redshift() const;
     void setRedshift(float redshift);
-    QQuaternion rotmat() const;
+    QQuaternion& rotmat();
     void setRotmat(const QQuaternion &rotmat);
     QVector3D position() const;
     void setPosition(const QVector3D &position);

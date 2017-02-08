@@ -79,6 +79,8 @@ private slots:
 
     void on_leArm4_editingFinished();
 
+    void on_actionRender_triggered();
+
 private:
     Ui::MainWindow *ui;
     Rasterizer m_rasterizer;
