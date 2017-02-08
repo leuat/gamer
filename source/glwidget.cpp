@@ -1,6 +1,7 @@
 #include "glwidget.h"
 #include <QDebug>
 #include <QTimer>
+#include <QApplication>
 
 GLWidget::GLWidget(QWidget *parent) : QOpenGLWidget(parent) {}
 
@@ -63,10 +64,49 @@ void GLWidget::resizeGL(int w, int h)
     QOpenGLWidget::resize(w,h);
 }
 
+void GLWidget::mousePressEvent(QMouseEvent *event)
+{
+//    exit(1);
+    m_lastPos = event->pos();
+
+}
+
+void GLWidget::mouseMoveEvent(QMouseEvent *event)
+{
+    int dx = event->x() - m_lastPos.x();
+    int dy = event->y() - m_lastPos.y();
+    float strength = 0.5;
+
+    if (event->buttons() & Qt::LeftButton) {
+        m_RenderingParams->camera().RotateVertical(strength*dx);
+        m_RenderingParams->camera().RotateHorisontal(strength*dy);
+        m_redraw = true;
+
+    }
+    if(QApplication::keyboardModifiers().testFlag(Qt::AltModifier)) {
+
+        m_RenderingParams->camera().ZoomXY(0.2*strength*dy);
+        m_redraw = true;
+    }
+    /*else if (event->buttons() & Qt::RightButton) {
+        setXRotation(xRot + 8 * dy);
+        setZRotation(zRot + 8 * dx);
+    }*/
+    m_lastPos = event->pos();
+}
+
 void GLWidget::loop()
 {
-    qDebug() << "loop";
     update();
+}
+
+bool GLWidget::redraw()
+{
+    if (m_redraw) {
+        m_redraw = false;
+        return true;
+    }
+    return false;
 }
 
 void GLWidget::SetTexture(QImage *image)
@@ -82,7 +122,7 @@ void GLWidget::SetTexture(QImage *image)
 
 
     int size = image->width();
-    qDebug() << size;
+
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, size, size, 0, GL_RGBA, GL_UNSIGNED_BYTE, image->bits());
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);

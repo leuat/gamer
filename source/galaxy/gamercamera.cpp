@@ -96,8 +96,8 @@ void GamerCamera::TranslateXY(QVector3D& delta) {
     m_target = m_target + d;
 }
 
-void GamerCamera::ZoomXY(QVector3D& delta) {
-    m_camera = m_camera - (m_camera-m_target).normalized()*delta.y();
+void GamerCamera::ZoomXY(float delta) {
+    m_camera = m_camera - (m_camera-m_target).normalized()*delta;
 }
 
 void GamerCamera::RotateUp(float r) {

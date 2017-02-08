@@ -4,9 +4,11 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT += core gui
 QT += opengl
 QT += gui
+QMAKE_CXXFLAGS+= -fopenmp
+QMAKE_LFLAGS +=  -fopenmp
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = Gamer

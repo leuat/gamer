@@ -12,13 +12,20 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    ui->myGLWidget->setRenderingParams(&m_rasterizer.getRenderingParams());
     Spectra::PopulateSpectra();
+    PopulateImageSize();
     m_galaxy.AddComponent();
     PrepareNewGalaxy();
     // Adding a single galaxy to the rasterizer
     m_rasterizer.AddGalaxy(new GalaxyInstance(&m_galaxy, m_galaxy.galaxyParams().name(),
                                               QVector3D(0,0,0), QVector3D(0,1,0).normalized(), 1, 0)  );
+    m_rasterizer.getRenderingParams().Load(m_RenderParamsFilename);
+    UpdateRenderingParamsGUI();
 
+    timer = new QTimer(this);
+    connect(timer, SIGNAL(timeout()), this, SLOT(loop()));
+    timer->start(3);
 }
 
 MainWindow::~MainWindow()
@@ -33,8 +40,7 @@ void MainWindow::loadFile()
 
 void MainWindow::on_renderButton_clicked()
 {
-    m_rasterizer.Render();
-    ui->myGLWidget->SetTexture(m_rasterizer.getBuffer());
+    Render();
 }
 
 void MainWindow::on_actionLoad_triggered()
@@ -74,6 +80,14 @@ void MainWindow::PopulateCmbSpectra()
         ui->cmbSpectrum->setCurrentText(m_curComponentParams->spectrum());
     }
 
+}
+
+void MainWindow::PopulateImageSize()
+{
+    ui->cmbImageSize->clear();
+    ui->cmbImageSize->addItems(QStringList() << "16" <<"32" << "64" << "100" << "128"
+                               << "256" << "400" <<  "512" << "768" << "1024"
+                               << "1200" << "1600" << "2048" );
 }
 
 void MainWindow::UpdateGalaxyGUI()
@@ -153,6 +167,40 @@ void MainWindow::UpdateGUI()
 {
     PopulateCmbComponents();
     UpdateGalaxyGUI();
+}
+
+void MainWindow::UpdateRenderingParamsGUI()
+{
+//    qDebug() << m_rasterizer.getRenderingParams().size();
+    ui->cmbImageSize->setCurrentText(QString::number(m_rasterizer.getRenderingParams().size()));
+}
+
+void MainWindow::UpdateRenderingParamsData()
+{
+    m_rasterizer.getRenderingParams().setSize(ui->cmbImageSize->currentText().toInt());
+    m_rasterizer.setNewSize(m_rasterizer.getRenderingParams().size());
+
+    m_rasterizer.getRenderingParams().Save(m_RenderParamsFilename);
+}
+
+void MainWindow::Render()
+{
+    m_rasterizer.getRenderingParams().Save(m_RenderParamsFilename);
+    m_rasterizer.Render();
+    ui->myGLWidget->SetTexture(m_rasterizer.getBuffer());
+
+}
+
+void MainWindow::loop()
+{
+    if (ui->myGLWidget->redraw()) {
+        int oldSize = m_rasterizer.getRenderingParams().size();
+        m_rasterizer.setNewSize(64);
+        Render();
+        m_rasterizer.setNewSize(oldSize);
+        m_rasterizer.getRenderingParams().Save(m_RenderParamsFilename);
+
+    }
 }
 
 void MainWindow::on_btnNewComponent_clicked()
@@ -257,7 +305,6 @@ void MainWindow::on_cmbSpectrum_activated(const QString &arg1)
     m_curComponentParams->setSpectrum(arg1);
     ui->cmbSpectrum->setCurrentText(arg1);
     m_galaxy.SetupComponents();
-    //UpdateGUI();
     UpdateComponentsGUI();
 
 }
@@ -315,7 +362,10 @@ void MainWindow::PrepareNewGalaxy()
 
 void MainWindow::on_actionRender_triggered()
 {
-    m_rasterizer.Render();
-    ui->myGLWidget->SetTexture(m_rasterizer.getBuffer());
+    Render();
+}
 
+void MainWindow::on_cmbImageSize_activated(const QString &arg1)
+{
+    UpdateRenderingParamsData();
 }

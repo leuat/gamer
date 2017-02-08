@@ -22,13 +22,44 @@
      <rect>
       <x>19</x>
       <y>19</y>
-      <width>401</width>
+      <width>431</width>
       <height>581</height>
      </rect>
     </property>
-    <property name="currentIndex">
-     <number>1</number>
+    <property name="toolTipDuration">
+     <number>-3</number>
     </property>
+    <property name="currentIndex">
+     <number>0</number>
+    </property>
+    <widget class="QWidget" name="tabScene">
+     <attribute name="title">
+      <string>Rendering</string>
+     </attribute>
+     <widget class="QLabel" name="label_22">
+      <property name="geometry">
+       <rect>
+        <x>30</x>
+        <y>50</y>
+        <width>91</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Image size</string>
+      </property>
+     </widget>
+     <widget class="QComboBox" name="cmbImageSize">
+      <property name="geometry">
+       <rect>
+        <x>120</x>
+        <y>45</y>
+        <width>111</width>
+        <height>31</height>
+       </rect>
+      </property>
+     </widget>
+    </widget>
     <widget class="QWidget" name="tabGalaxy">
      <attribute name="title">
       <string>Galaxy</string>
@@ -678,6 +709,9 @@
      </attribute>
     </widget>
     <widget class="QWidget" name="tab">
+     <property name="toolTipDuration">
+      <number>-1</number>
+     </property>
      <attribute name="title">
       <string>Page</string>
      </attribute>

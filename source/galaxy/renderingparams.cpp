@@ -1,4 +1,5 @@
 ﻿#include "source/galaxy/renderingparams.h"
+#include <QFile>
 
 int RenderingParams::size() const
 {
@@ -29,3 +30,32 @@ void RenderingParams::setRayStep(float rayStep)
 {
     m_rayStep = rayStep;
 }
+
+void RenderingParams::Save(QString filename)
+{
+    QFile file(filename);
+    if(!file.open(QIODevice::WriteOnly)) {
+        qDebug() << "Could not open " << filename;
+        return;
+    }
+    QDataStream out(&file);
+    out.setVersion(QDataStream::Qt_5_6);
+    out << *this;
+    file.flush();
+    file.close();
+
+}
+
+void RenderingParams::Load(QString filename)
+{
+    QFile file(filename);
+    if(!file.open(QIODevice::ReadOnly)) {
+        return;
+    }
+    QDataStream in(&file);
+
+    in >> *this;
+
+    file.close();
+}
+

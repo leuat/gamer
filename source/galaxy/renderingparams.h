@@ -15,6 +15,38 @@ public:
     float rayStep() const;
     void setRayStep(float rayStep);
 
+    int m_size = 128; // pixels
+    float m_exposure = 1;
+    float m_gamma = 1;
+    float m_saturation = 1;
+    float m_detailLevel = 0.01;
+    float m_noiseDetail = 1;
+    int m_noStars=0;
+    float m_starSize=1, m_starSizeSpread=1;
+    float m_starStrength = 1;
+    float m_rayStep = 0.01;
+    QVector3D color = QVector3D(1,1,1);
+
+    friend QDataStream& operator << ( QDataStream & s, RenderingParams& cp) {
+        s << cp.camera();
+        s << cp.m_size << cp.m_exposure << cp.m_gamma << cp.m_saturation << cp.m_detailLevel;
+        s << cp.m_noiseDetail << cp.m_noStars << cp.m_starSize << cp.m_starSizeSpread;
+        s << cp.m_starStrength << cp.m_rayStep;
+        return s;
+    }
+
+    friend QDataStream& operator >> ( QDataStream & s, RenderingParams& cp) {
+        GamerCamera camera;
+        s >> camera;
+        cp.setCamera(camera);
+        s >> cp.m_size >> cp.m_exposure >> cp.m_gamma >> cp.m_saturation >> cp.m_detailLevel;
+        s >> cp.m_noiseDetail >> cp.m_noStars >> cp.m_starSize >> cp.m_starSizeSpread;
+        s >> cp.m_starStrength >> cp.m_rayStep;
+        return s;
+    }
+    void Save(QString filename);
+    void Load(QString filename);
+
 private:
     float m_idx;
     float m_idxCount;
@@ -22,27 +54,16 @@ private:
     GamerCamera m_camera;// = new GamerCamera();
     QVector3D direction;
 
-    float m_detailLevel = 0.01;
-    float m_noiseDetail = 1;
     float m_seed;
-    int m_size = 100; // pixels
-    float m_exposure = 1;
-    float m_gamma = 1;
-    float m_saturation = 1;
     //int no_procs;
 
     //bool continuousPostprocessing=true;
 
-    int m_noStars=0;
-    float m_starSize=1, m_starSizeSpread=1;
-    float m_starStrength = 1;
 
     QString m_currentScene = "";
 
-    float m_rayStep = 0.01;
     float m_rayStepPreview;
     float m_rayStepNormal;
-    QVector3D color = QVector3D(1,1,1);
     float m_wavelength;
 
     QString m_currentGalaxy = "";

@@ -65,6 +65,7 @@ private:
 
 		
     QImage *getBuffer() const;
+    RenderingParams& getRenderingParams();
 };
 
 

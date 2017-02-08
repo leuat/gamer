@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QWindow>
+#include <QTimer>
 #include "source/galaxy/rasterizer.h"
 #include "source/galaxy/galaxy.h"
 #include "source/galaxy/galaxycomponent.h"
@@ -81,24 +82,35 @@ private slots:
 
     void on_actionRender_triggered();
 
+    void on_cmbImageSize_activated(const QString &arg1);
+
 private:
     Ui::MainWindow *ui;
     Rasterizer m_rasterizer;
     Galaxy m_galaxy;
     ComponentParams* m_curComponentParams = nullptr;
-
+    QBasicTimer m_timer;
     void PrepareNewGalaxy();
 
+    QTimer* timer;
     void PopulateCmbComponents();
     void PopulateCmbComponentTypes();
     void PopulateCmbSpectra();
+    void PopulateImageSize();
 
     void UpdateGalaxyGUI();
     void UpdateGalaxyData();
     void UpdateComponentsGUI();
     void UpdateComponentsData();
     void UpdateGUI();
+    void UpdateRenderingParamsGUI();
+    void UpdateRenderingParamsData();
 
+    void Render();
+    QString m_RenderParamsFilename = "RenderParams.dat";
+
+public slots:
+   void loop();
 };
 
 #endif // MAINWINDOW_H

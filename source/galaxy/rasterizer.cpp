@@ -11,9 +11,14 @@ QImage *Rasterizer::getBuffer() const
     return m_buffer;
 }
 
+RenderingParams& Rasterizer::getRenderingParams()
+{
+    return m_renderingParams;
+}
+
 void Rasterizer::prepareRenderList() {
 
-//    qDebug() << "Preparing buffer of size " << m_renderingParams.size();
+    //    qDebug() << "Preparing buffer of size " << m_renderingParams.size();
     m_renderList.resize(m_renderingParams.size() * m_renderingParams.size());
     for (int i = 0; i < m_renderingParams.size() * m_renderingParams.size(); i++)
         m_renderList[i] = i;
@@ -277,24 +282,22 @@ QVector3D Rasterizer::setupCamera(int idx) {
 
 RasterPixel* Rasterizer::renderPixel(QVector3D dir, QVector<GalaxyInstance*> gals) {
     QVector3D isp1, isp2;
-    dir*=-1;
+    //dir*=-1;
     RasterPixel* rp = new RasterPixel();
+
     for (int i=0;i<gals.size();i++) {
-//        qDebug() << dir;
         GalaxyInstance* gi = gals[i];
 
         Galaxy* g = gi->GetGalaxy();
         float t1, t2;
         bool intersects = Util::IntersectSphere(m_renderingParams.camera().camera() - gi->position(), dir,
                                                 g->galaxyParams().axis(), isp1, isp2, t1, t2);
-/*        qDebug() << dir;
-        qDebug() << intersects;*/
         if (t1<0) {
             isp2 = m_renderingParams.camera().camera()- gi->position();// + m_renderingParams.direction*
         }
-/*        if (t1>0 && t2>0)
-            intersects = false;
-*/
+//        if (t1>0 && t2>0)
+  //          intersects = false;
+
         if (intersects) {
 //            rp->I().setX(100);
             getIntensity(gi, rp, isp1, isp2, m_renderingParams.camera().camera());
