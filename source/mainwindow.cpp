@@ -6,6 +6,7 @@
 #include <QStringList>
 #include <QMessageBox>
 #include "source/galaxy/spectrum.h"
+#include <QElapsedTimer>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -25,7 +26,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(loop()));
-    timer->start(3);
+    timer->start(5);
 }
 
 MainWindow::~MainWindow()
@@ -173,26 +174,32 @@ void MainWindow::UpdateRenderingParamsGUI()
 {
 //    qDebug() << m_rasterizer.getRenderingParams().size();
     ui->cmbImageSize->setCurrentText(QString::number(m_rasterizer.getRenderingParams().size()));
+    ui->leRayStep->setText( QString::number(m_rasterizer.getRenderingParams().rayStep()));
 }
 
 void MainWindow::UpdateRenderingParamsData()
 {
     m_rasterizer.getRenderingParams().setSize(ui->cmbImageSize->currentText().toInt());
+    m_rasterizer.getRenderingParams().setRayStep(ui->leRayStep->text().toFloat());
     m_rasterizer.setNewSize(m_rasterizer.getRenderingParams().size());
-
     m_rasterizer.getRenderingParams().Save(m_RenderParamsFilename);
 }
 
 void MainWindow::Render()
 {
     m_rasterizer.getRenderingParams().Save(m_RenderParamsFilename);
+    QElapsedTimer timer;
+    timer.start();
     m_rasterizer.Render();
+    qDebug() << "Rendering took " << timer.elapsed()/1000.0 << " seconds";
     ui->myGLWidget->SetTexture(m_rasterizer.getBuffer());
 
 }
 
 void MainWindow::loop()
 {
+//    qDebug() << "WHY NOT CALL ME DUDE";
+//    qDebug() << "other: " << ui->myGLWidget->redraw();
     if (ui->myGLWidget->redraw()) {
         int oldSize = m_rasterizer.getRenderingParams().size();
         m_rasterizer.setNewSize(64);
@@ -366,6 +373,11 @@ void MainWindow::on_actionRender_triggered()
 }
 
 void MainWindow::on_cmbImageSize_activated(const QString &arg1)
+{
+    UpdateRenderingParamsData();
+}
+
+void MainWindow::on_leRayStep_editingFinished()
 {
     UpdateRenderingParamsData();
 }

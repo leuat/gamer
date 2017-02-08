@@ -31,7 +31,7 @@ void GLWidget::paintGL()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
-    glTranslatef(0,0,-6);
+    glTranslatef(0,0,-5.0);
 
     glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, m_textureID);
@@ -76,11 +76,11 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event)
     int dx = event->x() - m_lastPos.x();
     int dy = event->y() - m_lastPos.y();
     float strength = 0.5;
-
     if (event->buttons() & Qt::LeftButton) {
         m_RenderingParams->camera().RotateVertical(strength*dx);
         m_RenderingParams->camera().RotateHorisontal(strength*dy);
         m_redraw = true;
+   //     qDebug() << "MOUSEVENT" << dx;
 
     }
     if(QApplication::keyboardModifiers().testFlag(Qt::AltModifier)) {
@@ -93,6 +93,8 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event)
         setZRotation(zRot + 8 * dx);
     }*/
     m_lastPos = event->pos();
+//    event->ignore();
+//    qDebug() << m_redraw;
 }
 
 void GLWidget::loop()
@@ -102,6 +104,8 @@ void GLWidget::loop()
 
 bool GLWidget::redraw()
 {
+//    return redraw;
+
     if (m_redraw) {
         m_redraw = false;
         return true;

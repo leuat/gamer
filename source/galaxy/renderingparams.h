@@ -24,7 +24,7 @@ public:
     int m_noStars=0;
     float m_starSize=1, m_starSizeSpread=1;
     float m_starStrength = 1;
-    float m_rayStep = 0.01;
+    float m_rayStep = 0.001;
     QVector3D color = QVector3D(1,1,1);
 
     friend QDataStream& operator << ( QDataStream & s, RenderingParams& cp) {

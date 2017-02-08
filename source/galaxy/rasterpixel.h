@@ -8,6 +8,8 @@ private:
 
 
 public:
+    float winding, radius;
+
     void Add(RasterPixel* o);
     float scale = 1;
     RasterPixel(RasterPixel* o);

@@ -134,7 +134,9 @@ Galaxy* Rasterizer::AddGalaxy(GalaxyInstance* gi) {
 
 
 void Rasterizer::RenderPixels() {
-    for (int k=0;k<pow(m_renderingParams.size(),2);k++) {
+    int size = pow(m_renderingParams.size(),2);
+#pragma omp parallel for
+    for (int k=0;k<size;k++) {
         int idx = m_renderList[ k ];
         QVector3D dir = setupCamera(idx);
         RasterPixel rp = renderPixel(dir, m_galaxies);
@@ -304,6 +306,8 @@ RasterPixel* Rasterizer::renderPixel(QVector3D dir, QVector<GalaxyInstance*> gal
   //          qDebug() << "Getting intensity " << rp->I();
         }
     }
+    rp->I()*=.01/m_renderingParams.rayStep();
+
     return rp;
 }
 
@@ -331,7 +335,7 @@ void Rasterizer::getIntensity(GalaxyInstance* gi, RasterPixel* rp, QVector3D isp
                 gc->calculateIntensity( rp, p, gi, step*200);
         }
         p=p-dir*step;
-        //	rp.Floor(0);
+        //rp.I()Floor(0);
         n++;
     }
 }

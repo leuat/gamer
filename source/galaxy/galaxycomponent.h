@@ -31,13 +31,13 @@ protected:
 		
     float m_noiseVal = 0;
 
-    float m_workTheta, m_workRad, m_workWinding, m_workLength;
+//    float m_workTheta, m_workRad, m_workWinding, m_workLength;
     GalaxyInstance* m_currentGI = nullptr;
     QVector3D m_dAdd = QVector3D(0,0,0);
 
 		
-    float m_winding;
-    float m_currentRadius;
+//    float m_winding;
+//    float m_currentRadius;
 		
 
 public:

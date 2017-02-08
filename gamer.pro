@@ -7,6 +7,9 @@
 QT += core gui
 QT += opengl
 QT += gui
+
+#lQMAKE_CC = gcc-6
+#QMAKE_CXX = g++-6
 QMAKE_CXXFLAGS+= -fopenmp
 QMAKE_LFLAGS +=  -fopenmp
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets

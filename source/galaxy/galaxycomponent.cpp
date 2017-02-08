@@ -59,14 +59,17 @@ float GalaxyComponent::getHeightModulation(float height) {
 }
 
 
+
 void GalaxyComponent::calculateIntensity(RasterPixel* rp, QVector3D& p,
                                          GalaxyInstance* gi, const float weight) {
     QVector3D P;
     m_currentGI = gi;
     float z = 1;
+    float m_currentRadius;
     m_currentRadius = getRadius(p, P, z, gi);
     z = getHeightModulation(z);
     float armVal = 1;
+    float m_winding = 0;
     if (z>0.01)
     {
 
@@ -82,7 +85,8 @@ void GalaxyComponent::calculateIntensity(RasterPixel* rp, QVector3D& p,
                 m_winding = getWinding(m_currentRadius)*m_componentParams.winding();///(rad+1.0);
 
             }
-
+            rp->winding = m_winding;
+            rp->radius = m_currentRadius;
 
             // equation 5 from the paper
             float val = (m_componentParams.strength())*scale*armVal*z*intensity*gi->intensityScale();
@@ -139,9 +143,9 @@ float GalaxyComponent::findDifference( float t1,  float t2) {
 }
 float GalaxyComponent::calculateArmValue( float rad,  QVector3D P,  float armStrength) {
 
-    m_workRad = sqrt(rad);
-    m_workTheta = -getTheta(P);
-    m_workWinding = getWinding(rad);
+    float m_workRad = sqrt(rad);
+    float m_workTheta = -getTheta(P);
+    float m_workWinding = getWinding(rad);
 
 
     float v1 = getArm(rad, P, m_galaxyParams->arm1());
@@ -162,6 +166,9 @@ float GalaxyComponent::calculateArmValue( float rad,  QVector3D P,  float armStr
 
 
 float GalaxyComponent::getArm( float rad,  QVector3D p,  float disp) {
+    float m_workWinding = getWinding(rad);
+    float m_workTheta = -getTheta(p);
+
     float v = abs(findDifference(m_workWinding,m_workTheta + disp))/M_PI;
     return pow(1.0-v,m_componentParams.arm()*15);
 }

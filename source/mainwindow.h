@@ -84,6 +84,8 @@ private slots:
 
     void on_cmbImageSize_activated(const QString &arg1);
 
+    void on_leRayStep_editingFinished();
+
 private:
     Ui::MainWindow *ui;
     Rasterizer m_rasterizer;
