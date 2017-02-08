@@ -110,6 +110,16 @@ void GalaxyParams::setBulgeAxis(const QVector3D &bulgeAxis)
     m_bulgeAxis = bulgeAxis;
 }
 
+QString GalaxyParams::name() const
+{
+    return m_name;
+}
+
+void GalaxyParams::setName(const QString &name)
+{
+    m_name = name;
+}
+
 GalaxyParams::GalaxyParams() {
     m_noArms = 2;
     m_arm1 = 0;

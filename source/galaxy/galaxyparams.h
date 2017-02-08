@@ -6,6 +6,7 @@
 
 class GalaxyParams {
 public:
+    QString m_name = "Galaxy";
     QVector3D m_axis = QVector3D(1,1,1);
     float m_bulgeDust = 0.025f;
     QVector3D m_bulgeAxis = QVector3D(1,1,1);
@@ -26,14 +27,14 @@ public:
     float m_warpScale;
 
     friend QDataStream& operator << ( QDataStream & s, const GalaxyParams& gp) {
-        s << gp.m_axis << gp.m_bulgeDust << gp.m_bulgeAxis << gp.m_windingB << gp.m_windingN;
+        s << gp.m_name << gp.m_axis << gp.m_bulgeDust << gp.m_bulgeAxis << gp.m_windingB << gp.m_windingN;
         s << gp.m_noArms << gp.m_arm1 << gp.m_arm2 << gp.m_arm3 << gp.m_arm4;
         s << gp.m_innerTwirl << gp.m_warpAmplitude << gp.m_warpScale;
         return s;
     }
 
     friend QDataStream& operator >> ( QDataStream & s, GalaxyParams& gp) {
-        s >> gp.m_axis >> gp.m_bulgeDust >> gp.m_bulgeAxis >> gp.m_windingB >> gp.m_windingN;
+        s >> gp.m_name >> gp.m_axis >> gp.m_bulgeDust >> gp.m_bulgeAxis >> gp.m_windingB >> gp.m_windingN;
         s >> gp.m_noArms >> gp.m_arm1 >> gp.m_arm2 >> gp.m_arm3 >> gp.m_arm4;
         s >> gp.m_innerTwirl >> gp.m_warpAmplitude >> gp.m_warpScale;
         return s;
@@ -68,6 +69,8 @@ public:
     void setInnerTwirl(float innerTwirl);
     QVector3D bulgeAxis() const;
     void setBulgeAxis(const QVector3D &bulgeAxis);
+    QString name() const;
+    void setName(const QString &name);
 };
 
 

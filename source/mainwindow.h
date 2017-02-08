@@ -36,7 +36,48 @@ private slots:
 
     void on_cmbComponents_activated(int index);
 
-    void on_leStrength_returnPressed();
+
+    void on_leStrength_editingFinished();
+
+    void on_lePersistence_editingFinished();
+
+    void on_leNoiseTilt_editingFinished();
+
+    void on_leNoiseOffset_editingFinished();
+
+    void on_leScale_editingFinished();
+
+    void on_leWinding_editingFinished();
+
+    void on_leDelta_editingFinished();
+
+    void on_leR0_editingFinished();
+
+    void on_leZ0_editingFinished();
+
+    void on_leArm_editingFinished();
+
+    void on_chkIsActive_clicked();
+
+    void on_cmbSpectrum_activated(const QString &arg1);
+
+
+
+    void on_leGalaxyName_editingFinished();
+
+    void on_leWindingB_editingFinished();
+
+    void on_leWindingN_editingFinished();
+
+    void on_leNoArms_editingFinished();
+
+    void on_leArm1_editingFinished();
+
+    void on_leArm2_editingFinished();
+
+    void on_leArm3_editingFinished();
+
+    void on_leArm4_editingFinished();
 
 private:
     Ui::MainWindow *ui;
@@ -44,8 +85,14 @@ private:
     Galaxy m_galaxy;
     ComponentParams* m_curComponentParams = nullptr;
 
+    void PrepareNewGalaxy();
+
     void PopulateCmbComponents();
     void PopulateCmbComponentTypes();
+    void PopulateCmbSpectra();
+
+    void UpdateGalaxyGUI();
+    void UpdateGalaxyData();
     void UpdateComponentsGUI();
     void UpdateComponentsData();
     void UpdateGUI();

@@ -1,5 +1,7 @@
 #include "source/galaxy/spectrum.h"
 
+QVector<ComponentSpectrum*> Spectra::m_spectra;
+
 QString ComponentSpectrum::name() const
 {
 return m_name;

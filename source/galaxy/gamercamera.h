@@ -23,8 +23,10 @@ public:
     void setRotMatrix(const QMatrix4x4 &rotMatrix);
 
 private:
-    QVector3D m_camera, m_target, m_up;
-    float m_perspective;
+    QVector3D m_camera = QVector3D(0,3,3);
+    QVector3D m_target = QVector3D(0,0,0);
+    QVector3D m_up = QVector3D(0,1,0);
+    float m_perspective = 70;
 
     QMatrix4x4 m_viewMatrix, m_viewMatrixInv;
     QMatrix4x4 m_rotMatrix;

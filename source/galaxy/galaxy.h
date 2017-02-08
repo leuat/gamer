@@ -38,7 +38,7 @@ public:
     bool Load(QString filename);
     QVector<ComponentParams *>& componentParams();
     QVector<GalaxyComponent *> components() const;
-    GalaxyParams galaxyParams() const;
+    GalaxyParams& galaxyParams();
 
     friend QDataStream& operator << ( QDataStream & s, Galaxy& g) {
         s << g.displayName();

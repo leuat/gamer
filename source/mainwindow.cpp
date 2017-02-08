@@ -5,12 +5,18 @@
 #include <QGridLayout>
 #include <QStringList>
 #include <QMessageBox>
+#include "source/galaxy/spectrum.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    Spectra::PopulateSpectra();
+    m_galaxy.AddComponent();
+    PrepareNewGalaxy();
+    // Adding a single galaxy to the rasterizer
+    m_rasterizer.AddGalaxy(new GalaxyInstance(&m_galaxy, m_galaxy.galaxyParams().name(), QVector3D(0,0,0), QVector3D(0,1,0), 1, 0)  );
 
 }
 
@@ -38,10 +44,7 @@ void MainWindow::on_actionLoad_triggered()
         msgBox.exec();
         return;
     }
-    if (m_galaxy.componentParams().size()!=0)
-        m_curComponentParams = m_galaxy.componentParams()[0];
-    UpdateGUI();
-    UpdateComponentsGUI();
+    PrepareNewGalaxy();
 
 }
 
@@ -61,16 +64,73 @@ void MainWindow::PopulateCmbComponentTypes() {
 
 }
 
+void MainWindow::PopulateCmbSpectra()
+{
+    if (m_curComponentParams != nullptr) {
+        if (ui->cmbSpectrum->count()==0) {
+          ui->cmbSpectrum->addItems(Spectra::listSpectra());
+        }
+        ui->cmbSpectrum->setCurrentText(m_curComponentParams->spectrum());
+    }
+
+}
+
+void MainWindow::UpdateGalaxyGUI()
+{
+    ui->leGalaxyName->setText(m_galaxy.galaxyParams().name());
+    ui->leWindingB->setText(QString::number(m_galaxy.galaxyParams().windingB()));
+    ui->leWindingN->setText(QString::number(m_galaxy.galaxyParams().windingN()));
+    ui->leNoArms->setText(QString::number(m_galaxy.galaxyParams().noArms()));
+    ui->leArm1->setText(QString::number(m_galaxy.galaxyParams().arm1()));
+    ui->leArm2->setText(QString::number(m_galaxy.galaxyParams().arm2()));
+    ui->leArm3->setText(QString::number(m_galaxy.galaxyParams().arm3()));
+    ui->leArm4->setText(QString::number(m_galaxy.galaxyParams().arm4()));
+}
+
+void MainWindow::UpdateGalaxyData()
+{
+    m_galaxy.galaxyParams().setName(ui->leGalaxyName->text());
+    m_galaxy.galaxyParams().setWindingB(ui->leWindingB->text().toFloat());
+    m_galaxy.galaxyParams().setWindingN(ui->leWindingN->text().toFloat());
+    m_galaxy.galaxyParams().setNoArms(ui->leNoArms->text().toFloat());
+    m_galaxy.galaxyParams().setArm1(ui->leArm1->text().toFloat());
+    m_galaxy.galaxyParams().setArm2(ui->leArm2->text().toFloat());
+    m_galaxy.galaxyParams().setArm3(ui->leArm3->text().toFloat());
+    m_galaxy.galaxyParams().setArm4(ui->leArm4->text().toFloat());
+}
+
 void MainWindow::UpdateComponentsData() {
+
     m_curComponentParams->setStrength( ui->leStrength->text().toFloat());
+    m_curComponentParams->setArm( ui->leArm->text().toFloat());
+    m_curComponentParams->setZ0( ui->leZ0->text().toFloat());
+    m_curComponentParams->setR0( ui->leR0->text().toFloat());
+    m_curComponentParams->setDelta(ui->leDelta->text().toFloat());
+    m_curComponentParams->setWinding( ui->leWinding->text().toFloat());
+    m_curComponentParams->setScale( ui->leScale->text().toFloat());
+    m_curComponentParams->setNoiseOffset( ui->leNoiseOffset->text().toFloat());
+    m_curComponentParams->setNoiseTilt( ui->leNoiseTilt->text().toFloat());
+    m_curComponentParams->setKs(ui->lePersistence->text().toFloat());
+    m_curComponentParams->setActive(ui->chkIsActive->isChecked()==true);
+    m_curComponentParams->setSpectrum(ui->cmbSpectrum->currentText());
 
 }
 
 void MainWindow::UpdateComponentsGUI()
 {
     PopulateCmbComponentTypes();
+    PopulateCmbSpectra();
     ui->leStrength->setText(QString::number(m_curComponentParams->strength()));
-
+    ui->leArm->setText(QString::number(m_curComponentParams->arm()));
+    ui->leZ0->setText(QString::number(m_curComponentParams->z0()));
+    ui->leR0->setText(QString::number(m_curComponentParams->r0()));
+    ui->leDelta->setText(QString::number(m_curComponentParams->delta()));
+    ui->leWinding->setText(QString::number(m_curComponentParams->winding()));
+    ui->leScale->setText(QString::number(m_curComponentParams->scale()));
+    ui->leNoiseOffset->setText(QString::number(m_curComponentParams->noiseOffset()));
+    ui->lePersistence->setText(QString::number(m_curComponentParams->ks()));
+    ui->leNoiseTilt->setText(QString::number(m_curComponentParams->noiseTilt()));
+    ui->chkIsActive->setChecked(m_curComponentParams->active()==1);
 }
 
 void MainWindow::PopulateCmbComponents() {
@@ -91,6 +151,7 @@ void MainWindow::PopulateCmbComponents() {
 void MainWindow::UpdateGUI()
 {
     PopulateCmbComponents();
+    UpdateGalaxyGUI();
 }
 
 void MainWindow::on_btnNewComponent_clicked()
@@ -120,9 +181,133 @@ void MainWindow::on_cmbComponents_activated(int index)
 {
     m_curComponentParams = (m_galaxy.componentParams()[index]);
     UpdateComponentsGUI();
+
 }
 
-void MainWindow::on_leStrength_returnPressed()
+
+void MainWindow::on_leStrength_editingFinished()
 {
     UpdateComponentsData();
+
+}
+
+void MainWindow::on_lePersistence_editingFinished()
+{
+    UpdateComponentsData();
+
+}
+
+void MainWindow::on_leNoiseTilt_editingFinished()
+{
+    UpdateComponentsData();
+}
+
+void MainWindow::on_leNoiseOffset_editingFinished()
+{
+    UpdateComponentsData();
+
+}
+
+void MainWindow::on_leScale_editingFinished()
+{
+    UpdateComponentsData();
+}
+
+void MainWindow::on_leWinding_editingFinished()
+{
+    UpdateComponentsData();
+
+}
+
+void MainWindow::on_leDelta_editingFinished()
+{
+    UpdateComponentsData();
+
+}
+
+void MainWindow::on_leR0_editingFinished()
+{
+    UpdateComponentsData();
+
+}
+
+void MainWindow::on_leZ0_editingFinished()
+{
+    UpdateComponentsData();
+
+}
+
+void MainWindow::on_leArm_editingFinished()
+{
+    UpdateComponentsData();
+
+}
+
+void MainWindow::on_chkIsActive_clicked()
+{
+    UpdateComponentsData();
+
+}
+
+void MainWindow::on_cmbSpectrum_activated(const QString &arg1)
+{
+    if (m_curComponentParams==nullptr)
+        return;
+    m_curComponentParams->setSpectrum(arg1);
+    ui->cmbSpectrum->setCurrentText(arg1);
+    m_galaxy.SetupComponents();
+    //UpdateGUI();
+    UpdateComponentsGUI();
+
+}
+
+
+
+void MainWindow::on_leGalaxyName_editingFinished()
+{
+    UpdateGalaxyData();
+}
+
+void MainWindow::on_leWindingB_editingFinished()
+{
+    UpdateGalaxyData();
+}
+
+void MainWindow::on_leWindingN_editingFinished()
+{
+    UpdateGalaxyData();
+}
+
+void MainWindow::on_leNoArms_editingFinished()
+{
+    UpdateGalaxyData();
+}
+
+void MainWindow::on_leArm1_editingFinished()
+{
+    UpdateGalaxyData();
+}
+
+void MainWindow::on_leArm2_editingFinished()
+{
+    UpdateGalaxyData();
+}
+
+void MainWindow::on_leArm3_editingFinished()
+{
+    UpdateGalaxyData();
+}
+
+void MainWindow::on_leArm4_editingFinished()
+{
+    UpdateGalaxyData();
+}
+
+void MainWindow::PrepareNewGalaxy()
+{
+    if (m_galaxy.componentParams().size()!=0)
+        m_curComponentParams = m_galaxy.componentParams()[0];
+    UpdateGUI();
+    UpdateComponentsGUI();
+
 }

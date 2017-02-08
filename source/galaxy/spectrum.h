@@ -21,21 +21,28 @@ public:
 
 class Spectra  {
 
-    static QVector<ComponentSpectrum*> spectra;
+    static QVector<ComponentSpectrum*> m_spectra;
 
+public:
     static void PopulateSpectra() {
 
-        spectra.append( new ComponentSpectrum(QVector3D( 1, 0.6f, 0.5f), "Red"));
-        spectra.append( new ComponentSpectrum(QVector3D( 1, 0.9f, 0.55f), "Yellow"));
-        spectra.append( new ComponentSpectrum(QVector3D( 0.3f, 0.6f, 1.0f), "Blue"));
-        spectra.append( new ComponentSpectrum(QVector3D( 1.0f, 1.0f, 1.0f), "White"));
-        spectra.append( new ComponentSpectrum(QVector3D( 0.3f, 0.7f, 1.0f), "Cyan"));
-        spectra.append( new ComponentSpectrum(QVector3D( 1.0f, 0.4f, 0.8f), "Purple"));
+        m_spectra.append( new ComponentSpectrum(QVector3D( 1, 0.6f, 0.5f), "Red"));
+        m_spectra.append( new ComponentSpectrum(QVector3D( 1, 0.9f, 0.55f), "Yellow"));
+        m_spectra.append( new ComponentSpectrum(QVector3D( 0.3f, 0.6f, 1.0f), "Blue"));
+        m_spectra.append( new ComponentSpectrum(QVector3D( 1.0f, 1.0f, 1.0f), "White"));
+        m_spectra.append( new ComponentSpectrum(QVector3D( 0.3f, 0.7f, 1.0f), "Cyan"));
+        m_spectra.append( new ComponentSpectrum(QVector3D( 1.0f, 0.4f, 0.8f), "Purple"));
 
+    }
+    static QStringList listSpectra() {
+        QStringList ql;
+        for (ComponentSpectrum* c : m_spectra)
+            ql << c->name();
+        return ql;
     }
 
     static ComponentSpectrum* FindSpectrum(QString n) {
-        for (ComponentSpectrum* c : spectra)
+        for (ComponentSpectrum* c : m_spectra)
             if (c->name() == n)
                 return c;
         return nullptr;

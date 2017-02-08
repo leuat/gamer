@@ -37,7 +37,7 @@ QVector<GalaxyComponent *> Galaxy::components() const
     return m_components;
 }
 
-GalaxyParams Galaxy::galaxyParams() const
+GalaxyParams& Galaxy::galaxyParams()
 {
     return m_galaxyParams;
 }
@@ -66,11 +66,8 @@ void Galaxy::setGalaxyParams(const GalaxyParams &galaxyParams)
 void Galaxy::SetupComponents() {
 
     m_components.clear();
-   // qDebug() << m_componentParams.size();
     for (ComponentParams* cp : m_componentParams) {
-        qDebug() << "Setting up " << cp->className();
         GalaxyComponent* ngc = instantiate(cp->className());
-        //GalaxyComponent* ngc = (GalaxyComponent)System.Activator.CreateInstance (System.Type.GetType (Settings.classDictionary[cp.className]));
         ngc->Initialize(cp, &m_galaxyParams);
         m_components.append (ngc);
     }

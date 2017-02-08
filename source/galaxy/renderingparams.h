@@ -22,10 +22,10 @@ private:
     GamerCamera m_camera;// = new GamerCamera();
     QVector3D direction;
 
-    float m_detailLevel;
+    float m_detailLevel = 0.01;
     float m_noiseDetail = 1;
     float m_seed;
-    int m_size = 256; // pixels
+    int m_size = 64; // pixels
     float m_exposure = 1;
     float m_gamma = 1;
     float m_saturation = 1;

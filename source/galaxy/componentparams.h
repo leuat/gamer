@@ -6,18 +6,18 @@
 
 class ComponentParams {
 public:
-    QString m_className;
-    QString m_spectrum = QLatin1String("White");
-    float m_strength;
-    float m_arm;
-    float m_z0;
-    float m_r0;
+    QString m_className = "bulge";
+    QString m_spectrum = "White";
+    float m_strength = 1;
+    float m_arm = 0.5;
+    float m_z0 = 0.02;
+    float m_r0 = 0.5;
     float m_active = 1;
-    float m_delta;
-    float m_winding;
-    float m_scale;
-    float m_noiseOffset;
-    float m_noiseTilt;
+    float m_delta = 0;
+    float m_winding = 0.1;
+    float m_scale = 1;
+    float m_noiseOffset = 0;
+    float m_noiseTilt = 1;
     float m_ks = 1;
 
 public:
@@ -74,6 +74,8 @@ public:
     void setKs(float ks);
     float active() const;
     void setActive(float active);
+    QString spectrum() const;
+    void setSpectrum(const QString &spectrum);
 };
 
 

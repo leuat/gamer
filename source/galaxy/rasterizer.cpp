@@ -1,6 +1,10 @@
-﻿#include "source/galaxy/rasterizer.h"
+﻿#include <QRgb>
+#include <QColor>
+
+#include "source/galaxy/rasterizer.h"
 #include "source/util/util.h"
 #include "source/galaxy/galaxycomponent.h"
+
 
 QImage *Rasterizer::getBuffer() const
 {
@@ -9,6 +13,7 @@ QImage *Rasterizer::getBuffer() const
 
 void Rasterizer::prepareRenderList() {
 
+    qDebug() << "Preparing buffer of size " << m_renderingParams.size();
     m_renderList.resize(m_renderingParams.size() * m_renderingParams.size());
     for (int i = 0; i < m_renderingParams.size() * m_renderingParams.size(); i++)
         m_renderList[i] = i;
@@ -45,6 +50,7 @@ void Rasterizer::setNewSize(int s)
 */
 void Rasterizer::prepareBuffer()
 {
+    qDebug() << "Preparing buffer of size "<< m_renderingParams.size();
     if (m_buffer == nullptr || m_buffer->width() != m_renderingParams.size()) {
         m_buffer = new QImage(m_renderingParams.size(), m_renderingParams.size(),QImage::Format_ARGB32);
     }
@@ -120,14 +126,18 @@ Galaxy* Rasterizer::AddGalaxy(GalaxyInstance* gi) {
 
 
 void Rasterizer::RenderPixels() {
+    qDebug() <<m_renderList.size();
     for (int k=0;k<pow(m_renderingParams.size(),2);k++) {
         int idx = m_renderList[ k ];
         QVector3D dir = setupCamera(idx);
         RasterPixel rp = renderPixel(dir, m_galaxies);
-        //rp.I.Set (1,1,0);
-        //buffer.SetFill (idx, rp);
-        //                rp.I.x = 500;
-//        buffer.SetSingle(idx, rp);
+
+        QColor rgb = QColor((int) (rp.I().x()*255.0), (int)(rp.I().y()*255.0), (int)(rp.I().z()*255.0));
+//        m_buffer->setColor(idx,rgb.rgba());
+        int i = idx%(int)m_renderingParams.size();
+        int j = (idx-i)/(int)m_renderingParams.size();
+
+        m_buffer->setPixel(i,j,rgb.rgba());
     }
 }
 
@@ -152,7 +162,7 @@ void Rasterizer::RenderPixels() {
         }
     */
 
-void Rasterizer::AssembleImage() {
+/*void Rasterizer::AssembleImage() {
 
     int size = m_renderingParams.size();
     for (int i=0;i<size;i++)
@@ -161,15 +171,12 @@ void Rasterizer::AssembleImage() {
             m_buffer->setPixel(i,j,val);
         }
 }
-
+*/
 
 void  Rasterizer::Render() {
-    //Prepare();
-    //InitializeRendering();
-    prepareBuffer();
-    AssembleImage();
-    qDebug() << "RENDERING";
-
+    Prepare();
+    RenderPixels();
+  //  AssembleImage();
 }
 
 /*

@@ -110,6 +110,16 @@ void ComponentParams::setActive(float active)
 m_active = active;
 }
 
+QString ComponentParams::spectrum() const
+{
+    return m_spectrum;
+}
+
+void ComponentParams::setSpectrum(const QString &spectrum)
+{
+    m_spectrum = spectrum;
+}
+
 QString ComponentParams::className() const
 {
     return m_className;
