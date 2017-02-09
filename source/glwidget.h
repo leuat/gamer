@@ -19,6 +19,9 @@ public:
    //QSize sizeHint() const {  return QSize(400, 400); }
 
     bool redraw();
+    void disableInput(bool value) {
+        m_disableInput = value;
+    }
 
 protected:
     void initializeGL();
@@ -37,4 +40,5 @@ private:
     QPoint m_lastPos;
     RenderingParams* m_RenderingParams = nullptr;
     bool m_redraw = false;
+    bool m_disableInput = false;
 };

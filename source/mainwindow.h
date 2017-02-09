@@ -88,6 +88,8 @@ private slots:
 
     void on_btnAbort_clicked();
 
+    void on_cmbPreviewSize_activated(const QString &arg1);
+
 private:
     Ui::MainWindow *ui;
     Rasterizer* m_rasterizer = nullptr;

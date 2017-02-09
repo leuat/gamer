@@ -26,9 +26,9 @@ class Spectra  {
 public:
     static void PopulateSpectra() {
 
-        m_spectra.append( new ComponentSpectrum(QVector3D( 1, 0.6f, 0.5f), "Red"));
+        m_spectra.append( new ComponentSpectrum(QVector3D( 1, 0.8f, 0.7f), "Red"));
         m_spectra.append( new ComponentSpectrum(QVector3D( 1, 0.9f, 0.55f), "Yellow"));
-        m_spectra.append( new ComponentSpectrum(QVector3D( 0.3f, 0.6f, 1.0f), "Blue"));
+        m_spectra.append( new ComponentSpectrum(QVector3D( 0.6f, 0.7f, 1.0f), "Blue"));
         m_spectra.append( new ComponentSpectrum(QVector3D( 1.0f, 1.0f, 1.0f), "White"));
         m_spectra.append( new ComponentSpectrum(QVector3D( 0.3f, 0.7f, 1.0f), "Cyan"));
         m_spectra.append( new ComponentSpectrum(QVector3D( 1.0f, 0.4f, 0.8f), "Purple"));

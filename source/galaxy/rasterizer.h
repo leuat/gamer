@@ -57,8 +57,10 @@ protected:
     void Prepare();
     void Abort() {
         m_abort = true;
+        requestInterruption();
+        quit();
+        wait();
         GMessages::Message("Aborting threaded rendering!");
-
     }
     Galaxy* AddGalaxy(QString file, QVector3D position, QVector3D orientation, float iscale, float redshift, QString name);
 

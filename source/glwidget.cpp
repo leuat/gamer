@@ -18,6 +18,10 @@ void GLWidget::initializeGL() {
 
     glMatrixMode(GL_MODELVIEW);
     glGenTextures(1, &m_textureID); // Obtain an id for the texture
+    QTimer *timer = new QTimer(this);
+    connect(timer, SIGNAL(timeout()), this, SLOT(update()));
+    timer->start(10);
+
 }
 
 void GLWidget::paintGL()
@@ -48,7 +52,7 @@ void GLWidget::paintGL()
     glEnd();
 
     glDisable(GL_TEXTURE_2D);
-    update();
+   // update();
 }
 
 void GLWidget::resizeGL(int w, int h)
@@ -63,6 +67,10 @@ void GLWidget::mousePressEvent(QMouseEvent *event)
 
 void GLWidget::mouseMoveEvent(QMouseEvent *event)
 {
+    if (m_disableInput) {
+        return;
+    }
+
     int dx = event->x() - m_lastPos.x();
     int dy = event->y() - m_lastPos.y();
     float strength = 0.5;
@@ -73,7 +81,7 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event)
     }
     if(QApplication::keyboardModifiers().testFlag(Qt::AltModifier)) {
 
-        m_RenderingParams->camera().ZoomXY(0.2*strength*dy);
+        m_RenderingParams->camera().ZoomXY(0.05*strength*dy);
         m_redraw = true;
     }
     m_lastPos = event->pos();

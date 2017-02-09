@@ -30,11 +30,13 @@ MainWindow::MainWindow(QWidget *parent) :
 
     timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(loop()));
-    timer->start(5);
+    timer->start(10);
 }
 
 MainWindow::~MainWindow()
 {
+    m_rasterizer->Abort();
+    delete m_rasterizer;
     delete ui;
 }
 
@@ -90,9 +92,12 @@ void MainWindow::PopulateCmbSpectra()
 void MainWindow::PopulateImageSize()
 {
     ui->cmbImageSize->clear();
-    ui->cmbImageSize->addItems(QStringList() << "16" <<"32" << "64" << "100" << "128"
-                               << "256" << "400" <<  "512" << "768" << "1024"
-                               << "1200" << "1600" << "2048" );
+    ui->cmbPreviewSize->clear();
+    QStringList l = QStringList() << "16" <<"32" << "48" << "64" << "80" << "96" << "128"
+                    << "256" << "384" <<  "512" << "768" << "1024"
+                    << "1200" << "1600" << "2048";
+    ui->cmbImageSize->addItems(l);
+    ui->cmbPreviewSize->addItems(l);
 }
 
 void MainWindow::UpdateGalaxyGUI()
@@ -117,6 +122,7 @@ void MainWindow::UpdateGalaxyData()
     m_galaxy.galaxyParams().setArm2(ui->leArm2->text().toFloat());
     m_galaxy.galaxyParams().setArm3(ui->leArm3->text().toFloat());
     m_galaxy.galaxyParams().setArm4(ui->leArm4->text().toFloat());
+    RenderPreview(m_renderingParams.previewSize());
 }
 
 void MainWindow::UpdateComponentsData() {
@@ -133,6 +139,7 @@ void MainWindow::UpdateComponentsData() {
     m_curComponentParams->setKs(ui->lePersistence->text().toFloat());
     m_curComponentParams->setActive(ui->chkIsActive->isChecked()==true);
     m_curComponentParams->setSpectrum(ui->cmbSpectrum->currentText());
+    RenderPreview(m_renderingParams.previewSize());
 
 }
 
@@ -178,12 +185,14 @@ void MainWindow::UpdateRenderingParamsGUI()
 {
 //    qDebug() << m_renderingParams.size();
     ui->cmbImageSize->setCurrentText(QString::number(m_renderingParams.size()));
+    ui->cmbPreviewSize->setCurrentText(QString::number(m_renderingParams.previewSize()));
     ui->leRayStep->setText( QString::number(m_renderingParams.rayStep()));
 }
 
 void MainWindow::UpdateRenderingParamsData()
 {
     m_renderingParams.setSize(ui->cmbImageSize->currentText().toInt());
+    m_renderingParams.setPreviewSize(ui->cmbPreviewSize->currentText().toInt());
     m_renderingParams.setRayStep(ui->leRayStep->text().toFloat());
     m_rasterizer->setNewSize(m_renderingParams.size());
     m_renderingParams.Save(m_RenderParamsFilename);
@@ -217,6 +226,9 @@ void MainWindow::RenderPreview(int size)
 
 void MainWindow::EnableGUIEditing(bool value)
 {
+    ui->myGLWidget->disableInput(!value);
+    ui->actionLoad->setEnabled(value);
+    ui->actionSave->setEnabled(value);
     ui->renderButton->setEnabled(value);
     ui->btnNewComponent->setEnabled(value);
     ui->btnNewComponent_2->setEnabled(value);
@@ -242,6 +254,8 @@ void MainWindow::EnableGUIEditing(bool value)
     ui->cmbComponents->setEnabled(value);
     ui->cmbComponentType->setEnabled(value);
     ui->cmbImageSize->setEnabled(value);
+    ui->cmbPreviewSize->setEnabled(value);
+
     ui->cmbSpectrum->setEnabled(value);
     ui->chkIsActive->setEnabled(value);
 }
@@ -439,5 +453,11 @@ void MainWindow::on_btnAbort_clicked()
 {
     m_rasterizer->Abort();
     EnableGUIEditing(true);
+
+}
+
+void MainWindow::on_cmbPreviewSize_activated(const QString &arg1)
+{
+    UpdateRenderingParamsData();
 
 }

@@ -179,7 +179,7 @@ void Rasterizer::RenderPixels() {
         QVector3D c = Util::clamp(rp.I()*s, 0, 255);
 
         m_percentDone+=delta;
-        QColor rgb = QColor(c.x(), c.y(),c.z());
+        QColor rgb = QColor(c.z(), c.y(),c.x());
 
         int i = idx%(int)m_renderingParams->size();
         int j = (idx-i)/(int)m_renderingParams->size();
@@ -291,7 +291,7 @@ QVector3D Rasterizer::setupCamera(int idx) {
     int i = idx%(int)m_renderingParams->size();
     int j = (idx-i)/(int)m_renderingParams->size();
 
-    return m_renderingParams->camera().coord2ray(i,j, m_renderingParams->size());
+    return m_renderingParams->camera().coord2ray(i,j, m_renderingParams->size())*-1;
 }
 
 RasterPixel* Rasterizer::renderPixel(QVector3D dir, QVector<GalaxyInstance*> gals) {
@@ -309,14 +309,16 @@ RasterPixel* Rasterizer::renderPixel(QVector3D dir, QVector<GalaxyInstance*> gal
         if (t1<0) {
             isp2 = m_renderingParams->camera().camera()- gi->position();// + m_renderingParams->direction*
         }
-        //        if (t1>0 && t2>0)
-        //          intersects = false;
-
-        if (intersects) {
-            //            rp->I().setX(100);-
-            getIntensity(gi, rp, isp1, isp2);
-            //          qDebug() << "Getting intensity " << rp->I();
+        if (t1>0 && t2>0) {
+            QVector3D kk = isp1;
+            isp1 = isp2;
+            isp2= kk;
+         // intersects = false;
         }
+
+        if (intersects)
+            getIntensity(gi, rp, isp1, isp2);
+
     }
     rp->I()*=.01/m_renderingParams->rayStep();
 
