@@ -143,12 +143,6 @@ QMatrix4x4 GamerCamera::GetRotationMatrix() {
 }
 
 
-/*
-void UpdateMaterial(Material m)
-{
-}
-
-*/
 void GamerCamera::setupViewmatrix() {
     QVector3D zaxis = (m_target-m_camera).normalized();
     QVector3D xaxis = (QVector3D::crossProduct(m_up,zaxis)).normalized();
@@ -175,10 +169,10 @@ void GamerCamera::setupViewmatrix() {
 
 
 
-//    m_viewMatrix = m_rotMatrix*M;
-//    QMatrix4x4 M;
-//    M.lookAt(m_camera, m_target, m_up);
-  //  qDebug() << M;
+/*    m_viewMatrix = m_rotMatrix*M;
+    QMatrix4x4 M;
+    M.lookAt(m_camera, m_target, m_up);
+    qDebug() << M;*/
     m_viewMatrix = M;//m_rotMatrix*M;
     m_viewMatrixInv = m_viewMatrix.inverted();
 }
@@ -201,7 +195,7 @@ void GamerCamera::RotateHorisontal(float angle) {
     m_up = QVector3D::crossProduct(d, side).normalized();
 }
 
-QVector3D GamerCamera::coord2ray(float x, float y, float width, float height) {
+QVector3D GamerCamera::coord2ray(float x, float y, float width) {
 
     float aspect_ratio = 1;
     float FOV = m_perspective / 360.0f * 2 * M_PI; // convert to radians

@@ -18,13 +18,6 @@ void GLWidget::initializeGL() {
 
     glMatrixMode(GL_MODELVIEW);
     glGenTextures(1, &m_textureID); // Obtain an id for the texture
-
-
-/*    QTimer *aTimer = new QTimer();
-    connect(aTimer,SIGNAL(timeout()),SLOT(loop()));
-    aTimer->start(1);
-*/
-
 }
 
 void GLWidget::paintGL()
@@ -36,25 +29,24 @@ void GLWidget::paintGL()
     glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, m_textureID);
 
-//    qDebug() << m_textureID;
     glBegin(GL_QUADS);
-     glTexCoord2f(0,0);
-     glColor3f(1,1,1);
-     glVertex3f( -1.0f, 1.0f, 0.0f);
+    glTexCoord2f(0,0);
+    glColor3f(1,1,1);
+    glVertex3f( -1.0f, 1.0f, 0.0f);
 
-     glTexCoord2f(1,0);
-     glColor3f(1,1,1);
-     glVertex3f( 1.0f, 1.0f, 0.0f);
+    glTexCoord2f(1,0);
+    glColor3f(1,1,1);
+    glVertex3f( 1.0f, 1.0f, 0.0f);
 
+    glTexCoord2f(1,1);
+    glColor3f(1,1,1);
+    glVertex3f( 1.0f,-1.0f, 0.0f);
 
-     glTexCoord2f(1,1);
-     glColor3f(1,1,1);
-     glVertex3f( 1.0f,-1.0f, 0.0f);
-
-     glTexCoord2f(0,1);
-     glColor3f(1,1,1);
-     glVertex3f( -1.0f,-1.0f, 0.0f);
+    glTexCoord2f(0,1);
+    glColor3f(1,1,1);
+    glVertex3f( -1.0f,-1.0f, 0.0f);
     glEnd();
+
     glDisable(GL_TEXTURE_2D);
     update();
 }
@@ -66,9 +58,7 @@ void GLWidget::resizeGL(int w, int h)
 
 void GLWidget::mousePressEvent(QMouseEvent *event)
 {
-//    exit(1);
     m_lastPos = event->pos();
-
 }
 
 void GLWidget::mouseMoveEvent(QMouseEvent *event)
@@ -80,21 +70,13 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event)
         m_RenderingParams->camera().RotateVertical(strength*dx);
         m_RenderingParams->camera().RotateHorisontal(strength*dy);
         m_redraw = true;
-   //     qDebug() << "MOUSEVENT" << dx;
-
     }
     if(QApplication::keyboardModifiers().testFlag(Qt::AltModifier)) {
 
         m_RenderingParams->camera().ZoomXY(0.2*strength*dy);
         m_redraw = true;
     }
-    /*else if (event->buttons() & Qt::RightButton) {
-        setXRotation(xRot + 8 * dy);
-        setZRotation(zRot + 8 * dx);
-    }*/
     m_lastPos = event->pos();
-//    event->ignore();
-//    qDebug() << m_redraw;
 }
 
 void GLWidget::loop()
@@ -104,8 +86,6 @@ void GLWidget::loop()
 
 bool GLWidget::redraw()
 {
-//    return redraw;
-
     if (m_redraw) {
         m_redraw = false;
         return true;
@@ -117,8 +97,6 @@ void GLWidget::SetTexture(QImage *image)
 {
     glEnable(GL_TEXTURE_2D); // Enable texturing
 
-
-    //m_textureID = 0;
     glBindTexture(GL_TEXTURE_2D, m_textureID); // Set as the current texture
 
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);

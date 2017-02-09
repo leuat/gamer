@@ -25,17 +25,16 @@ GalaxyComponent::GalaxyComponent() {
 void GalaxyComponent::Initialize(ComponentParams* cp, GalaxyParams* gp) {
     m_componentParams = *cp;
     m_galaxyParams = gp;
-    m_count = 0;
-    m_average = 0;
-    //m_spectrum = Spectra.FindSpectrum(cp.spectrum);
+
 }
 
 
 void GalaxyComponent::componentIntensity(RasterPixel* rp, QVector3D& p, float ival )  {
     qDebug() << "GALAXYCOMPONENT: COMPONENTINTENSITY SHOULD NEVER BE CALLED";
-    rp->setI(QVector3D(0,0,0));
+    // Dummy stuff to ignore warnings
+    rp->setI(p);
+    rp->I().setX(ival);
 }
-// returns the intensity at a given position
 
 void GalaxyComponent::setGalaxyParam(GalaxyParams* gp) {
     m_galaxyParams = gp;
@@ -81,7 +80,7 @@ void GalaxyComponent::calculateIntensity(RasterPixel* rp, QVector3D& p,
             if (m_componentParams.className() == "Dust")
                 scale = Util::smoothstep(0, 1.0f*m_galaxyParams->bulgeDust(), m_currentRadius);
             if (m_componentParams.arm()!=0) {
-                armVal = calculateArmValue(m_currentRadius, P, m_componentParams.arm());
+                armVal = calculateArmValue(m_currentRadius, P);
                 m_winding = getWinding(m_currentRadius)*m_componentParams.winding();///(rad+1.0);
 
             }
@@ -112,16 +111,16 @@ float GalaxyComponent::getRadius(QVector3D p, QVector3D& P, float& dott, GalaxyI
 
 QVector3D GalaxyComponent::twirl( QVector3D& p,  const float twirl) {
     QQuaternion q =  QQuaternion::fromAxisAndAngle(m_currentGI->orientation(),twirl*180.0);
-//    return p;
+    //    return p;
     return q*p;
 }
 
 
-float GalaxyComponent::getPerlinCloudNoise(QVector3D& p, const float rad, const float t, const int NN, const float ks, const float pers)
+float GalaxyComponent::getPerlinCloudNoise(QVector3D& p, const float t, const int NN, const float ks, const float pers)
 {
     QVector3D r = twirl(p, t);
     return octave_noise_3d(NN, pers, ks * 0.1f, r.x(), r.y(), r.z());
-    //            return IQNoise.octave_noise_3d(NN, pers, ks * 0.1f, r.x, r.y, r.z);
+    // return IQNoise.octave_noise_3d(NN, pers, ks * 0.1f, r.x, r.y, r.z);
 }
 
 
@@ -141,11 +140,7 @@ float GalaxyComponent::findDifference( float t1,  float t2) {
     return v;
 
 }
-float GalaxyComponent::calculateArmValue( float rad,  QVector3D P,  float armStrength) {
-
-    float m_workRad = sqrt(rad);
-    float m_workTheta = -getTheta(P);
-    float m_workWinding = getWinding(rad);
+float GalaxyComponent::calculateArmValue( float rad,  const QVector3D& P) {
 
 
     float v1 = getArm(rad, P, m_galaxyParams->arm1());
@@ -176,8 +171,7 @@ float GalaxyComponent::getArm( float rad,  QVector3D p,  float disp) {
 
 
 float GalaxyComponent::getTheta( QVector3D p ) {
-    QVector3D quatRot = m_currentGI->rotmat()*p;//rotmat.Mul(p, quatRot);
-//    quatRot = p;
+    QVector3D quatRot = m_currentGI->rotmat()*p;
     return atan2(quatRot.x(), quatRot.z()) + m_componentParams.delta();
 }
 
@@ -189,7 +183,7 @@ float GalaxyComponent::getWinding( float rad) {
     //float t = (*param.splineWinding)[r];
     float scale = 1.0;
     float t2 = 0.0;
-/*    if (m_galaxyParams->innerTwirl() != 0) {
+    /*    if (m_galaxyParams->innerTwirl() != 0) {
         t2 = -0.5/(pow(r,1.0)+0.1);
         scale = Util::smoothstep(0.00, m_galaxyParams->bulgeDust()*1.5f, r);
     }*/

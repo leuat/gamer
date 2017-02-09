@@ -37,7 +37,8 @@ SOURCES += \
     source/galaxy/spectrum.cpp \
     source/glwidget.cpp \
     source/main.cpp \
-    source/mainwindow.cpp
+    source/mainwindow.cpp \
+    source/util/gmessages.cpp
 
 HEADERS  += \
     source/galaxy/rasterizer.h \
@@ -58,6 +59,7 @@ HEADERS  += \
     source/galaxy/galaxycomponent.h \
     source/noise/simplexnoise.h \
     source/glwidget.h \
-    source/mainwindow.h
+    source/mainwindow.h \
+    source/util/gmessages.h
 
 FORMS    += mainwindow.ui

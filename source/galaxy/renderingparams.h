@@ -16,6 +16,7 @@ public:
     void setRayStep(float rayStep);
 
     int m_size = 128; // pixels
+    int m_previewSize = 64;
     float m_exposure = 1;
     float m_gamma = 1;
     float m_saturation = 1;
@@ -29,7 +30,7 @@ public:
 
     friend QDataStream& operator << ( QDataStream & s, RenderingParams& cp) {
         s << cp.camera();
-        s << cp.m_size << cp.m_exposure << cp.m_gamma << cp.m_saturation << cp.m_detailLevel;
+        s << cp.m_size << cp.m_previewSize << cp.m_exposure << cp.m_gamma << cp.m_saturation << cp.m_detailLevel;
         s << cp.m_noiseDetail << cp.m_noStars << cp.m_starSize << cp.m_starSizeSpread;
         s << cp.m_starStrength << cp.m_rayStep;
         return s;
@@ -39,13 +40,16 @@ public:
         GamerCamera camera;
         s >> camera;
         cp.setCamera(camera);
-        s >> cp.m_size >> cp.m_exposure >> cp.m_gamma >> cp.m_saturation >> cp.m_detailLevel;
+        s >> cp.m_size >> cp.m_previewSize >> cp.m_exposure >> cp.m_gamma >> cp.m_saturation >> cp.m_detailLevel;
         s >> cp.m_noiseDetail >> cp.m_noStars >> cp.m_starSize >> cp.m_starSizeSpread;
         s >> cp.m_starStrength >> cp.m_rayStep;
         return s;
     }
     void Save(QString filename);
     void Load(QString filename);
+
+    int previewSize() const;
+    void setPreviewSize(int previewSize);
 
 private:
     float m_idx;

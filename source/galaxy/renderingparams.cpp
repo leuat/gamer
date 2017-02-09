@@ -60,3 +60,13 @@ void RenderingParams::Load(QString filename)
     file.close();
 }
 
+
+int RenderingParams::previewSize() const
+{
+    return m_previewSize;
+}
+
+void RenderingParams::setPreviewSize(int previewSize)
+{
+    m_previewSize = previewSize;
+}

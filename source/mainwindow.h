@@ -5,6 +5,7 @@
 #include <QWindow>
 #include <QTimer>
 #include "source/galaxy/rasterizer.h"
+#include "source/galaxy/renderingparams.h"
 #include "source/galaxy/galaxy.h"
 #include "source/galaxy/galaxycomponent.h"
 
@@ -31,7 +32,6 @@ private slots:
 
     void on_btnNewComponent_clicked();
 
-    void on_cmbComponentType_currentIndexChanged(const QString &arg1);
 
     void on_cmbComponentType_activated(const QString &arg1);
 
@@ -86,12 +86,16 @@ private slots:
 
     void on_leRayStep_editingFinished();
 
+    void on_btnAbort_clicked();
+
 private:
     Ui::MainWindow *ui;
-    Rasterizer m_rasterizer;
+    Rasterizer* m_rasterizer = nullptr;
+    RenderingParams m_renderingParams;
     Galaxy m_galaxy;
     ComponentParams* m_curComponentParams = nullptr;
     QBasicTimer m_timer;
+
     void PrepareNewGalaxy();
 
     QTimer* timer;
@@ -109,6 +113,11 @@ private:
     void UpdateRenderingParamsData();
 
     void Render();
+    void RenderDirect();
+    void RenderPreview(int size);
+
+    void EnableGUIEditing(bool value);
+
     QString m_RenderParamsFilename = "RenderParams.dat";
 
 public slots:

@@ -127,6 +127,6 @@ GalaxyParams::GalaxyParams() {
     m_arm3 = M_PI/2.0;
     m_arm4 = M_PI + M_PI/2.0;
 
-    m_randShiftX = 1;//(int)((Random.value*1001.1f));
-    m_randShiftY = 2;//(int)((Random.value*1001.9f));
+    m_randShiftX = random()%1024;
+    m_randShiftY = random()%1023;
 }

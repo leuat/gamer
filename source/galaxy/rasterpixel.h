@@ -6,7 +6,6 @@ class RasterPixel {
 private:
     QVector3D m_I = QVector3D(0,0,0);
 
-
 public:
     float winding, radius;
 

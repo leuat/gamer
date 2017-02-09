@@ -7,21 +7,25 @@
 #include <QMessageBox>
 #include "source/galaxy/spectrum.h"
 #include <QElapsedTimer>
+#include "source/util/gmessages.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    ui->myGLWidget->setRenderingParams(&m_rasterizer.getRenderingParams());
+
+    GMessages::Initialize(ui->lstMessages);
+    m_rasterizer = new Rasterizer(&m_renderingParams);
+    ui->myGLWidget->setRenderingParams(&m_renderingParams);
     Spectra::PopulateSpectra();
     PopulateImageSize();
     m_galaxy.AddComponent();
     PrepareNewGalaxy();
     // Adding a single galaxy to the rasterizer
-    m_rasterizer.AddGalaxy(new GalaxyInstance(&m_galaxy, m_galaxy.galaxyParams().name(),
+    m_rasterizer->AddGalaxy(new GalaxyInstance(&m_galaxy, m_galaxy.galaxyParams().name(),
                                               QVector3D(0,0,0), QVector3D(0,1,0).normalized(), 1, 0)  );
-    m_rasterizer.getRenderingParams().Load(m_RenderParamsFilename);
+    m_renderingParams.Load(m_RenderParamsFilename);
     UpdateRenderingParamsGUI();
 
     timer = new QTimer(this);
@@ -53,7 +57,7 @@ void MainWindow::on_actionLoad_triggered()
         return;
     }
     PrepareNewGalaxy();
-
+    RenderPreview(m_renderingParams.previewSize());
 }
 
 void MainWindow::on_actionSave_triggered()
@@ -172,40 +176,93 @@ void MainWindow::UpdateGUI()
 
 void MainWindow::UpdateRenderingParamsGUI()
 {
-//    qDebug() << m_rasterizer.getRenderingParams().size();
-    ui->cmbImageSize->setCurrentText(QString::number(m_rasterizer.getRenderingParams().size()));
-    ui->leRayStep->setText( QString::number(m_rasterizer.getRenderingParams().rayStep()));
+//    qDebug() << m_renderingParams.size();
+    ui->cmbImageSize->setCurrentText(QString::number(m_renderingParams.size()));
+    ui->leRayStep->setText( QString::number(m_renderingParams.rayStep()));
 }
 
 void MainWindow::UpdateRenderingParamsData()
 {
-    m_rasterizer.getRenderingParams().setSize(ui->cmbImageSize->currentText().toInt());
-    m_rasterizer.getRenderingParams().setRayStep(ui->leRayStep->text().toFloat());
-    m_rasterizer.setNewSize(m_rasterizer.getRenderingParams().size());
-    m_rasterizer.getRenderingParams().Save(m_RenderParamsFilename);
+    m_renderingParams.setSize(ui->cmbImageSize->currentText().toInt());
+    m_renderingParams.setRayStep(ui->leRayStep->text().toFloat());
+    m_rasterizer->setNewSize(m_renderingParams.size());
+    m_renderingParams.Save(m_RenderParamsFilename);
 }
 
 void MainWindow::Render()
 {
-    m_rasterizer.getRenderingParams().Save(m_RenderParamsFilename);
-    QElapsedTimer timer;
-    timer.start();
-    m_rasterizer.Render();
-    qDebug() << "Rendering took " << timer.elapsed()/1000.0 << " seconds";
-    ui->myGLWidget->SetTexture(m_rasterizer.getBuffer());
+    EnableGUIEditing(false);
+    m_renderingParams.Save(m_RenderParamsFilename);
+    m_rasterizer->Render();
 
 }
 
+void MainWindow::RenderDirect()
+{
+    m_rasterizer->RenderDirect();
+    ui->myGLWidget->SetTexture(m_rasterizer->getBuffer());
+
+}
+
+void MainWindow::RenderPreview(int size)
+{
+    int oldSize = m_renderingParams.size();
+    float oldStep = m_renderingParams.rayStep();
+    m_renderingParams.setRayStep(0.01);
+    m_rasterizer->setNewSize(size);
+    RenderDirect();
+    m_rasterizer->setNewSize(oldSize);
+    m_renderingParams.setRayStep(oldStep);
+}
+
+void MainWindow::EnableGUIEditing(bool value)
+{
+    ui->renderButton->setEnabled(value);
+    ui->btnNewComponent->setEnabled(value);
+    ui->btnNewComponent_2->setEnabled(value);
+    ui->leArm->setEnabled(value);
+    ui->leArm1->setEnabled(value);
+    ui->leArm2->setEnabled(value);
+    ui->leArm3->setEnabled(value);
+    ui->leArm4->setEnabled(value);
+    ui->leDelta->setEnabled(value);
+    ui->leGalaxyName->setEnabled(value);
+    ui->leNoArms->setEnabled(value);
+    ui->leNoiseOffset->setEnabled(value);
+    ui->leNoiseTilt->setEnabled(value);
+    ui->lePersistence->setEnabled(value);
+    ui->leR0->setEnabled(value);
+    ui->leRayStep->setEnabled(value);
+    ui->leScale->setEnabled(value);
+    ui->leStrength->setEnabled(value);
+    ui->leWinding->setEnabled(value);
+    ui->leWindingB->setEnabled(value);
+    ui->leWindingN->setEnabled(value);
+    ui->leZ0->setEnabled(value);
+    ui->cmbComponents->setEnabled(value);
+    ui->cmbComponentType->setEnabled(value);
+    ui->cmbImageSize->setEnabled(value);
+    ui->cmbSpectrum->setEnabled(value);
+    ui->chkIsActive->setEnabled(value);
+}
+
+
 void MainWindow::loop()
 {
-//    qDebug() << "WHY NOT CALL ME DUDE";
-//    qDebug() << "other: " << ui->myGLWidget->redraw();
+    if (m_rasterizer->getState()==Rasterizer::State::done) {
+        ui->myGLWidget->SetTexture(m_rasterizer->getBuffer());
+        EnableGUIEditing(true);
+        m_rasterizer->setState(Rasterizer::State::idle);
+    }
+    if (m_rasterizer->getState()==Rasterizer::State::rendering)
+        ui->myGLWidget->SetTexture(m_rasterizer->getBuffer());
+
+    ui->pgbRendering->setValue((int)(m_rasterizer->getPercentDone()*100.0)+1);
+
+    // Preview image
     if (ui->myGLWidget->redraw()) {
-        int oldSize = m_rasterizer.getRenderingParams().size();
-        m_rasterizer.setNewSize(64);
-        Render();
-        m_rasterizer.setNewSize(oldSize);
-        m_rasterizer.getRenderingParams().Save(m_RenderParamsFilename);
+        RenderPreview(m_renderingParams.previewSize());
+        m_renderingParams.Save(m_RenderParamsFilename);
 
     }
 }
@@ -215,10 +272,6 @@ void MainWindow::on_btnNewComponent_clicked()
     m_curComponentParams = m_galaxy.AddComponent();
     UpdateGUI();
     UpdateComponentsGUI();
-}
-
-void MainWindow::on_cmbComponentType_currentIndexChanged(const QString &arg1)
-{
 }
 
 void MainWindow::on_cmbComponentType_activated(const QString &arg1)
@@ -380,4 +433,11 @@ void MainWindow::on_cmbImageSize_activated(const QString &arg1)
 void MainWindow::on_leRayStep_editingFinished()
 {
     UpdateRenderingParamsData();
+}
+
+void MainWindow::on_btnAbort_clicked()
+{
+    m_rasterizer->Abort();
+    EnableGUIEditing(true);
+
 }

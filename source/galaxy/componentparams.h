@@ -36,19 +36,19 @@ public:
         return s;
     }
 
-    ComponentParams(float s, float a, float z, float r0, float winding) { //, CGraph* g) {
-            m_strength = s;
-            m_arm = a;
-            m_z0 = z;
-            m_r0 = r0;
+    ComponentParams(float s, float a, float z, float r0) { //, CGraph* g) {
+        m_strength = s;
+        m_arm = a;
+        m_z0 = z;
+        m_r0 = r0;
     }
 
 
     ComponentParams() {
-            m_arm = 1.0f;
-            m_strength = 1.0f;
-            m_z0 = 0.02f;
-            m_className = "Bulge";
+        m_arm = 1.0f;
+        m_strength = 1.0f;
+        m_z0 = 0.02f;
+        m_className = "Bulge";
     }
     QString className() const;
     void setClassName(const QString &className);

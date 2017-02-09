@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1079</width>
-    <height>721</height>
+    <width>1051</width>
+    <height>756</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -58,6 +58,18 @@
         <height>41</height>
        </rect>
       </property>
+      <property name="toolTip">
+       <string>Image size squared</string>
+      </property>
+      <property name="toolTipDuration">
+       <number>-1</number>
+      </property>
+      <property name="statusTip">
+       <string/>
+      </property>
+      <property name="whatsThis">
+       <string>Huh?</string>
+      </property>
      </widget>
      <widget class="QLabel" name="label_23">
       <property name="geometry">
@@ -80,6 +92,9 @@
         <width>113</width>
         <height>21</height>
        </rect>
+      </property>
+      <property name="toolTip">
+       <string>Ray tracing step length: 0.01 for preview, 0.001 for small images, 0.0001 for close-up large images</string>
       </property>
       <property name="inputMask">
        <string>0.00000</string>
@@ -747,7 +762,7 @@
     <property name="geometry">
      <rect>
       <x>460</x>
-      <y>50</y>
+      <y>10</y>
       <width>571</width>
       <height>591</height>
      </rect>
@@ -756,14 +771,96 @@
    <widget class="QPushButton" name="renderButton">
     <property name="geometry">
      <rect>
-      <x>22</x>
-      <y>620</y>
-      <width>391</width>
+      <x>20</x>
+      <y>610</y>
+      <width>191</width>
       <height>32</height>
      </rect>
     </property>
     <property name="text">
      <string>Render</string>
+    </property>
+   </widget>
+   <widget class="QProgressBar" name="pgbRendering">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>640</y>
+      <width>411</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="maximum">
+     <number>100</number>
+    </property>
+    <property name="value">
+     <number>0</number>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btnAbort">
+    <property name="geometry">
+     <rect>
+      <x>250</x>
+      <y>610</y>
+      <width>191</width>
+      <height>32</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Abort</string>
+    </property>
+   </widget>
+   <widget class="QListWidget" name="lstMessages">
+    <property name="geometry">
+     <rect>
+      <x>460</x>
+      <y>610</y>
+      <width>571</width>
+      <height>81</height>
+     </rect>
+    </property>
+    <property name="palette">
+     <palette>
+      <active>
+       <colorrole role="Base">
+        <brush brushstyle="SolidPattern">
+         <color alpha="255">
+          <red>231</red>
+          <green>234</green>
+          <blue>234</blue>
+         </color>
+        </brush>
+       </colorrole>
+      </active>
+      <inactive>
+       <colorrole role="Base">
+        <brush brushstyle="SolidPattern">
+         <color alpha="255">
+          <red>231</red>
+          <green>234</green>
+          <blue>234</blue>
+         </color>
+        </brush>
+       </colorrole>
+      </inactive>
+      <disabled>
+       <colorrole role="Base">
+        <brush brushstyle="SolidPattern">
+         <color alpha="255">
+          <red>237</red>
+          <green>237</green>
+          <blue>237</blue>
+         </color>
+        </brush>
+       </colorrole>
+      </disabled>
+     </palette>
+    </property>
+    <property name="font">
+     <font>
+      <family>Courier New</family>
+      <pointsize>10</pointsize>
+     </font>
     </property>
    </widget>
   </widget>
@@ -772,7 +869,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1079</width>
+     <width>1051</width>
      <height>22</height>
     </rect>
    </property>

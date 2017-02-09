@@ -4,7 +4,6 @@
 #include <QString>
 #include <QMatrix4x4>
 #include <QVector>
-//#include "source/galaxy/component.h"
 #include "source/galaxy/galaxyparams.h"
 #include "source/galaxy/componentparams.h"
 
@@ -15,11 +14,7 @@ private:
 
     GalaxyParams m_galaxyParams;
     QString m_displayName = "";
-    // Rotation matrix
     QMatrix4x4 m_rotation;
-    // pointer to spectra
-    //	CSpectra* spectra;
-    // galaxy components
     QVector<ComponentParams*> m_componentParams;
     QVector<GalaxyComponent*> m_components;
 
@@ -27,7 +22,7 @@ public:
 
     void SetupComponents();
     ComponentParams* AddComponent();
-	
+
     Galaxy() {}
 
     Galaxy(GalaxyParams* param, QString displayName, QVector<ComponentParams*> componentParams);

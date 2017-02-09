@@ -57,20 +57,13 @@ public:
 
     void RotateUp(float r);
 
-
-    void RotateXY(float delta) {
-        //gamer.rast.RP.camera.RotateVertical(delta.x*10);
-        // gamer.rast.RP.camera.RotateHorisontal(delta.y*10);
-
-    }
-
     QMatrix4x4 GetRotationMatrix();
     void setupViewmatrix();
 
     void RotateVertical(float angle);
     void RotateHorisontal(float angle);
 
-    QVector3D coord2ray(float x, float y, float width, float height);
+    QVector3D coord2ray(float x, float y, float width);
 
 
     QMatrix4x4& viewMatrix();

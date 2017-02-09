@@ -79,7 +79,7 @@ double* Noise::generateSpectralWeights (double lacunarity,
 //
 // Not really used, but could be useful for nice dust patterns
 //
-double Noise::getRidgedMf(QVector3D p, float frequency, int octaves, float lacunarity, float warp, float offset, float gain)
+double Noise::getRidgedMf(QVector3D p, float frequency, int octaves, float lacunarity, float offset, float gain)
 {
     double value = 0.0;
     double weight = 1.0;

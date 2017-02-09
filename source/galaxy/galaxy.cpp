@@ -3,6 +3,7 @@
 #include "source/galaxy/galaxycomponents.h"
 #include <QFile>
 #include <QDataStream>
+#include "source/util/gmessages.h"
 
 
 
@@ -65,14 +66,14 @@ void Galaxy::setGalaxyParams(const GalaxyParams &galaxyParams)
 
 void Galaxy::SetupSpectra()
 {
+    GMessages::Debug("Setting up components");
     for (GalaxyComponent* gc : m_components) {
         gc->setSpectrum(Spectra::FindSpectrum(gc->getComponentParams().spectrum()));
-            if (gc->getSpectrum() == nullptr) {
-                qDebug() << "ERROR Could not find spectrum : " << gc->getComponentParams().spectrum();
-                exit(1);
-            }
+        if (gc->getSpectrum() == nullptr) {
+            qDebug() << "ERROR Could not find spectrum : " << gc->getComponentParams().spectrum();
+            exit(1);
         }
-
+    }
 }
 
 void Galaxy::SetupComponents() {
@@ -85,15 +86,7 @@ void Galaxy::SetupComponents() {
     }
     SetupSpectra();
 }
-/*	public void SetupSpectra() {
-    foreach (GalaxyComponent gc in components) {
-        gc.spectrum = Spectra.FindSpectrum(gc.componentParams.spectrum);
-        if (gc.spectrum == null) {
-            Debug.Log ("ERROR Could not find spectrum : " + gc.componentParams.spectrum);
-        }
-    }
-}
-*/
+
 ComponentParams* Galaxy::AddComponent() {
     ComponentParams* cp = new ComponentParams();
     cp->setClassName("bulge");
@@ -136,18 +129,9 @@ void Galaxy::Save(QString filename)
 
     file.flush();
     file.close();
-
+    GMessages::Message("Saved galaxy to '" +filename +"'.");
 }
 
-
-/*	public static void Save(string filename, Galaxy g) {
-    XmlSerializer serializer = new XmlSerializer(typeof(Galaxy));
-    TextWriter textWriter = new StreamWriter(filename);
-    serializer.Serialize(textWriter, g);
-    textWriter.Close();
-
-}
-*/
 bool Galaxy::Load(QString filename) {
     QFile file(filename);
     if(!file.open(QIODevice::ReadOnly)) {
@@ -160,5 +144,7 @@ bool Galaxy::Load(QString filename) {
 
     file.close();
     SetupComponents();
+    GMessages::Message("Loaded galaxy '" +filename +"'.");
+
     return true;
 }

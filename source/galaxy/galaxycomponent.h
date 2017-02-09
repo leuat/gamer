@@ -21,24 +21,8 @@ protected:
     ComponentParams m_componentParams;
     ComponentSpectrum* m_spectrum = nullptr;
 
-    float m_keep;
-		
-    float m_strength;
-		
-    float m_average, m_count;
-		
-    float m_bulgeDust;
-		
-    float m_noiseVal = 0;
-
-//    float m_workTheta, m_workRad, m_workWinding, m_workLength;
     GalaxyInstance* m_currentGI = nullptr;
     QVector3D m_dAdd = QVector3D(0,0,0);
-
-		
-//    float m_winding;
-//    float m_currentRadius;
-		
 
 public:
 
@@ -55,9 +39,9 @@ public:
     float getRadialIntensity(const float rad);
     float getRadius(QVector3D p, QVector3D& P, float& dott, GalaxyInstance* gi);
     QVector3D twirl( QVector3D& p,  const float twirl);
-    float getPerlinCloudNoise(QVector3D& p, const float rad, const float t, const int NN, const float ks, const float pers);
+    float getPerlinCloudNoise(QVector3D& p, const float t, const int NN, const float ks, const float pers);
     float findDifference( float t1,  float t2);
-    float calculateArmValue( float rad,  QVector3D P,  float armStrength);
+    float calculateArmValue( float rad,  const QVector3D& P);
     float getArm( float rad,  QVector3D p,  float disp);
     float getTheta( QVector3D p );
     float getWinding( float rad);

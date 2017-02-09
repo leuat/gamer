@@ -5,8 +5,6 @@
 #include <QQuaternion>
 #include "source/galaxy/galaxy.h"
 
-//class Galaxy;
-
 class GalaxyInstance {
 private:
     Galaxy* m_galaxy;
@@ -21,7 +19,6 @@ public:
     Galaxy* GetGalaxy() {
         return m_galaxy;
     }
-
 
     float m_workTheta, m_workRad, m_workWinding, m_workLength;
     float m_winding;
