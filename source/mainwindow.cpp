@@ -8,6 +8,8 @@
 #include "source/galaxy/spectrum.h"
 #include <QElapsedTimer>
 #include "source/util/gmessages.h"
+#include <QDirIterator>
+
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -100,6 +102,20 @@ void MainWindow::PopulateImageSize()
     ui->cmbPreviewSize->addItems(l);
 }
 
+void MainWindow::PopulateGalaxyList()
+{
+    QDirIterator it(m_renderingParams.galaxyDirectory(),
+                    QStringList() << "*.gax", QDir::Files, QDirIterator::Subdirectories);
+    ui->lstGalaxies->clear();
+
+    while (it.hasNext()) {
+        QString filename = it.next();
+        QString name = filename.split("/").last();
+        qDebug() << filename;
+        ui->lstGalaxies->addItem(name);
+    }
+}
+
 void MainWindow::UpdateGalaxyGUI()
 {
     ui->leGalaxyName->setText(m_galaxy.galaxyParams().name());
@@ -187,6 +203,10 @@ void MainWindow::UpdateRenderingParamsGUI()
     ui->cmbImageSize->setCurrentText(QString::number(m_renderingParams.size()));
     ui->cmbPreviewSize->setCurrentText(QString::number(m_renderingParams.previewSize()));
     ui->leRayStep->setText( QString::number(m_renderingParams.rayStep()));
+    ui->leGalaxyDir->setText(m_renderingParams.galaxyDirectory());
+    ui->leSceneDir->setText(m_renderingParams.sceneDirectory());
+    PopulateGalaxyList();
+
 }
 
 void MainWindow::UpdateRenderingParamsData()
@@ -195,6 +215,8 @@ void MainWindow::UpdateRenderingParamsData()
     m_renderingParams.setPreviewSize(ui->cmbPreviewSize->currentText().toInt());
     m_renderingParams.setRayStep(ui->leRayStep->text().toFloat());
     m_rasterizer->setNewSize(m_renderingParams.size());
+    m_renderingParams.setGalaxyDirectory(ui->leGalaxyDir->text());
+    m_renderingParams.setSceneDirectory(ui->leSceneDir->text());
     m_renderingParams.Save(m_RenderParamsFilename);
 }
 
@@ -263,6 +285,7 @@ void MainWindow::EnableGUIEditing(bool value)
 
 void MainWindow::loop()
 {
+//    qDebug() << m_renderingParams.camera().target();
     if (m_rasterizer->getState()==Rasterizer::State::done) {
         ui->myGLWidget->SetTexture(m_rasterizer->getBuffer());
         EnableGUIEditing(true);
@@ -460,4 +483,25 @@ void MainWindow::on_cmbPreviewSize_activated(const QString &arg1)
 {
     UpdateRenderingParamsData();
 
+}
+
+void MainWindow::on_leGalaxyDir_editingFinished()
+{
+    UpdateRenderingParamsData();
+}
+
+void MainWindow::on_leScenedir_editingFinished()
+{
+    UpdateRenderingParamsData();
+
+}
+
+void MainWindow::on_lstGalaxies_itemDoubleClicked(QListWidgetItem *item)
+{
+    QString filename = m_renderingParams.galaxyDirectory() + item->text();
+    m_galaxy.Load(filename);
+    RenderPreview(m_renderingParams.previewSize());
+    qDebug() << "camera. " << m_renderingParams.camera().camera();
+    qDebug() << "target: " << m_renderingParams.camera().target();
+//    qDebug() << item->text();
 }

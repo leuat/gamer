@@ -119,3 +119,4 @@ float Util::smoothstep(float edge0, float edge1, float x)
     // Evaluate polynomial
     return x*x*(3 - 2 * x);
 }
+

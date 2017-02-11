@@ -159,3 +159,25 @@ void Noise::calculate_statistics(double N, std::string filename) {
     }
 
 }
+
+double Noise::octave_noise_3d(const double octaves, const double persistence, const double scale, const double x, const double y, const double z)
+{
+    double total = 0;
+    double frequency = scale;
+    double amplitude = 1;
+    // We have to keep track of the largest possible amplitude,
+    // because each octave adds more, and we need a value in [-1, 1].
+    double maxAmplitude = 0;
+
+    for( int i=0; i < octaves; i++ ) {
+        total += raw_3d( x * frequency, y * frequency, z * frequency ) * amplitude;
+
+        frequency *= 2;
+        maxAmplitude += amplitude;
+        amplitude *= persistence;
+    }
+
+    return total / maxAmplitude;
+}
+
+

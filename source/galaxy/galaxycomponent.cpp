@@ -1,6 +1,5 @@
 ﻿#include "source/galaxy/galaxycomponent.h"
 #include "source/util/util.h"
-#include "source/noise/simplexnoise.h"
 
 ComponentParams& GalaxyComponent::getComponentParams()
 {
@@ -119,7 +118,7 @@ QVector3D GalaxyComponent::twirl( QVector3D& p,  const float twirl) {
 float GalaxyComponent::getPerlinCloudNoise(QVector3D& p, const float t, const int NN, const float ks, const float pers)
 {
     QVector3D r = twirl(p, t);
-    return octave_noise_3d(NN, pers, ks * 0.1f, r.x(), r.y(), r.z());
+    return m_galaxyParams->noise()->octave_noise_3d(NN, pers, ks * 0.1f, r.x(), r.y(), r.z());
     // return IQNoise.octave_noise_3d(NN, pers, ks * 0.1f, r.x, r.y, r.z);
 }
 

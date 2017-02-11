@@ -1,6 +1,8 @@
 ﻿#include <QMatrix3x3>
 #include "source/galaxy/gamercamera.h"
 #include "math.h"
+#include <QVector2D>
+#include <QOpenGLFunctions>
 
 QVector3D& GamerCamera::camera()
 {
@@ -168,13 +170,14 @@ void GamerCamera::setupViewmatrix() {
     M(3,2) = -m_camera.z();
 
 
+//    qDebug() << M;
 
-/*    m_viewMatrix = m_rotMatrix*M;
-    QMatrix4x4 M;
-    M.lookAt(m_camera, m_target, m_up);
-    qDebug() << M;*/
-    m_viewMatrix = M;//m_rotMatrix*M;
-    m_viewMatrixInv = m_viewMatrix.inverted();
+    m_viewMatrix = m_rotMatrix*M;
+//    QMatrix4x4 M;
+//    M.lookAt(m_camera, m_target, m_up);
+   // qDebug() << M;
+    m_viewMatrix = M;
+    //m_viewMatrix = m_viewMatrix.inverted();
 }
 
 void GamerCamera::RotateVertical(float angle) {
@@ -195,6 +198,15 @@ void GamerCamera::RotateHorisontal(float angle) {
     m_up = QVector3D::crossProduct(d, side).normalized();
 }
 
+/*QVector3D GamerCamera::coord2ray(float x, float y, float width) {
+    QMatrix4x4 projection;
+    projection.perspective(m_perspective, 1, 0.1, 120.0);
+    QRect qr = QRect(0,0,20, 20);
+//    QRect qr = QRect(view[0],view[1],view[2],view[3]);
+
+    return QVector3D(x,y,0).unproject(viewMatrix(),projection,qr);
+}
+*/
 QVector3D GamerCamera::coord2ray(float x, float y, float width) {
 
     float aspect_ratio = 1;
@@ -204,7 +216,7 @@ QVector3D GamerCamera::coord2ray(float x, float y, float width) {
 
     float far = 10;
 
-    QVector3D Pfar = QVector3D(dx*far, dy*far, -far);
+    QVector3D Pfar = QVector3D(dx*far, dy*far, far);
     QVector3D res = m_viewMatrix*Pfar;
     res = res.normalized();
 

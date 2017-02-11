@@ -90,6 +90,13 @@ private slots:
 
     void on_cmbPreviewSize_activated(const QString &arg1);
 
+    void on_leGalaxyDir_editingFinished();
+
+    void on_leScenedir_editingFinished();
+
+
+    void on_lstGalaxies_itemDoubleClicked(QListWidgetItem *item);
+
 private:
     Ui::MainWindow *ui;
     Rasterizer* m_rasterizer = nullptr;
@@ -105,6 +112,7 @@ private:
     void PopulateCmbComponentTypes();
     void PopulateCmbSpectra();
     void PopulateImageSize();
+    void PopulateGalaxyList();
 
     void UpdateGalaxyGUI();
     void UpdateGalaxyData();

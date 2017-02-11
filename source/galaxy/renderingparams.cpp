@@ -32,6 +32,36 @@ void RenderingParams::setRayStep(float rayStep)
     m_rayStep = rayStep;
 }
 
+QString RenderingParams::currentGalaxy() const
+{
+    return m_currentGalaxy;
+}
+
+void RenderingParams::setCurrentGalaxy(const QString &currentGalaxy)
+{
+    m_currentGalaxy = currentGalaxy;
+}
+
+QString RenderingParams::sceneDirectory() const
+{
+    return m_sceneDirectory;
+}
+
+void RenderingParams::setSceneDirectory(const QString &sceneDirectory)
+{
+    m_sceneDirectory = sceneDirectory;
+}
+
+QString RenderingParams::galaxyDirectory() const
+{
+    return m_galaxyDirectory;
+}
+
+void RenderingParams::setGalaxyDirectory(const QString &galaxyDirectory)
+{
+    m_galaxyDirectory = galaxyDirectory;
+}
+
 void RenderingParams::Save(QString filename)
 {
     QFile file(filename);
@@ -49,6 +79,7 @@ void RenderingParams::Save(QString filename)
 
 void RenderingParams::Load(QString filename)
 {
+//    qDebug() << "TAR" << camera().target();
     QFile file(filename);
     if(!file.open(QIODevice::ReadOnly)) {
         return;

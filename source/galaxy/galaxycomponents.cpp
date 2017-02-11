@@ -68,24 +68,25 @@ void GalaxyComponentDust::componentIntensity(RasterPixel* rp, QVector3D& p, floa
 }
 
 void GalaxyComponentStars::componentIntensity(RasterPixel* rp, QVector3D& r, float ival) {
-    /*	float perlinnoise = Mathf.Abs(Util.Simplex.octave_noise_3d(14,componentParams.ks,0.01f*componentParams.scale,r.x,r.y,r.z));
+    float perlinnoise = abs(m_galaxyParams->noise()->octave_noise_3d(14,m_componentParams.ks(),0.01f*m_componentParams.scale(),r.x(),r.y(),r.z()));
 
-            float addNoise = 0;
-            if (componentParams.noiseOffset != 0)
-            {
-                addNoise = (componentParams.noiseOffset * getPerlinCloudNoise(r * 2, currentRadius, winding, 4, 2, -2));
-                addNoise += 0.5f * (componentParams.noiseOffset * getPerlinCloudNoise(r * 2, currentRadius, winding * 0.5f, 4, 4, -2));
-            }
-            float val = Mathf.Abs(Mathf.Pow(perlinnoise+1 + addNoise,componentParams.noiseTilt));
-            //            val = perlinnoise;
+    float addNoise = 0;
+    if (m_componentParams.noiseOffset() != 0)
+    {
 
-            rp.I +=  ival * val * spectrum.spectrum *rp.scale;
+        addNoise = (m_componentParams.noiseOffset() * getPerlinCloudNoise(r,  rp->winding, 4, 2, -2));
+        addNoise += 0.5f * (m_componentParams.noiseOffset() * getPerlinCloudNoise(r,  rp->winding * 0.5f, 4, 4, -2));
+    }
+    float val = abs(pow(perlinnoise+1 + addNoise,m_componentParams.noiseTilt()));
+    //            val = perlinnoise;
 
+    rp->setI(rp->I() +  ival * val * m_spectrum->spectrum() *rp->scale);
 
-        }
-    */
 
 }
+
+
+
 
 
 

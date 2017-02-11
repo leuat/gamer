@@ -120,6 +120,16 @@ void GalaxyParams::setName(const QString &name)
     m_name = name;
 }
 
+Noise *GalaxyParams::noise() const
+{
+    return m_noise;
+}
+
+void GalaxyParams::setNoise(Noise *noise)
+{
+    m_noise = noise;
+}
+
 GalaxyParams::GalaxyParams() {
     m_noArms = 2;
     m_arm1 = 0;

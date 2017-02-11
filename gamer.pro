@@ -10,10 +10,9 @@ QT += gui
 
 #lQMAKE_CC = gcc-6
 #QMAKE_CXX = g++-6
-QMAKE_CXXFLAGS+= -fopenmp
+QMAKE_CXXFLAGS+= -fopenmp -O2
 QMAKE_LFLAGS +=  -fopenmp
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
-
 TARGET = Gamer
 TEMPLATE = app
 
@@ -38,7 +37,8 @@ SOURCES += \
     source/glwidget.cpp \
     source/main.cpp \
     source/mainwindow.cpp \
-    source/util/gmessages.cpp
+    source/util/gmessages.cpp \
+    source/noise/iqnoise.cpp
 
 HEADERS  += \
     source/galaxy/rasterizer.h \
@@ -60,6 +60,7 @@ HEADERS  += \
     source/noise/simplexnoise.h \
     source/glwidget.h \
     source/mainwindow.h \
-    source/util/gmessages.h
+    source/util/gmessages.h \
+    source/noise/iqnoise.h
 
 FORMS    += mainwindow.ui

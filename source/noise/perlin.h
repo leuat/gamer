@@ -23,22 +23,6 @@ public:
         init();
     }
 
-
-    /*  double Get(const double x,const double y)
-  {
-    vec2[0] = x;
-    vec2[1] = y;
-    return perlin_noise_2D(vec2);
-  };
-
-  double Get(const double x,const double y, const double z)
-  {
-    vec3[0] = x;
-    vec3[1] = y;
-    vec3[2] = z;
-    return perlin_noise_3D(vec3);
-  };
-  */
     double raw_2d(const double& x, const double& y) {
         vec2[0] = x;
         vec2[1] = y;

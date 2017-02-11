@@ -3,6 +3,7 @@
 #include "math.h"
 #include <QVector3D>
 #include <QDataStream>
+#include "source/noise/noise.h"
 
 class GalaxyParams {
 public:
@@ -10,7 +11,6 @@ public:
     QVector3D m_axis = QVector3D(1,1,1);
     float m_bulgeDust = 0.025f;
     QVector3D m_bulgeAxis = QVector3D(1,1,1);
-
 
     float m_windingB = 0.5f;
     float m_windingN = 4;
@@ -40,9 +40,13 @@ public:
         return s;
     }
 
+private:
+
     int m_randShiftX, m_randShiftY;
 
     float m_diskStarModifier;
+    Noise* m_noise = nullptr;
+
 
 public:
     GalaxyParams();
@@ -70,6 +74,8 @@ public:
     void setBulgeAxis(const QVector3D &bulgeAxis);
     QString name() const;
     void setName(const QString &name);
+    Noise *noise() const;
+    void setNoise(Noise *noise);
 };
 
 

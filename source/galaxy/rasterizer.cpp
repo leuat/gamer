@@ -112,8 +112,11 @@ void Rasterizer::Prepare() {
             );
             //            buffer = new ColorBuffer2D(m_renderingParams->size, m_renderingParams->size);
 */
-    for (GalaxyInstance* gi : m_galaxies)
+
+    for (GalaxyInstance* gi : m_galaxies) {
+        gi->GetGalaxy()->galaxyParams().setNoise(m_noise);
         gi->GetGalaxy()->SetupComponents();
+    }
 
     prepareBuffer();
     prepareRenderList();
@@ -291,7 +294,8 @@ QVector3D Rasterizer::setupCamera(int idx) {
     int i = idx%(int)m_renderingParams->size();
     int j = (idx-i)/(int)m_renderingParams->size();
 
-    return m_renderingParams->camera().coord2ray(i,j, m_renderingParams->size())*-1;
+
+    return m_renderingParams->camera().coord2ray(i,j, m_renderingParams->size());
 }
 
 RasterPixel* Rasterizer::renderPixel(QVector3D dir, QVector<GalaxyInstance*> gals) {
@@ -299,22 +303,34 @@ RasterPixel* Rasterizer::renderPixel(QVector3D dir, QVector<GalaxyInstance*> gal
     //dir*=-1;
     RasterPixel* rp = new RasterPixel();
 
+    QVector3D viewDir = (m_renderingParams->camera().camera()-m_renderingParams->camera().target()).normalized();
+    if (QVector3D::dotProduct(viewDir,dir)<0)
+        dir*=-1;
+
     for (int i=0;i<gals.size();i++) {
         GalaxyInstance* gi = gals[i];
 
         Galaxy* g = gi->GetGalaxy();
         float t1, t2;
         bool intersects = Util::IntersectSphere(m_renderingParams->camera().camera() - gi->position(), dir,
+
                                                 g->galaxyParams().axis(), isp1, isp2, t1, t2);
+
         if (t1<0) {
             isp2 = m_renderingParams->camera().camera()- gi->position();// + m_renderingParams->direction*
         }
+
         if (t1>0 && t2>0) {
-            QVector3D kk = isp1;
+           /* QVector3D kk = isp1;
             isp1 = isp2;
             isp2= kk;
-         // intersects = false;
+            float t = t1;
+            t1 = t2;
+            t2 = t;*/
+
+            intersects = false;
         }
+
 
         if (intersects)
             getIntensity(gi, rp, isp1, isp2);

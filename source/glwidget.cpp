@@ -11,7 +11,7 @@ void GLWidget::initializeGL() {
     QSize viewport_size = size();
     initializeOpenGLFunctions();
     glViewport(0, 0, viewport_size.width(), viewport_size.height());
-
+//    qDebug() << viewport_size.width();
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     glFrustum(-1, 1, -1, 1, 5, 700); // near and far match your triangle Z distance
@@ -75,8 +75,8 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event)
     int dy = event->y() - m_lastPos.y();
     float strength = 0.5;
     if (event->buttons() & Qt::LeftButton) {
-        m_RenderingParams->camera().RotateVertical(strength*dx);
-        m_RenderingParams->camera().RotateHorisontal(strength*dy);
+        m_RenderingParams->camera().RotateVertical(strength*dy);
+        m_RenderingParams->camera().RotateHorisontal(strength*dx*-1);
         m_redraw = true;
     }
     if(QApplication::keyboardModifiers().testFlag(Qt::AltModifier)) {

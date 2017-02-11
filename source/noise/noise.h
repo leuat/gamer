@@ -41,4 +41,10 @@ public:
 
     virtual double raw_2d(const double& x, const double& y) = 0;
     virtual double raw_3d(const double& x, const double& y, const double& z) = 0;
+
+    double octave_noise_3d( const double octaves, const double persistence, const double scale, const double x, const double y, const double z );
+
+
+
+
 };

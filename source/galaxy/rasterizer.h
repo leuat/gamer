@@ -11,6 +11,9 @@
 #include "source/galaxy/rasterpixel.h"
 #include "source/noise/simplexnoise.h"
 #include "source/util/gmessages.h"
+#include "source/noise/noise.h"
+#include "source/noise/simplex.h"
+#include "source/noise/iqnoise.h"
 
 class Rasterizer : public QThread {
 public:
@@ -28,6 +31,8 @@ private:
     bool m_abort = false;
     State m_state = State::idle;
 
+    Noise* m_noise = nullptr;
+
     QMutex m_mutex;
     QWaitCondition m_condition;
 
@@ -41,6 +46,8 @@ protected:
 
     Rasterizer(RenderingParams* rp) {
         m_renderingParams = rp;
+//        m_noise = new IQnoise(1,1,1,1);
+        m_noise = new Simplex(1,1,1,1);
     }
     ~Rasterizer() {
         m_mutex.lock();

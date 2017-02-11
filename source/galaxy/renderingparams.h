@@ -27,12 +27,16 @@ public:
     float m_starStrength = 1;
     float m_rayStep = 0.001;
     QVector3D color = QVector3D(1,1,1);
+    QString m_galaxyDirectory = "galaxies/";
+    QString m_sceneDirectory = "scenes/";
+    QString m_currentGalaxy ="";
+    QString m_sceneMode ="galaxy";
 
     friend QDataStream& operator << ( QDataStream & s, RenderingParams& cp) {
         s << cp.camera();
         s << cp.m_size << cp.m_previewSize << cp.m_exposure << cp.m_gamma << cp.m_saturation << cp.m_detailLevel;
         s << cp.m_noiseDetail << cp.m_noStars << cp.m_starSize << cp.m_starSizeSpread;
-        s << cp.m_starStrength << cp.m_rayStep;
+        s << cp.m_starStrength << cp.m_rayStep << cp.m_galaxyDirectory << cp.m_sceneDirectory << cp.m_currentGalaxy << cp.m_sceneMode;
         return s;
     }
 
@@ -42,7 +46,8 @@ public:
         cp.setCamera(camera);
         s >> cp.m_size >> cp.m_previewSize >> cp.m_exposure >> cp.m_gamma >> cp.m_saturation >> cp.m_detailLevel;
         s >> cp.m_noiseDetail >> cp.m_noStars >> cp.m_starSize >> cp.m_starSizeSpread;
-        s >> cp.m_starStrength >> cp.m_rayStep;
+        s >> cp.m_starStrength >> cp.m_rayStep >> cp.m_galaxyDirectory >> cp.m_sceneDirectory >> cp.m_currentGalaxy;
+        s >> cp.m_sceneMode;
         return s;
     }
     void Save(QString filename);
@@ -50,6 +55,15 @@ public:
 
     int previewSize() const;
     void setPreviewSize(int previewSize);
+
+    QString galaxyDirectory() const;
+    void setGalaxyDirectory(const QString &galaxyDirectory);
+
+    QString sceneDirectory() const;
+    void setSceneDirectory(const QString &sceneDirectory);
+
+    QString currentGalaxy() const;
+    void setCurrentGalaxy(const QString &currentGalaxy);
 
 private:
     float m_idx;
@@ -70,7 +84,6 @@ private:
     float m_rayStepNormal;
     float m_wavelength;
 
-    QString m_currentGalaxy = "";
     float m_bufferSize;
 
     float m_randomize_spectra;
