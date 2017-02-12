@@ -6,6 +6,7 @@
 #include <QVector>
 #include <math.h>
 #include <QDateTime>
+#include <QDebug>
 
 class GMessages
 {
@@ -23,6 +24,7 @@ public:
     static void Message(QString msg) {
         if (m_verbatim)
             m_messages.push_front("[ " +QDateTime::currentDateTime().toString()  + " ] " + msg);
+
         Update();
 
     }
@@ -39,9 +41,12 @@ public:
     }
 
     static void Update() {
-        if (m_widget == nullptr)
+        if (m_widget == nullptr) {
+            qDebug() << "GMessages::Update widget is null!";
             return;
+        }
         m_widget->clear();
+
         for (int i=0;i<std::min(m_messages.size(), m_maxMessageCount);i++) {
             m_widget->addItem(m_messages[i]);
         }

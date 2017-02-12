@@ -11,8 +11,20 @@
 #include <random>
 #include <QVector3D>
 #include <QImage>
+#include <QString>
 #include <QRgb>
 #include <QDirIterator>
+#include <QElapsedTimer>
+
+#define Q_TIMER_START()  \
+{                        \
+    QElapsedTimer ttimer; \
+    ttimer.start();        \
+
+#define Q_TIMER_ELAPSED(name) \
+   qDebug() << (name) << " took "<< QString::number(ttimer.elapsed()/1000.0) << " seconds"; \
+}
+
 
 using namespace std;
 

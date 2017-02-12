@@ -21,7 +21,7 @@ private:
 public:
 
     void SetupComponents();
-    ComponentParams* AddComponent();
+    ComponentParams* AddComponent(int);
 
     Galaxy() {}
 

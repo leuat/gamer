@@ -92,7 +92,6 @@ private slots:
 
     void on_leGalaxyDir_editingFinished();
 
-    void on_leScenedir_editingFinished();
 
 
     void on_lstGalaxies_itemDoubleClicked(QListWidgetItem *item);
@@ -111,6 +110,16 @@ private slots:
 
     void on_leImageDir_editingFinished();
 
+    void on_leSceneDir_editingFinished();
+
+    void on_btnDelete_clicked();
+
+    void on_btnNewComponent_2_clicked();
+
+    void on_btnClone_clicked();
+
+    void on_pushButton_clicked();
+
 private:
     Ui::MainWindow *ui;
     Rasterizer* m_rasterizer = nullptr;
@@ -118,6 +127,7 @@ private:
     Galaxy m_galaxy;
     ComponentParams* m_curComponentParams = nullptr;
     QBasicTimer m_timer;
+
     float m_postSliderScale = 30;
 
     void PrepareNewGalaxy();
@@ -147,7 +157,7 @@ private:
     void EnableGUIEditing(bool value);
 
     void SaveGalaxy();
-
+    void CreateNewGalaxy();
     QString m_RenderParamsFilename = "RenderParams.dat";
 
 public slots:

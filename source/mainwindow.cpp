@@ -10,25 +10,29 @@
 #include "source/galaxy/spectrum.h"
 #include "source/util/gmessages.h"
 #include "source/util/util.h"
+#include "dialogrendererhelp.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
-    ui->setupUi(this);
 
-    GMessages::Initialize(ui->lstMessages);
+    ui->setupUi(this);
     m_rasterizer = new Rasterizer(&m_renderingParams);
     ui->myGLWidget->setRenderingParams(&m_renderingParams);
+    GMessages::Initialize(ui->lstMessages);
     Spectra::PopulateSpectra();
     PopulateImageSize();
     m_renderingParams.Load(m_RenderParamsFilename);
     UpdateRenderingParamsGUI();
 
-    if (m_renderingParams.currentGalaxy()=="")
-        m_galaxy.AddComponent();
-    else
-        m_galaxy.Load(m_renderingParams.galaxyDirectory() + m_renderingParams.currentGalaxy() + ".gax");
+    // Try to load
+    m_galaxy.Load(m_renderingParams.galaxyDirectory() + m_renderingParams.currentGalaxy() + ".gax");
+
+    if (m_galaxy.components().size()==0) {
+        m_galaxy.AddComponent(10);
+        m_renderingParams.setCurrentGalaxy(m_galaxy.galaxyParams().name());
+    }
 
 
     PrepareNewGalaxy();
@@ -37,11 +41,12 @@ MainWindow::MainWindow(QWidget *parent) :
     m_rasterizer->AddGalaxy(new GalaxyInstance(&m_galaxy, m_galaxy.galaxyParams().name(),
                                               QVector3D(0,0,0), QVector3D(0,1,0).normalized(), 1, 0)  );
 
+
     timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(loop()));
     timer->start(10);
-//    RenderPreview(m_renderingParams.previewSize());
     ui->myGLWidget->setRedraw(true);
+
 
 }
 
@@ -334,6 +339,19 @@ void MainWindow::SaveGalaxy()
     m_galaxy.Save(filename);
 }
 
+void MainWindow::CreateNewGalaxy()
+{
+    m_galaxy = Galaxy();
+    m_galaxy.AddComponent(10);
+    PrepareNewGalaxy();
+    m_galaxy.galaxyParams().setName("NewGalaxy");
+    SaveGalaxy();
+    PopulateGalaxyList();
+    RenderPreview(m_renderingParams.previewSize());
+    UpdateComponentsGUI();
+    UpdateGalaxyGUI();
+}
+
 
 void MainWindow::loop()
 {
@@ -359,7 +377,7 @@ void MainWindow::loop()
 
 void MainWindow::on_btnNewComponent_clicked()
 {
-    m_curComponentParams = m_galaxy.AddComponent();
+    m_curComponentParams = m_galaxy.AddComponent(1);
     UpdateGUI();
     UpdateComponentsGUI();
 }
@@ -553,11 +571,6 @@ void MainWindow::on_leGalaxyDir_editingFinished()
     UpdateRenderingParamsData();
 }
 
-void MainWindow::on_leScenedir_editingFinished()
-{
-    UpdateRenderingParamsData();
-
-}
 
 void MainWindow::on_lstGalaxies_itemDoubleClicked(QListWidgetItem *item)
 {
@@ -574,13 +587,7 @@ void MainWindow::on_lstGalaxies_itemDoubleClicked(QListWidgetItem *item)
 
 void MainWindow::on_btnNew_clicked()
 {
-    m_galaxy = Galaxy();
-    m_galaxy.AddComponent();
-    PrepareNewGalaxy();
-    m_galaxy.galaxyParams().setName("NewGalaxy");
-    SaveGalaxy();
-    PopulateGalaxyList();
-    RenderPreview(m_renderingParams.previewSize());
+    CreateNewGalaxy();
 }
 
 void MainWindow::on_leFOV_editingFinished()
@@ -615,4 +622,55 @@ void MainWindow::on_btnSaveImage_clicked()
 void MainWindow::on_leImageDir_editingFinished()
 {
     UpdateRenderingParamsData();
+}
+
+void MainWindow::on_leSceneDir_editingFinished()
+{
+    UpdateRenderingParamsData();
+
+}
+
+void MainWindow::on_btnDelete_clicked()
+{
+    QMessageBox msgBox;
+    QString gax = ui->lstGalaxies->currentItem()->text();
+    msgBox.setText("Are you sure you wish to delete the galaxy '" + gax + "'?");
+    msgBox.setInformativeText("This action cannot be undone.");
+    msgBox.setStandardButtons(QMessageBox::Ok |  QMessageBox::Cancel);
+    msgBox.setDefaultButton(QMessageBox::Cancel);
+    int ret = msgBox.exec();
+    if (ret==QMessageBox::Ok) {
+        QString filename= m_renderingParams.galaxyDirectory() + gax;
+        QFile file (filename);
+        file.remove();
+        PopulateGalaxyList();
+    }
+}
+
+void MainWindow::on_btnNewComponent_2_clicked()
+{
+    if (m_galaxy.componentParams().size()<=1)
+        return;
+    m_galaxy.componentParams().removeAll(m_curComponentParams);
+    m_galaxy.SetupComponents();
+    m_curComponentParams = m_galaxy.componentParams()[0];
+    UpdateComponentsGUI();
+    PopulateCmbComponents();
+}
+
+void MainWindow::on_btnClone_clicked()
+{
+    QString name = m_galaxy.galaxyParams().name();
+    m_galaxy.galaxyParams().setName(name+"Clone");
+    m_renderingParams.setCurrentGalaxy(name + "Clone");
+    SaveGalaxy();
+    PopulateGalaxyList();
+    UpdateGalaxyGUI();
+
+}
+
+void MainWindow::on_pushButton_clicked()
+{
+    DialogRendererHelp* dr = new DialogRendererHelp("Renderer", "Hallaballa! \n Dette var jo moro.");
+    dr->show();
 }

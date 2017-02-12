@@ -29,8 +29,8 @@ void GalaxyComponentDisk::componentIntensity(RasterPixel* rp, QVector3D& p, floa
     p2 =abs(getPerlinCloudNoise(p, rp->winding, 6, m_componentParams.scale(), m_componentParams.ks()));
 
     p2 = fmax (p2, 0.01f);
-    if (p2!=0)
-        p2=0.1/p2;
+    //if (p2!=0)
+//        p2=0.1/p2;
 
     p2 = pow(p2,m_componentParams.noiseTilt());
 
@@ -49,14 +49,17 @@ void GalaxyComponentDust::componentIntensity(RasterPixel* rp, QVector3D& p, floa
     if (ival<0.0005)
         return;
 
-    float p2 = getPerlinCloudNoise(p, rp->winding, 6, m_componentParams.scale(), m_componentParams.ks());
+    float p2 = getPerlinCloudNoise(p, rp->winding, 10, m_componentParams.scale(), m_componentParams.ks());
     //if (p2!=0)
-    p2=0.1f/(abs(p2) + 0.1f);
+//    p2=0.1f/(abs(p2) + 0.1f);
 
     p2 = p2 + m_componentParams.noiseOffset();
-    if (p2<0)
-        return;
-    p2 = pow(5*p2,m_componentParams.noiseTilt());
+/*    if (p2<0)
+        return;*/
+    if (p2==0)
+        p2 = p2 +0.01;
+
+    p2 = pow(5*abs(p2),m_componentParams.noiseTilt());
 
     float s = 0.01;
 
@@ -68,7 +71,7 @@ void GalaxyComponentDust::componentIntensity(RasterPixel* rp, QVector3D& p, floa
 }
 
 void GalaxyComponentStars::componentIntensity(RasterPixel* rp, QVector3D& r, float ival) {
-    float perlinnoise = abs(m_galaxyParams->noise()->octave_noise_3d(14,m_componentParams.ks(),0.01f*m_componentParams.scale(),r.x(),r.y(),r.z()));
+    float perlinnoise = abs(m_galaxyParams->noise()->octave_noise_3d(6,m_componentParams.ks(),0.01f*m_componentParams.scale()*100,r.x(),r.y(),r.z()));
 
     float addNoise = 0;
     if (m_componentParams.noiseOffset() != 0)

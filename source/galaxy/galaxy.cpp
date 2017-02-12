@@ -87,7 +87,7 @@ void Galaxy::SetupComponents() {
     SetupSpectra();
 }
 
-ComponentParams* Galaxy::AddComponent() {
+ComponentParams* Galaxy::AddComponent(int count) {
     ComponentParams* cp = new ComponentParams();
     cp->setClassName("bulge");
     cp->setStrength(30);
@@ -95,17 +95,32 @@ ComponentParams* Galaxy::AddComponent() {
     cp->setSpectrum("Yellow");
     m_componentParams.append(cp);
 
-    cp = new ComponentParams();
-    cp->setClassName("disk");
-    cp->setStrength(250);
-    cp->setR0(0.5);
-    cp->setArm(0.3);
-    cp->setNoiseTilt(0.3);
-    cp->setSpectrum("Red");
-    cp->setScale(10);
-//    cp->setN
-    m_componentParams.append(cp);
+    if (count>1) {
+        cp = new ComponentParams();
+        cp->setClassName("disk");
+        cp->setStrength(900);
+        cp->setR0(0.4);
+        cp->setArm(0.3);
+        cp->setNoiseTilt(0.3);
+        cp->setSpectrum("Blue");
+        cp->setScale(1);
+        //    cp->setN
+        m_componentParams.append(cp);
+    }
 
+    if (count>2) {
+        cp = new ComponentParams();
+        cp->setClassName("dust");
+        cp->setStrength(250);
+        cp->setR0(0.45);
+        cp->setArm(0.25);
+        cp->setZ0(0.015);
+        cp->setNoiseTilt(1);
+        cp->setSpectrum("Blue");
+        cp->setScale(1);
+        //    cp->setN
+        m_componentParams.append(cp);
+    }
 
     SetupComponents();
     return cp;

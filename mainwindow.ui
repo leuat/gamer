@@ -262,6 +262,19 @@
        <string>Field of view</string>
       </property>
      </widget>
+     <widget class="QPushButton" name="pushButton">
+      <property name="geometry">
+       <rect>
+        <x>420</x>
+        <y>510</y>
+        <width>113</width>
+        <height>32</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Help</string>
+      </property>
+     </widget>
     </widget>
     <widget class="QWidget" name="tabGalaxy">
      <attribute name="title">
@@ -615,7 +628,7 @@
         </rect>
        </property>
        <property name="inputMask">
-        <string>0000.00</string>
+        <string>0.000</string>
        </property>
       </widget>
       <widget class="QLabel" name="label_6">
@@ -771,7 +784,7 @@
         </rect>
        </property>
        <property name="inputMask">
-        <string>#0000.00</string>
+        <string>#00.00</string>
        </property>
       </widget>
       <widget class="QLabel" name="label_12">
@@ -797,7 +810,7 @@
         </rect>
        </property>
        <property name="inputMask">
-        <string>#0000.00</string>
+        <string>#00.00</string>
        </property>
       </widget>
       <widget class="QLabel" name="label_13">
@@ -823,7 +836,7 @@
         </rect>
        </property>
        <property name="text">
-        <string>CheckBox</string>
+        <string/>
        </property>
       </widget>
       <widget class="QLabel" name="label_26">

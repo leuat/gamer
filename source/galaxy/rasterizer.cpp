@@ -46,7 +46,6 @@ void Rasterizer::run()
 //    sleep(5000);
     RenderPixels();
     GMessages::Message("Rendering took " + QString::number(timer.elapsed()/1000.0) + " seconds");
-
     m_state=State::done;
 
 }

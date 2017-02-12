@@ -10,7 +10,7 @@ QT += gui
 
 #lQMAKE_CC = gcc-6
 #QMAKE_CXX = g++-6
-QMAKE_CXXFLAGS+= -fopenmp -O2
+QMAKE_CXXFLAGS+= -fopenmp -O3
 QMAKE_LFLAGS +=  -fopenmp
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = Gamer
@@ -39,7 +39,8 @@ SOURCES += \
     source/mainwindow.cpp \
     source/util/gmessages.cpp \
     source/noise/iqnoise.cpp \
-    source/util/buffer2d.cpp
+    source/util/buffer2d.cpp \
+    dialogrendererhelp.cpp
 
 HEADERS  += \
     source/galaxy/rasterizer.h \
@@ -63,9 +64,11 @@ HEADERS  += \
     source/mainwindow.h \
     source/util/gmessages.h \
     source/noise/iqnoise.h \
-    source/util/buffer2d.h
+    source/util/buffer2d.h \
+    dialogrendererhelp.h
 
-FORMS    += mainwindow.ui
+FORMS    += mainwindow.ui \
+    dialogrendererhelp.ui
 
 RESOURCES += \
     gamerresources.qrc
