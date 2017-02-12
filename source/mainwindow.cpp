@@ -5,11 +5,11 @@
 #include <QGridLayout>
 #include <QStringList>
 #include <QMessageBox>
-#include "source/galaxy/spectrum.h"
 #include <QElapsedTimer>
-#include "source/util/gmessages.h"
 #include <QDirIterator>
-
+#include "source/galaxy/spectrum.h"
+#include "source/util/gmessages.h"
+#include "source/util/util.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -22,17 +22,27 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->myGLWidget->setRenderingParams(&m_renderingParams);
     Spectra::PopulateSpectra();
     PopulateImageSize();
-    m_galaxy.AddComponent();
+    m_renderingParams.Load(m_RenderParamsFilename);
+    UpdateRenderingParamsGUI();
+
+    if (m_renderingParams.currentGalaxy()=="")
+        m_galaxy.AddComponent();
+    else
+        m_galaxy.Load(m_renderingParams.galaxyDirectory() + m_renderingParams.currentGalaxy() + ".gax");
+
+
     PrepareNewGalaxy();
+
     // Adding a single galaxy to the rasterizer
     m_rasterizer->AddGalaxy(new GalaxyInstance(&m_galaxy, m_galaxy.galaxyParams().name(),
                                               QVector3D(0,0,0), QVector3D(0,1,0).normalized(), 1, 0)  );
-    m_renderingParams.Load(m_RenderParamsFilename);
-    UpdateRenderingParamsGUI();
 
     timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(loop()));
     timer->start(10);
+//    RenderPreview(m_renderingParams.previewSize());
+    ui->myGLWidget->setRedraw(true);
+
 }
 
 MainWindow::~MainWindow()
@@ -54,19 +64,19 @@ void MainWindow::on_renderButton_clicked()
 
 void MainWindow::on_actionLoad_triggered()
 {
-    if (!m_galaxy.Load("test.gax")) {
+/*    if (!m_galaxy.Load("test.gax")) {
         QMessageBox msgBox;
         msgBox.setText("Could not open file");
         msgBox.exec();
         return;
     }
     PrepareNewGalaxy();
-    RenderPreview(m_renderingParams.previewSize());
+    RenderPreview(m_renderingParams.previewSize());*/
 }
 
 void MainWindow::on_actionSave_triggered()
 {
-    m_galaxy.Save("test.gax");
+    //m_galaxy.Save("test.gax");
 }
 
 void MainWindow::PopulateCmbComponentTypes() {
@@ -111,7 +121,6 @@ void MainWindow::PopulateGalaxyList()
     while (it.hasNext()) {
         QString filename = it.next();
         QString name = filename.split("/").last();
-        qDebug() << filename;
         ui->lstGalaxies->addItem(name);
     }
 }
@@ -138,7 +147,9 @@ void MainWindow::UpdateGalaxyData()
     m_galaxy.galaxyParams().setArm2(ui->leArm2->text().toFloat());
     m_galaxy.galaxyParams().setArm3(ui->leArm3->text().toFloat());
     m_galaxy.galaxyParams().setArm4(ui->leArm4->text().toFloat());
+
     RenderPreview(m_renderingParams.previewSize());
+    SaveGalaxy();
 }
 
 void MainWindow::UpdateComponentsData() {
@@ -155,6 +166,7 @@ void MainWindow::UpdateComponentsData() {
     m_curComponentParams->setKs(ui->lePersistence->text().toFloat());
     m_curComponentParams->setActive(ui->chkIsActive->isChecked()==true);
     m_curComponentParams->setSpectrum(ui->cmbSpectrum->currentText());
+    SaveGalaxy();
     RenderPreview(m_renderingParams.previewSize());
 
 }
@@ -205,9 +217,17 @@ void MainWindow::UpdateRenderingParamsGUI()
     ui->leRayStep->setText( QString::number(m_renderingParams.rayStep()));
     ui->leGalaxyDir->setText(m_renderingParams.galaxyDirectory());
     ui->leSceneDir->setText(m_renderingParams.sceneDirectory());
+    ui->leImageDir->setText(m_renderingParams.imageDirectory());
+    ui->leFOV->setText(QString::number(m_renderingParams.camera().perspective()));
+    ui->hsExposure->setValue(m_renderingParams.exposure()*m_postSliderScale);
+    ui->hsGamma->setValue(m_renderingParams.gamma()*m_postSliderScale);
+    ui->hsSaturation->setValue(m_renderingParams.saturation()*m_postSliderScale);
     PopulateGalaxyList();
 
 }
+
+
+
 
 void MainWindow::UpdateRenderingParamsData()
 {
@@ -217,13 +237,30 @@ void MainWindow::UpdateRenderingParamsData()
     m_rasterizer->setNewSize(m_renderingParams.size());
     m_renderingParams.setGalaxyDirectory(ui->leGalaxyDir->text());
     m_renderingParams.setSceneDirectory(ui->leSceneDir->text());
+    m_renderingParams.setImageDirectory(ui->leImageDir->text());
+    m_renderingParams.camera().setPerspective(ui->leFOV->text().toFloat());
+
+
     m_renderingParams.Save(m_RenderParamsFilename);
+    RenderPreview(m_renderingParams.previewSize());
+}
+
+void MainWindow::UpdatePostProcessingData()
+{
+    m_renderingParams.setExposure(ui->hsExposure->value()/m_postSliderScale);
+    m_renderingParams.setGamma(ui->hsGamma->value()/m_postSliderScale);
+    m_renderingParams.setSaturation(ui->hsSaturation->value()/m_postSliderScale);
+//    m_rasterizer->RenderDirect();
+    m_renderingParams.Save(m_RenderParamsFilename);
+    UpdateImage();
+
 }
 
 void MainWindow::Render()
 {
     EnableGUIEditing(false);
     m_renderingParams.Save(m_RenderParamsFilename);
+    m_rasterizer->setNewSize(m_renderingParams.size());
     m_rasterizer->Render();
 
 }
@@ -231,7 +268,7 @@ void MainWindow::Render()
 void MainWindow::RenderDirect()
 {
     m_rasterizer->RenderDirect();
-    ui->myGLWidget->SetTexture(m_rasterizer->getBuffer());
+    UpdateImage();
 
 }
 
@@ -242,7 +279,7 @@ void MainWindow::RenderPreview(int size)
     m_renderingParams.setRayStep(0.01);
     m_rasterizer->setNewSize(size);
     RenderDirect();
-    m_rasterizer->setNewSize(oldSize);
+    m_renderingParams.setSize(oldSize);
     m_renderingParams.setRayStep(oldStep);
 }
 
@@ -273,6 +310,10 @@ void MainWindow::EnableGUIEditing(bool value)
     ui->leWindingB->setEnabled(value);
     ui->leWindingN->setEnabled(value);
     ui->leZ0->setEnabled(value);
+    ui->leFOV->setEnabled(value);
+    ui->leGalaxyDir->setEnabled(value);
+    ui->leSceneDir->setEnabled(value);
+    ui->leImageDir->setEnabled(value);
     ui->cmbComponents->setEnabled(value);
     ui->cmbComponentType->setEnabled(value);
     ui->cmbImageSize->setEnabled(value);
@@ -280,6 +321,17 @@ void MainWindow::EnableGUIEditing(bool value)
 
     ui->cmbSpectrum->setEnabled(value);
     ui->chkIsActive->setEnabled(value);
+
+    ui->btnNew->setEnabled(value);
+    ui->btnClone->setEnabled(value);
+    ui->btnDelete->setEnabled(value);
+    ui->lstGalaxies->setEnabled(value);
+}
+
+void MainWindow::SaveGalaxy()
+{
+    QString filename = m_renderingParams.galaxyDirectory() + m_galaxy.galaxyParams().name() + ".gax";
+    m_galaxy.Save(filename);
 }
 
 
@@ -287,12 +339,13 @@ void MainWindow::loop()
 {
 //    qDebug() << m_renderingParams.camera().target();
     if (m_rasterizer->getState()==Rasterizer::State::done) {
-        ui->myGLWidget->SetTexture(m_rasterizer->getBuffer());
+        //ui->myGLWidget->SetTexture(m_rasterizer->getBuffer());
+        UpdateImage();
         EnableGUIEditing(true);
         m_rasterizer->setState(Rasterizer::State::idle);
     }
     if (m_rasterizer->getState()==Rasterizer::State::rendering)
-        ui->myGLWidget->SetTexture(m_rasterizer->getBuffer());
+        UpdateImage();
 
     ui->pgbRendering->setValue((int)(m_rasterizer->getPercentDone()*100.0)+1);
 
@@ -410,7 +463,10 @@ void MainWindow::on_cmbSpectrum_activated(const QString &arg1)
 
 void MainWindow::on_leGalaxyName_editingFinished()
 {
+    QFile file (m_renderingParams.galaxyDirectory() + m_galaxy.galaxyParams().name() + ".gax");
+    file.remove();
     UpdateGalaxyData();
+    PopulateGalaxyList();
 }
 
 void MainWindow::on_leWindingB_editingFinished()
@@ -457,6 +513,13 @@ void MainWindow::PrepareNewGalaxy()
 
 }
 
+void MainWindow::UpdateImage()
+{
+    m_rasterizer->AssembleImage();
+    ui->myGLWidget->SetTexture(m_rasterizer->getBuffer());
+
+}
+
 void MainWindow::on_actionRender_triggered()
 {
     Render();
@@ -500,8 +563,56 @@ void MainWindow::on_lstGalaxies_itemDoubleClicked(QListWidgetItem *item)
 {
     QString filename = m_renderingParams.galaxyDirectory() + item->text();
     m_galaxy.Load(filename);
+    QString name = item->text().split(".")[0];
+    m_galaxy.galaxyParams().setName(name);
+    m_renderingParams.setCurrentGalaxy(name);
+    //ui->lblCurrentGalaxy->setText(name);
+    PrepareNewGalaxy();
     RenderPreview(m_renderingParams.previewSize());
-    qDebug() << "camera. " << m_renderingParams.camera().camera();
-    qDebug() << "target: " << m_renderingParams.camera().target();
-//    qDebug() << item->text();
+    m_renderingParams.Save(m_RenderParamsFilename);
+}
+
+void MainWindow::on_btnNew_clicked()
+{
+    m_galaxy = Galaxy();
+    m_galaxy.AddComponent();
+    PrepareNewGalaxy();
+    m_galaxy.galaxyParams().setName("NewGalaxy");
+    SaveGalaxy();
+    PopulateGalaxyList();
+    RenderPreview(m_renderingParams.previewSize());
+}
+
+void MainWindow::on_leFOV_editingFinished()
+{
+    UpdateRenderingParamsData();
+}
+
+void MainWindow::on_hsExposure_sliderMoved(int position)
+{
+    UpdatePostProcessingData();
+}
+
+void MainWindow::on_hsGamma_sliderMoved(int position)
+{
+    UpdatePostProcessingData();
+}
+
+void MainWindow::on_hsSaturation_sliderMoved(int position)
+{
+    UpdatePostProcessingData();
+}
+
+void MainWindow::on_btnSaveImage_clicked()
+{
+    QString filename = m_renderingParams.imageDirectory() +
+            Util::getFileName(m_renderingParams.imageDirectory(),"Image","png");
+    m_rasterizer->getImageShadowBuffer()->save(filename);
+    GMessages::Message("Galaxy png saved to " + filename);
+
+}
+
+void MainWindow::on_leImageDir_editingFinished()
+{
+    UpdateRenderingParamsData();
 }

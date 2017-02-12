@@ -9,12 +9,12 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1180</width>
-    <height>756</height>
+    <width>1215</width>
+    <height>786</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>Gamer 1.0</string>
   </property>
   <widget class="QWidget" name="centralWidget">
    <widget class="QTabWidget" name="tab_3">
@@ -30,7 +30,7 @@
      <number>-3</number>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>4</number>
     </property>
     <widget class="QWidget" name="tabScene">
      <attribute name="title">
@@ -40,7 +40,7 @@
       <property name="geometry">
        <rect>
         <x>30</x>
-        <y>30</y>
+        <y>60</y>
         <width>91</width>
         <height>16</height>
        </rect>
@@ -50,57 +50,6 @@
       </property>
      </widget>
      <widget class="QComboBox" name="cmbImageSize">
-      <property name="geometry">
-       <rect>
-        <x>170</x>
-        <y>20</y>
-        <width>111</width>
-        <height>41</height>
-       </rect>
-      </property>
-      <property name="toolTip">
-       <string>Image size squared</string>
-      </property>
-      <property name="toolTipDuration">
-       <number>-1</number>
-      </property>
-      <property name="statusTip">
-       <string/>
-      </property>
-      <property name="whatsThis">
-       <string>Huh?</string>
-      </property>
-     </widget>
-     <widget class="QLabel" name="label_23">
-      <property name="geometry">
-       <rect>
-        <x>30</x>
-        <y>90</y>
-        <width>91</width>
-        <height>16</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Ray step:</string>
-      </property>
-     </widget>
-     <widget class="QLineEdit" name="leRayStep">
-      <property name="geometry">
-       <rect>
-        <x>170</x>
-        <y>90</y>
-        <width>113</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="toolTip">
-       <string>Ray tracing step length: 0.01 for preview, 0.001 for small images, 0.0001 for close-up large images</string>
-      </property>
-      <property name="inputMask">
-       <string>0.00000</string>
-      </property>
-     </widget>
-     <widget class="QComboBox" name="cmbPreviewSize">
       <property name="geometry">
        <rect>
         <x>170</x>
@@ -122,11 +71,62 @@
        <string>Huh?</string>
       </property>
      </widget>
+     <widget class="QLabel" name="label_23">
+      <property name="geometry">
+       <rect>
+        <x>30</x>
+        <y>120</y>
+        <width>91</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Ray step:</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="leRayStep">
+      <property name="geometry">
+       <rect>
+        <x>170</x>
+        <y>120</y>
+        <width>113</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="toolTip">
+       <string>Ray tracing step length: 0.01 for preview, 0.001 for small images, 0.0001 for close-up large images</string>
+      </property>
+      <property name="inputMask">
+       <string>0.00000</string>
+      </property>
+     </widget>
+     <widget class="QComboBox" name="cmbPreviewSize">
+      <property name="geometry">
+       <rect>
+        <x>170</x>
+        <y>80</y>
+        <width>111</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="toolTip">
+       <string>Image size squared</string>
+      </property>
+      <property name="toolTipDuration">
+       <number>-1</number>
+      </property>
+      <property name="statusTip">
+       <string/>
+      </property>
+      <property name="whatsThis">
+       <string>Huh?</string>
+      </property>
+     </widget>
      <widget class="QLabel" name="label_24">
       <property name="geometry">
        <rect>
         <x>30</x>
-        <y>60</y>
+        <y>90</y>
         <width>131</width>
         <height>16</height>
        </rect>
@@ -139,7 +139,7 @@
       <property name="geometry">
        <rect>
         <x>30</x>
-        <y>130</y>
+        <y>200</y>
         <width>501</width>
         <height>301</height>
        </rect>
@@ -157,41 +157,116 @@
         </rect>
        </property>
       </widget>
+      <widget class="QPushButton" name="btnNew">
+       <property name="geometry">
+        <rect>
+         <x>310</x>
+         <y>30</y>
+         <width>113</width>
+         <height>32</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>New</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="btnClone">
+       <property name="geometry">
+        <rect>
+         <x>310</x>
+         <y>60</y>
+         <width>113</width>
+         <height>32</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Clone</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="btnDelete">
+       <property name="geometry">
+        <rect>
+         <x>310</x>
+         <y>90</y>
+         <width>113</width>
+         <height>32</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Delete</string>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QLineEdit" name="leGalaxyName">
+      <property name="geometry">
+       <rect>
+        <x>170</x>
+        <y>10</y>
+        <width>251</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>24</pointsize>
+       </font>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_28">
+      <property name="geometry">
+       <rect>
+        <x>30</x>
+        <y>20</y>
+        <width>121</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>24</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Name</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="leFOV">
+      <property name="geometry">
+       <rect>
+        <x>170</x>
+        <y>150</y>
+        <width>113</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="toolTip">
+       <string>Ray tracing step length: 0.01 for preview, 0.001 for small images, 0.0001 for close-up large images</string>
+      </property>
+      <property name="inputMask">
+       <string>000.0</string>
+      </property>
+      <property name="text">
+       <string>.</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_29">
+      <property name="geometry">
+       <rect>
+        <x>30</x>
+        <y>150</y>
+        <width>91</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Field of view</string>
+      </property>
      </widget>
     </widget>
     <widget class="QWidget" name="tabGalaxy">
      <attribute name="title">
       <string>Galaxy</string>
      </attribute>
-     <widget class="QLineEdit" name="leGalaxyName">
-      <property name="geometry">
-       <rect>
-        <x>150</x>
-        <y>30</y>
-        <width>131</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="inputMask">
-       <string/>
-      </property>
-      <property name="text">
-       <string/>
-      </property>
-     </widget>
-     <widget class="QLabel" name="label_15">
-      <property name="geometry">
-       <rect>
-        <x>40</x>
-        <y>30</y>
-        <width>60</width>
-        <height>16</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Name</string>
-      </property>
-     </widget>
      <widget class="QGroupBox" name="groupBox_2">
       <property name="geometry">
        <rect>
@@ -806,6 +881,93 @@
      <attribute name="title">
       <string>Post-processing</string>
      </attribute>
+     <widget class="QLabel" name="label_30">
+      <property name="geometry">
+       <rect>
+        <x>50</x>
+        <y>40</y>
+        <width>60</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Exposure</string>
+      </property>
+     </widget>
+     <widget class="QSlider" name="hsExposure">
+      <property name="geometry">
+       <rect>
+        <x>170</x>
+        <y>40</y>
+        <width>160</width>
+        <height>22</height>
+       </rect>
+      </property>
+      <property name="maximum">
+       <number>100</number>
+      </property>
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_31">
+      <property name="geometry">
+       <rect>
+        <x>50</x>
+        <y>70</y>
+        <width>60</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Gamma</string>
+      </property>
+     </widget>
+     <widget class="QSlider" name="hsGamma">
+      <property name="geometry">
+       <rect>
+        <x>170</x>
+        <y>70</y>
+        <width>160</width>
+        <height>22</height>
+       </rect>
+      </property>
+      <property name="maximum">
+       <number>100</number>
+      </property>
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_32">
+      <property name="geometry">
+       <rect>
+        <x>50</x>
+        <y>100</y>
+        <width>71</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Saturation</string>
+      </property>
+     </widget>
+     <widget class="QSlider" name="hsSaturation">
+      <property name="geometry">
+       <rect>
+        <x>170</x>
+        <y>100</y>
+        <width>160</width>
+        <height>22</height>
+       </rect>
+      </property>
+      <property name="maximum">
+       <number>100</number>
+      </property>
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+     </widget>
     </widget>
     <widget class="QWidget" name="tab">
      <property name="toolTipDuration">
@@ -860,23 +1022,52 @@
        </rect>
       </property>
      </widget>
+     <widget class="QLineEdit" name="leImageDir">
+      <property name="geometry">
+       <rect>
+        <x>210</x>
+        <y>130</y>
+        <width>201</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_33">
+      <property name="geometry">
+       <rect>
+        <x>40</x>
+        <y>130</y>
+        <width>151</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Image directory</string>
+      </property>
+     </widget>
     </widget>
    </widget>
    <widget class="GLWidget" name="myGLWidget" native="true">
     <property name="geometry">
      <rect>
       <x>600</x>
-      <y>10</y>
+      <y>30</y>
       <width>571</width>
-      <height>591</height>
+      <height>571</height>
      </rect>
+    </property>
+    <property name="toolTip">
+     <string>Click + drag to rotate, alt + click + drag to zoom</string>
     </property>
    </widget>
    <widget class="QPushButton" name="renderButton">
     <property name="geometry">
      <rect>
-      <x>20</x>
-      <y>610</y>
+      <x>350</x>
+      <y>620</y>
       <width>191</width>
       <height>32</height>
      </rect>
@@ -889,8 +1080,8 @@
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>640</y>
-      <width>411</width>
+      <y>700</y>
+      <width>561</width>
       <height>23</height>
      </rect>
     </property>
@@ -904,8 +1095,8 @@
    <widget class="QPushButton" name="btnAbort">
     <property name="geometry">
      <rect>
-      <x>250</x>
-      <y>610</y>
+      <x>350</x>
+      <y>660</y>
       <width>191</width>
       <height>32</height>
      </rect>
@@ -918,9 +1109,9 @@
     <property name="geometry">
      <rect>
       <x>600</x>
-      <y>610</y>
-      <width>571</width>
-      <height>81</height>
+      <y>650</y>
+      <width>601</width>
+      <height>61</height>
      </rect>
     </property>
     <property name="palette">
@@ -967,13 +1158,42 @@
      </font>
     </property>
    </widget>
+   <widget class="QLabel" name="label_15">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>630</y>
+      <width>341</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="pixmap">
+     <pixmap resource="gamerresources.qrc">:/images/logo2.png</pixmap>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btnSaveImage">
+    <property name="geometry">
+     <rect>
+      <x>802</x>
+      <y>610</y>
+      <width>161</width>
+      <height>32</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Save image</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1180</width>
+     <width>1215</width>
      <height>22</height>
     </rect>
    </property>
@@ -1052,6 +1272,8 @@
    <container>1</container>
   </customwidget>
  </customwidgets>
- <resources/>
+ <resources>
+  <include location="gamerresources.qrc"/>
+ </resources>
  <connections/>
 </ui>

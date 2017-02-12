@@ -90,9 +90,23 @@ void Galaxy::SetupComponents() {
 ComponentParams* Galaxy::AddComponent() {
     ComponentParams* cp = new ComponentParams();
     cp->setClassName("bulge");
-    cp->setStrength(1);
-    cp->setR0(1);
+    cp->setStrength(30);
+    cp->setR0(5);
+    cp->setSpectrum("Yellow");
     m_componentParams.append(cp);
+
+    cp = new ComponentParams();
+    cp->setClassName("disk");
+    cp->setStrength(250);
+    cp->setR0(0.5);
+    cp->setArm(0.3);
+    cp->setNoiseTilt(0.3);
+    cp->setSpectrum("Red");
+    cp->setScale(10);
+//    cp->setN
+    m_componentParams.append(cp);
+
+
     SetupComponents();
     return cp;
 
@@ -129,8 +143,9 @@ void Galaxy::Save(QString filename)
 
     file.flush();
     file.close();
-    GMessages::Message("Saved galaxy to '" +filename +"'.");
+    GMessages::Debug("Saved galaxy to '" +filename +"'.");
 }
+
 
 bool Galaxy::Load(QString filename) {
     QFile file(filename);
@@ -144,7 +159,7 @@ bool Galaxy::Load(QString filename) {
 
     file.close();
     SetupComponents();
-    GMessages::Message("Loaded galaxy '" +filename +"'.");
+    GMessages::Debug("Loaded galaxy '" +filename +"'.");
 
     return true;
 }

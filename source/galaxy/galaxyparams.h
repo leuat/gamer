@@ -7,7 +7,7 @@
 
 class GalaxyParams {
 public:
-    QString m_name = "Galaxy";
+    QString m_name = "NewGalaxy";
     QVector3D m_axis = QVector3D(1,1,1);
     float m_bulgeDust = 0.025f;
     QVector3D m_bulgeAxis = QVector3D(1,1,1);

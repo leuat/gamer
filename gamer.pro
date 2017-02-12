@@ -38,7 +38,8 @@ SOURCES += \
     source/main.cpp \
     source/mainwindow.cpp \
     source/util/gmessages.cpp \
-    source/noise/iqnoise.cpp
+    source/noise/iqnoise.cpp \
+    source/util/buffer2d.cpp
 
 HEADERS  += \
     source/galaxy/rasterizer.h \
@@ -61,6 +62,10 @@ HEADERS  += \
     source/glwidget.h \
     source/mainwindow.h \
     source/util/gmessages.h \
-    source/noise/iqnoise.h
+    source/noise/iqnoise.h \
+    source/util/buffer2d.h
 
 FORMS    += mainwindow.ui
+
+RESOURCES += \
+    gamerresources.qrc

@@ -97,6 +97,20 @@ private slots:
 
     void on_lstGalaxies_itemDoubleClicked(QListWidgetItem *item);
 
+    void on_btnNew_clicked();
+
+    void on_leFOV_editingFinished();
+
+    void on_hsExposure_sliderMoved(int position);
+
+    void on_hsGamma_sliderMoved(int position);
+
+    void on_hsSaturation_sliderMoved(int position);
+
+    void on_btnSaveImage_clicked();
+
+    void on_leImageDir_editingFinished();
+
 private:
     Ui::MainWindow *ui;
     Rasterizer* m_rasterizer = nullptr;
@@ -104,10 +118,13 @@ private:
     Galaxy m_galaxy;
     ComponentParams* m_curComponentParams = nullptr;
     QBasicTimer m_timer;
+    float m_postSliderScale = 30;
 
     void PrepareNewGalaxy();
 
     QTimer* timer;
+    void UpdateImage();
+
     void PopulateCmbComponents();
     void PopulateCmbComponentTypes();
     void PopulateCmbSpectra();
@@ -121,12 +138,15 @@ private:
     void UpdateGUI();
     void UpdateRenderingParamsGUI();
     void UpdateRenderingParamsData();
+    void UpdatePostProcessingData();
 
     void Render();
     void RenderDirect();
     void RenderPreview(int size);
 
     void EnableGUIEditing(bool value);
+
+    void SaveGalaxy();
 
     QString m_RenderParamsFilename = "RenderParams.dat";
 

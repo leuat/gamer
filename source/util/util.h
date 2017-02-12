@@ -12,6 +12,7 @@
 #include <QVector3D>
 #include <QImage>
 #include <QRgb>
+#include <QDirIterator>
 
 using namespace std;
 
@@ -102,6 +103,10 @@ public:
         }
         return a;
     }
+
+    static QString getFileName(QString dir, QString baseName, QString type);
+
+
 
 };
 

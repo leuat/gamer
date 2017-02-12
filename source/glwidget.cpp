@@ -74,13 +74,13 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event)
     int dx = event->x() - m_lastPos.x();
     int dy = event->y() - m_lastPos.y();
     float strength = 0.5;
-    if (event->buttons() & Qt::LeftButton) {
+    bool hasModifier = QApplication::keyboardModifiers().testFlag(Qt::AltModifier);
+    if (event->buttons() & Qt::LeftButton && !hasModifier) {
         m_RenderingParams->camera().RotateVertical(strength*dy);
         m_RenderingParams->camera().RotateHorisontal(strength*dx*-1);
         m_redraw = true;
     }
-    if(QApplication::keyboardModifiers().testFlag(Qt::AltModifier)) {
-
+    if (event->buttons() & Qt::LeftButton && hasModifier) {
         m_RenderingParams->camera().ZoomXY(0.05*strength*dy);
         m_redraw = true;
     }
@@ -90,6 +90,11 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event)
 void GLWidget::loop()
 {
     update();
+}
+
+void GLWidget::setRedraw(bool redraw)
+{
+    m_redraw = redraw;
 }
 
 bool GLWidget::redraw()

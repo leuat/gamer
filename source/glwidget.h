@@ -23,6 +23,8 @@ public:
         m_disableInput = value;
     }
 
+    void setRedraw(bool redraw);
+
 protected:
     void initializeGL();
     void paintGL();

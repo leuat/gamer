@@ -1,4 +1,5 @@
 #include "util.h"
+#include <QDebug>
 //#include <QtGlobal>
 
 void Util::Tokenize(const string& str,
@@ -110,6 +111,28 @@ QVector3D Util::clamp(QVector3D val, float min, float max)
     v.setZ(clamp(val.z(),min,max));
     return v;
 }
+
+QString Util::getFileName(QString dir, QString baseName, QString type)
+{
+    QDirIterator it(dir,
+                    QStringList() << "*.*", QDir::Files, QDirIterator::Subdirectories);
+    int maxNumber = 1;
+    while (it.hasNext()) {
+        QString filename = it.next();
+        QStringList split = filename.split("/");
+        filename = split[split.length()-1];
+        if (filename.contains(baseName)) {
+            filename = filename.replace(baseName, "");
+            filename = filename.replace("."+type, "");
+            int num = filename.toInt();
+            maxNumber = max(maxNumber, num);
+        }
+    }
+    maxNumber++;
+    return baseName + QString::number(maxNumber).rightJustified(4, '0') + "." + type;
+
+}
+
 
 
 float Util::smoothstep(float edge0, float edge1, float x)

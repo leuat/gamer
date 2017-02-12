@@ -32,6 +32,86 @@ void RenderingParams::setRayStep(float rayStep)
     m_rayStep = rayStep;
 }
 
+QString RenderingParams::imageDirectory() const
+{
+    return m_imageDirectory;
+}
+
+void RenderingParams::setImageDirectory(const QString &imageDirectory)
+{
+    m_imageDirectory = imageDirectory;
+}
+
+float RenderingParams::starStrength() const
+{
+    return m_starStrength;
+}
+
+void RenderingParams::setStarStrength(float starStrength)
+{
+    m_starStrength = starStrength;
+}
+
+float RenderingParams::starSizeSpread() const
+{
+    return m_starSizeSpread;
+}
+
+void RenderingParams::setStarSizeSpread(float starSizeSpread)
+{
+    m_starSizeSpread = starSizeSpread;
+}
+
+float RenderingParams::starSize() const
+{
+    return m_starSize;
+}
+
+void RenderingParams::setStarSize(float starSize)
+{
+    m_starSize = starSize;
+}
+
+int RenderingParams::noStars() const
+{
+    return m_noStars;
+}
+
+void RenderingParams::setNoStars(int noStars)
+{
+    m_noStars = noStars;
+}
+
+float RenderingParams::saturation() const
+{
+    return m_saturation;
+}
+
+void RenderingParams::setSaturation(float saturation)
+{
+    m_saturation = saturation;
+}
+
+float RenderingParams::gamma() const
+{
+    return m_gamma;
+}
+
+void RenderingParams::setGamma(float gamma)
+{
+    m_gamma = gamma;
+}
+
+float RenderingParams::exposure() const
+{
+    return m_exposure;
+}
+
+void RenderingParams::setExposure(float exposure)
+{
+    m_exposure = exposure;
+}
+
 QString RenderingParams::currentGalaxy() const
 {
     return m_currentGalaxy;

@@ -14,6 +14,7 @@
 #include "source/noise/noise.h"
 #include "source/noise/simplex.h"
 #include "source/noise/iqnoise.h"
+#include "source/util/buffer2d.h"
 
 class Rasterizer : public QThread {
 public:
@@ -24,9 +25,11 @@ private:
     QVector<GalaxyInstance*> m_galaxies;
     RenderingParams* m_renderingParams;
     QVector<int> m_renderList;
-    QImage* m_buffer = nullptr;
+    QImage* m_imageBuffer = nullptr;
+    QImage* m_imageShadowBuffer = nullptr;
     // Backbuffer used to mark whether pixel is set or not
-    QImage* m_backBuffer = nullptr;
+    Buffer2D* m_backBuffer = nullptr;
+    Buffer2D* m_renderBuffer = nullptr;
     bool m_restart = false;
     bool m_abort = false;
     State m_state = State::idle;
@@ -62,6 +65,7 @@ protected:
     void setNewSize(int s);
     void prepareBuffer();
     void Prepare();
+
     void Abort() {
         m_abort = true;
         requestInterruption();
@@ -91,6 +95,7 @@ protected:
     State getState();
     void setState(const State &state);
     float getPercentDone() const;
+    QImage *getImageShadowBuffer() const;
 };
 
 
