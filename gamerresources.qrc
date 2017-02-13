@@ -2,4 +2,10 @@
     <qresource prefix="/images">
         <file>logo2.png</file>
     </qresource>
+    <qresource prefix="/">
+        <file>TabRenderingHelp.txt</file>
+        <file>test.txt</file>
+        <file>TabGalaxyHelp.txt</file>
+        <file>TabComponentsHelp.txt</file>
+    </qresource>
 </RCC>

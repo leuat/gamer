@@ -1,0 +1,7 @@
+<h2>Galaxy parameters</h2>
+In this panel, you can edit the general global values for the current working galaxy. When editing is done, the galaxy is automatically saved and a new preview image is created. The parameters are:
+<ul>
+    <li><b>Winding B and N</b>: The winding number of the galaxy, specifying the structure and winding of the arms. See the GAMER paper for details.
+    <li><b>No arms</b>: This number specifies the number of arms in the current galaxy. Must be between 0 and 4.
+    <li><b>ArmN</b>: Specifies the starting position of the particular arm, given in radians.
+</ul>

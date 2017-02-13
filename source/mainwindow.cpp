@@ -130,6 +130,36 @@ void MainWindow::PopulateGalaxyList()
     }
 }
 
+void MainWindow::UpdateComponentsGUIbyType()
+{
+    if (m_curComponentParams->className()=="bulge") {
+        ui->leStrength->setVisible(true);
+        ui->leArm->setVisible(false);
+        ui->leZ0->setVisible(false);
+        ui->leR0->setVisible(true);
+        ui->leDelta->setVisible(false);
+        ui->leWinding->setVisible(false);
+        ui->leScale->setVisible(false);
+        ui->leDelta->setVisible(false);
+        ui->leNoiseOffset->setVisible(false);
+        ui->leNoiseTilt->setVisible(false);
+        ui->lePersistence->setVisible(false);
+    }
+    else {
+        ui->leStrength->setVisible(true);
+        ui->leArm->setVisible(true);
+        ui->leZ0->setVisible(true);
+        ui->leR0->setVisible(true);
+        ui->leDelta->setVisible(true);
+        ui->leWinding->setVisible(true);
+        ui->leScale->setVisible(true);
+        ui->leDelta->setVisible(true);
+        ui->leNoiseOffset->setVisible(true);
+        ui->leNoiseTilt->setVisible(true);
+        ui->lePersistence->setVisible(true);
+    }
+}
+
 void MainWindow::UpdateGalaxyGUI()
 {
     ui->leGalaxyName->setText(m_galaxy.galaxyParams().name());
@@ -180,6 +210,7 @@ void MainWindow::UpdateComponentsGUI()
 {
     PopulateCmbComponentTypes();
     PopulateCmbSpectra();
+    UpdateComponentsGUIbyType();
     ui->leStrength->setText(QString::number(m_curComponentParams->strength()));
     ui->leArm->setText(QString::number(m_curComponentParams->arm()));
     ui->leZ0->setText(QString::number(m_curComponentParams->z0()));
@@ -671,6 +702,20 @@ void MainWindow::on_btnClone_clicked()
 
 void MainWindow::on_pushButton_clicked()
 {
-    DialogRendererHelp* dr = new DialogRendererHelp("Renderer", "Hallaballa! \n Dette var jo moro.");
+    DialogRendererHelp* dr = new DialogRendererHelp("Renderer panel", Util::loadTextFile(":/TabRenderingHelp.txt") );
     dr->show();
+}
+
+void MainWindow::on_btnHelpGalaxy_clicked()
+{
+    DialogRendererHelp* dr = new DialogRendererHelp("Galaxy parameters panel", Util::loadTextFile(":/TabGalaxyHelp.txt") );
+    dr->show();
+
+}
+
+void MainWindow::on_btnHelpComponents_clicked()
+{
+    DialogRendererHelp* dr = new DialogRendererHelp("Components parameters panel", Util::loadTextFile(":/TabComponentsHelp.txt") );
+    dr->show();
+
 }

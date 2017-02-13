@@ -26,7 +26,7 @@ void GalaxyComponentDisk::componentIntensity(RasterPixel* rp, QVector3D& p, floa
     float p2 = 0.5;
     if (ival<0.0005)
         return;
-    p2 =abs(getPerlinCloudNoise(p, rp->winding, 6, m_componentParams.scale(), m_componentParams.ks()));
+    p2 =abs(getPerlinCloudNoise(p, rp->winding, 10, m_componentParams.scale(), m_componentParams.ks()));
 
     p2 = fmax (p2, 0.01f);
     //if (p2!=0)

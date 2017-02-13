@@ -30,7 +30,7 @@
      <number>-3</number>
     </property>
     <property name="currentIndex">
-     <number>4</number>
+     <number>2</number>
     </property>
     <widget class="QWidget" name="tabScene">
      <attribute name="title">
@@ -490,6 +490,19 @@
        </property>
       </widget>
      </widget>
+     <widget class="QPushButton" name="btnHelpGalaxy">
+      <property name="geometry">
+       <rect>
+        <x>420</x>
+        <y>510</y>
+        <width>113</width>
+        <height>32</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Help</string>
+      </property>
+     </widget>
     </widget>
     <widget class="QWidget" name="tabGalaxy">
      <attribute name="title">
@@ -889,6 +902,19 @@
        <string>Delete component</string>
       </property>
      </widget>
+     <widget class="QPushButton" name="btnHelpComponents">
+      <property name="geometry">
+       <rect>
+        <x>420</x>
+        <y>510</y>
+        <width>113</width>
+        <height>32</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Help</string>
+      </property>
+     </widget>
     </widget>
     <widget class="QWidget" name="tab_2">
      <attribute name="title">
@@ -1086,7 +1112,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>Render</string>
+     <string>&amp;Render</string>
     </property>
    </widget>
    <widget class="QProgressBar" name="pgbRendering">

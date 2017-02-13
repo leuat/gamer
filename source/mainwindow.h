@@ -16,6 +16,8 @@ class MainWindow;
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
+//    Q_INIT_RESOURCE(gamerresources);
+
 
 public:
     explicit MainWindow(QWidget *parent = 0);
@@ -120,6 +122,10 @@ private slots:
 
     void on_pushButton_clicked();
 
+    void on_btnHelpGalaxy_clicked();
+
+    void on_btnHelpComponents_clicked();
+
 private:
     Ui::MainWindow *ui;
     Rasterizer* m_rasterizer = nullptr;
@@ -140,6 +146,8 @@ private:
     void PopulateCmbSpectra();
     void PopulateImageSize();
     void PopulateGalaxyList();
+
+    void UpdateComponentsGUIbyType();
 
     void UpdateGalaxyGUI();
     void UpdateGalaxyData();

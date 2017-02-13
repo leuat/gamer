@@ -15,7 +15,7 @@ QMAKE_LFLAGS +=  -fopenmp
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = Gamer
 TEMPLATE = app
-
+INCLUDEPATH += .
 
 SOURCES += \
     source/galaxy/rasterizer.cpp \
@@ -72,3 +72,5 @@ FORMS    += mainwindow.ui \
 
 RESOURCES += \
     gamerresources.qrc
+
+DISTFILES +=
