@@ -48,10 +48,16 @@ void Buffer2D::DrawBox(Buffer2D* backImage,  const int i, const int j, const int
 
 void Buffer2D::ToColorBuffer(QImage *image, QImage* shadowImage, float exposure, float gamma, float saturation)
 {
-    if (image->width()!=m_size) {
-        GMessages::Message("ERROR! Color buffer and render buffer not equal size!");
+    if (image->width()!=m_size || shadowImage->width() != m_size) {
+        qDebug() << "ERROR! Color buffer and render buffer not equal size!";
+        qDebug() << "Main: " << m_size;
+        qDebug() << "Image: " << image->width();
+        qDebug() << "ShadowImage: " << shadowImage->width();
         return;
     }
+
+
+#pragma omp for
     for (int i=0;i<m_size;i++) {
         for (int j=0;j<m_size;j++) {
             QColor c = PostProcess(Get(i,j), exposure, gamma, saturation);

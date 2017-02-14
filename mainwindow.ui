@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>1215</width>
-    <height>786</height>
+    <height>796</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -1119,7 +1119,7 @@
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>700</y>
+      <y>690</y>
       <width>561</width>
       <height>23</height>
      </rect>
@@ -1224,6 +1224,35 @@
     </property>
     <property name="text">
      <string>Save image</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="lblEta">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>710</y>
+      <width>271</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="checkBox">
+    <property name="geometry">
+     <rect>
+      <x>970</x>
+      <y>609</y>
+      <width>101</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Save Fits</string>
     </property>
    </widget>
   </widget>

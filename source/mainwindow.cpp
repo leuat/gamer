@@ -11,6 +11,7 @@
 #include "source/util/gmessages.h"
 #include "source/util/util.h"
 #include "dialogrendererhelp.h"
+#include <QElapsedTimer>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -404,6 +405,16 @@ void MainWindow::loop()
         m_renderingParams.Save(m_RenderParamsFilename);
 
     }
+    // ETA time
+    if (m_rasterizer->getState()==Rasterizer::State::rendering) {
+        float time = m_rasterizer->getTimer().elapsed();
+        float percentage = m_rasterizer->getPercentDone();
+        float timeLeft = time/(percentage) - time;
+        ui->lblEta->setText("ETA: " + Util::MilisecondToString(timeLeft));
+
+    }
+    else
+        ui->lblEta->setText("");
 }
 
 void MainWindow::on_btnNewComponent_clicked()

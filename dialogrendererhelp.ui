@@ -110,6 +110,19 @@ p, li { white-space: pre-wrap; }
     </property>
    </widget>
   </widget>
+  <widget class="QPushButton" name="btnKake">
+   <property name="geometry">
+    <rect>
+     <x>90</x>
+     <y>400</y>
+     <width>113</width>
+     <height>32</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Kake</string>
+   </property>
+  </widget>
  </widget>
  <resources/>
  <connections>

@@ -34,18 +34,24 @@ QImage *Rasterizer::getImageShadowBuffer() const
     return m_imageShadowBuffer;
 }
 
+QElapsedTimer Rasterizer::getTimer() const
+{
+    return m_timer;
+}
+
 void Rasterizer::run()
 {
     m_mutex.lock();
     m_mutex.unlock();
-    m_state=State::rendering;
     Prepare();
+    m_state=State::rendering;
 
-    QElapsedTimer timer;
-    timer.start();
+//    m_timer;
+//    m_timer;
+    m_timer.start();
 //    sleep(5000);
     RenderPixels();
-    GMessages::Message("Rendering took " + QString::number(timer.elapsed()/1000.0) + " seconds");
+    GMessages::Message("Rendering took " + Util::MilisecondToString(m_timer.elapsed()));
     m_state=State::done;
 
 }
@@ -89,15 +95,32 @@ void Rasterizer::setNewSize(int s)
 */
 void Rasterizer::prepareBuffer()
 {
-    if (m_imageBuffer == nullptr || m_imageBuffer->width() != m_renderingParams->size()) {
-        m_imageBuffer = new QImage(m_renderingParams->size(), m_renderingParams->size(),QImage::Format_ARGB32);
-        m_renderBuffer = new Buffer2D(m_renderingParams->size());
-        m_backBuffer = new Buffer2D(m_renderingParams->size());
-        m_imageShadowBuffer = new QImage(m_renderingParams->size(), m_renderingParams->size(),QImage::Format_ARGB32);
+    // Do not changes buffers if rendering!
+
+    if (m_state == State::rendering)
+        return;
+
+    int size = m_renderingParams->size();
+
+    if (m_imageBuffer == nullptr || m_imageBuffer->width() != size || m_imageShadowBuffer->width()!=size) {
+        if (m_imageBuffer)
+            delete m_imageBuffer;
+        if (m_renderBuffer)
+            delete m_renderBuffer;
+        if (m_backBuffer)
+            delete m_backBuffer;
+        if (m_imageShadowBuffer)
+            delete m_imageShadowBuffer;
+
+        m_imageBuffer = new QImage(size,size,QImage::Format_ARGB32);
+        m_renderBuffer = new Buffer2D(size);
+        m_backBuffer = new Buffer2D(size);
+        m_imageShadowBuffer = new QImage(size, size,QImage::Format_ARGB32);
     }
     m_imageBuffer->fill(QColor(0,0,0));
     m_backBuffer->fill(QVector3D(0,0,0));
     m_renderBuffer->fill(QVector3D(0,0,0));
+    m_imageShadowBuffer->fill(QColor(0,0,0));
 
 }
 
@@ -188,7 +211,9 @@ void Rasterizer::RenderPixels() {
         int i = idx%(int)m_renderingParams->size();
         int j = (idx-i)/(int)m_renderingParams->size();
 
-        //m_buffer->setPixel(i,j,rgb.rgba());
+
+
+        //m_renderBuffer->setPixel(i,j,rgb.rgba());
         m_renderBuffer->DrawBox(m_backBuffer, i,j, 6, rp.I());
 
     }

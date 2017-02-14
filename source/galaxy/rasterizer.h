@@ -5,6 +5,7 @@
 #include <QImage>
 #include <QMutex>
 #include <QWaitCondition>
+#include <QElapsedTimer>
 #include "source/galaxy/galaxy.h"
 #include "source/galaxy/renderingparams.h"
 #include "source/galaxy/galaxyinstance.h"
@@ -40,6 +41,7 @@ private:
     QWaitCondition m_condition;
 
     float m_percentDone = 0;
+    QElapsedTimer m_timer;
 
 protected:
     void run() override;
@@ -96,6 +98,7 @@ protected:
     void setState(const State &state);
     float getPercentDone() const;
     QImage *getImageShadowBuffer() const;
+    QElapsedTimer getTimer() const;
 };
 
 

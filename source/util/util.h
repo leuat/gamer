@@ -127,7 +127,28 @@ public:
         QString data = in.readAll();
         file.close();
         return data;
+    }
 
+    static QString MilisecondToString(int ms) {
+//        ms+=1000;
+        int ds = ms/100;
+        int s = (ms/1000);
+        int m = (s/60);
+        int h = (m/60);
+        int d = h/24;
+        ds = ds % 10;
+        s = s % 60;
+        m = m % 60;
+        h = h % 24;
+        QString str = "";
+        if (d!=0)
+            str+= QString::number(d) + "d ";
+        if (h!=0)
+            str+= QString::number(h) + "h ";
+        if (m!=0)
+            str+= QString::number(m) + "m ";
+        str+= QString::number(s) + "." + QString::number(ds) + "s ";
+        return str;
     }
 
 

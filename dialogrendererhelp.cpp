@@ -1,7 +1,7 @@
 #include "dialogrendererhelp.h"
 #include "ui_dialogrendererhelp.h"
 
-DialogRendererHelp::DialogRendererHelp(QString header, QString text,QWidget *parent) :
+DialogRendererHelp::DialogRendererHelp(QString header, QString text,QWidget *parent ) :
     QDialog(parent),
     ui(new Ui::DialogRendererHelp)
 {
