@@ -33,6 +33,7 @@ public:
                                     GalaxyInstance* gi, const float weight);
 
 
+    //virtuafloat getIntensityModifier();
     void setGalaxyParam(GalaxyParams* gp);
     float cosh(const float x);
     float getHeightModulation(float height);

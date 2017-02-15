@@ -23,6 +23,9 @@ GalaxyComponent* Galaxy::instantiate(QString className) {
     if (className=="dust")
         ngc = (GalaxyComponent*)new GalaxyComponentDust();
 
+    if (className=="dust2")
+        ngc = (GalaxyComponent*)new GalaxyComponentDust2();
+
     if (className=="stars")
         ngc = (GalaxyComponent*)new GalaxyComponentStars();
 

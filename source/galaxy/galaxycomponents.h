@@ -28,3 +28,9 @@ class GalaxyComponentStars : GalaxyComponent {
     void componentIntensity(RasterPixel* rp, QVector3D& r, float ival) override;
 		
 };
+
+class GalaxyComponentDust2 : GalaxyComponent {
+
+    void componentIntensity(RasterPixel* rp, QVector3D& r, float ival) override;
+
+};

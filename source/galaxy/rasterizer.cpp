@@ -350,8 +350,9 @@ RasterPixel* Rasterizer::renderPixel(QVector3D dir, QVector<GalaxyInstance*> gal
 
                                                 g->galaxyParams().axis(), isp1, isp2, t1, t2);
 
-        if (t1<0) {
-            //isp2 = m_renderingParams->camera().camera()- gi->position();// + m_renderingParams->direction*
+        if (t2>0) {
+ //           qDebug() << "BEHIND";
+            isp2 = m_renderingParams->camera().camera()+ gi->position();// + m_renderingParams->direction*
         }
 
         if (t1>0 && t2>0)
@@ -381,22 +382,44 @@ void Rasterizer::getIntensity(GalaxyInstance* gi, RasterPixel* rp, QVector3D isp
     QVector3D p = origin;
     rp->scale = step;
 
-    for (int i=0;i<N;i++)
-//    while(QVector3D::dotProduct(p-origin,(isp2-origin).normalized())<length)
+    QVector3D camera = m_renderingParams->camera().camera();
+    int cnt = 0;
+//    for (int i=0;i<N;i++)
+    while(QVector3D::dotProduct(p-origin,(isp2-origin).normalized())<length)
     {
-        //step = Mathf.Clamp((p-camera).magnitude*0.01f, 0.001f, 0.01f);
+        //step = Util::clamp((p-camera).length()*m_renderingParams->rayStep(), 0.00001, 0.1);
+        //step = m_renderingParams->rayStep();
 
-        step = m_renderingParams->rayStep();
+        float curStep = 0.1;
+//        float curStep = m_renderingParams->rayStep();
+        QVector3D P;
+        float z = 1;
+        float m_currentRadius;
+
         for ( GalaxyComponent* gc : g->components()) {
-            //            qDebug() << "Looping throgh gc " << gc->getComponentParams().className();
+            gc->getRadius(p, P, z, gi);
+            z = gc->getHeightModulation(z);
+/*            if (random()%300==1 && z>0)
+                qDebug() << z;*/
+//            curStep = max(curStep, 0.1f/(10.0f*z+0.5f));
+//            float hmod = max((1-0.01*z),0.0f);
+
+            // BULGEN er problemet for faen. jaja.
+            float hmod = m_renderingParams->rayStep() + (1-z)*0.01;
+            curStep = max(min(curStep, hmod), m_renderingParams->rayStep());
+
+
             if (gc->getComponentParams().active()==1)
                 gc->calculateIntensity( rp, p, gi, step*200);
         }
+        step = curStep;
         p=p-dir*step;
+        cnt++;
         //rp.I()Floor(0);
     }
-/*    if (random()%300==1)
-        qDebug() << "average: " << N << "isps: " << isp1 << ", " << isp2;*/
+/*    if (random()%1000==1)
+        qDebug() << "average: " << cnt << "isps: " << isp1 << ", " << isp2;
+*/
 }
 
 QImage *Rasterizer::getBuffer() const

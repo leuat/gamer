@@ -68,6 +68,7 @@ void GalaxyComponent::calculateIntensity(RasterPixel* rp, QVector3D& p,
     z = getHeightModulation(z);
     float armVal = 1;
     float m_winding = 0;
+
     if (z>0.01)
     {
 
@@ -76,7 +77,7 @@ void GalaxyComponent::calculateIntensity(RasterPixel* rp, QVector3D& p,
         if (intensity >0.001) {
 
             float scale = 1;
-            if (m_componentParams.className() == "Dust")
+            if (m_componentParams.className() == "Dust" || m_componentParams.className() == "Dust2")
                 scale = Util::smoothstep(0, 1.0f*m_galaxyParams->bulgeDust(), m_currentRadius);
             if (m_componentParams.arm()!=0) {
                 armVal = calculateArmValue(m_currentRadius, P);
