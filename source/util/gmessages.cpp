@@ -28,7 +28,8 @@ void GMessages::setVerbatim(bool verbatim)
     m_verbatim = verbatim;
 }
 
+
 GMessages::GMessages()
 {
-
+    
 }

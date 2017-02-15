@@ -2,6 +2,7 @@
 
 #include <QVector3D>
 #include <QString>
+#include "source/galaxy/spectrum.h"
 #include "source/galaxy/gamercamera.h"
 
 class RenderingParams {
@@ -33,12 +34,15 @@ public:
     QString m_currentGalaxy ="";
     QString m_sceneMode ="galaxy";
 
+    Spectra m_spectra;
+
     friend QDataStream& operator << ( QDataStream & s, RenderingParams& cp) {
         s << cp.camera();
         s << cp.m_size << cp.m_previewSize << cp.m_exposure << cp.m_gamma << cp.m_saturation << cp.m_detailLevel;
         s << cp.m_noiseDetail << cp.m_noStars << cp.m_starSize << cp.m_starSizeSpread;
         s << cp.m_starStrength << cp.m_rayStep << cp.m_galaxyDirectory << cp.m_sceneDirectory << cp.m_currentGalaxy << cp.m_sceneMode;
         s << cp.m_imageDirectory;
+        s << cp.m_spectra;
         return s;
     }
 
@@ -50,6 +54,7 @@ public:
         s >> cp.m_noiseDetail >> cp.m_noStars >> cp.m_starSize >> cp.m_starSizeSpread;
         s >> cp.m_starStrength >> cp.m_rayStep >> cp.m_galaxyDirectory >> cp.m_sceneDirectory >> cp.m_currentGalaxy;
         s >> cp.m_sceneMode >> cp.m_imageDirectory;
+        s >> cp.m_spectra;
         return s;
     }
     void Save(QString filename);
@@ -90,6 +95,8 @@ public:
 
     QString imageDirectory() const;
     void setImageDirectory(const QString &imageDirectory);
+
+    Spectra& spectra();
 
 private:
     float m_idx;

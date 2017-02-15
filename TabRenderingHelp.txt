@@ -4,13 +4,13 @@ This path can be changed in the settings section. Open a galaxy by double-clicki
 filename is automatically updated.<br>
 <br>
 The list is refreshed every time you create, delete, clone or change the current working galaxy.
-<h2>The galaxy renderer</h2>
+<h2>Galaxy renderer window</h2>
 The current galaxy is continuously rendered in low-resolution preview mode, and is displayed on the right-hand panel. In preview mode, you can rotate the camera around the center of the galaxy
 by right-clicking and dragging the mouse. By pressing the "Alt"-button and right-clicking and dragging, you can zoom the camera.<br>
 <br>
 When you have obtained a suitable camera, press the "Renderer"-button (or press command+R) to perform a full rendering of the current scene. Press "Save" to save the image. The image is automatically
 saved to the image directory (specified in the "Settings" tab).
-<h2>The rendering parameters</h2>
+<h2>Rendering parameters</h2>
 Above the galaxy list, you are presented with some of the global rendering parameters. When changed, they are automatically saved and a new preview image is created. They are:
 <ul>
     <li><b>Image size</b>: Pixel width / height of the rendered image

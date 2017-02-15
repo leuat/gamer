@@ -11,6 +11,8 @@
 #include "source/util/gmessages.h"
 #include "source/util/util.h"
 #include "dialogrendererhelp.h"
+#include "dialogabout.h"
+#include "source/util/fitsio.h"
 #include <QElapsedTimer>
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -22,18 +24,26 @@ MainWindow::MainWindow(QWidget *parent) :
     m_rasterizer = new Rasterizer(&m_renderingParams);
     ui->myGLWidget->setRenderingParams(&m_renderingParams);
     GMessages::Initialize(ui->lstMessages);
-    Spectra::PopulateSpectra();
+
     PopulateImageSize();
     m_renderingParams.Load(m_RenderParamsFilename);
+//    qDebug() << m_renderingParams.spectra().m_spectra.size();
+
+    if (m_renderingParams.spectra().m_spectra.size()==0)
+        m_renderingParams.spectra().PopulateSpectra();
+
+    m_curComponentSpectrum = m_renderingParams.spectra().m_spectra[0];
+    UpdateSpectrumParamsGUI();
     UpdateRenderingParamsGUI();
 
     // Try to load
     m_galaxy.Load(m_renderingParams.galaxyDirectory() + m_renderingParams.currentGalaxy() + ".gax");
 
-    if (m_galaxy.components().size()==0) {
+    if (m_galaxy.componentParams().size()==0) {
         m_galaxy.AddComponent(10);
         m_renderingParams.setCurrentGalaxy(m_galaxy.galaxyParams().name());
     }
+
 
 
     PrepareNewGalaxy();
@@ -41,7 +51,6 @@ MainWindow::MainWindow(QWidget *parent) :
     // Adding a single galaxy to the rasterizer
     m_rasterizer->AddGalaxy(new GalaxyInstance(&m_galaxy, m_galaxy.galaxyParams().name(),
                                               QVector3D(0,0,0), QVector3D(0,1,0).normalized(), 1, 0)  );
-
 
     timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(loop()));
@@ -98,13 +107,10 @@ void MainWindow::PopulateCmbComponentTypes() {
 
 void MainWindow::PopulateCmbSpectra()
 {
-    if (m_curComponentParams != nullptr) {
-        if (ui->cmbSpectrum->count()==0) {
-          ui->cmbSpectrum->addItems(Spectra::listSpectra());
-        }
+    ui->cmbSpectrum->clear();
+    ui->cmbSpectrum->addItems(m_renderingParams.spectra().listSpectra());
+    if (m_curComponentParams!=nullptr)
         ui->cmbSpectrum->setCurrentText(m_curComponentParams->spectrum());
-    }
-
 }
 
 void MainWindow::PopulateImageSize()
@@ -129,6 +135,15 @@ void MainWindow::PopulateGalaxyList()
         QString name = filename.split("/").last();
         ui->lstGalaxies->addItem(name);
     }
+}
+
+void MainWindow::PopulateSpectraEditList()
+{
+    ui->cmbSpectraEdit->clear();
+    ui->cmbSpectraEdit->addItems(m_renderingParams.spectra().listSpectra());
+    if (m_curComponentSpectrum!=nullptr)
+        ui->cmbSpectraEdit->setCurrentText(m_curComponentSpectrum->name());
+    PopulateCmbSpectra();
 }
 
 void MainWindow::UpdateComponentsGUIbyType()
@@ -229,8 +244,8 @@ void MainWindow::PopulateCmbComponents() {
     int idx = ui->cmbComponents->currentIndex();
     ui->cmbComponents->clear();
     int i = 0;
-    for (GalaxyComponent* gc: m_galaxy.components()) {
-        QString s = gc->getComponentParams().className() + " " + QString::number(i);
+    for (ComponentParams* gc: m_galaxy.componentParams()) {
+        QString s = gc->className() + " " + QString::number(i);
         ui->cmbComponents->addItem(s);
         i++;
     }
@@ -260,6 +275,7 @@ void MainWindow::UpdateRenderingParamsGUI()
     ui->hsGamma->setValue(m_renderingParams.gamma()*m_postSliderScale);
     ui->hsSaturation->setValue(m_renderingParams.saturation()*m_postSliderScale);
     PopulateGalaxyList();
+    PopulateSpectraEditList();
 
 }
 
@@ -293,8 +309,46 @@ void MainWindow::UpdatePostProcessingData()
 
 }
 
+void MainWindow::UpdateSpectrumParamsGUI()
+{
+    if (m_curComponentSpectrum==nullptr)
+        return;
+
+    ui->leSpectrumName->setText( m_curComponentSpectrum->m_name );
+    ui->leSpectrumRed->setText(QString::number(m_curComponentSpectrum->m_spectrum.x()));
+    ui->leSpectrumGreen->setText(QString::number(m_curComponentSpectrum->m_spectrum.y()));
+    ui->leSpectrumBlue->setText(QString::number(m_curComponentSpectrum->m_spectrum.z()));
+
+}
+
+void MainWindow::UpdateSpectrumParamsData()
+{
+    if (m_curComponentSpectrum==nullptr)
+        return;
+
+    m_curComponentSpectrum->m_name = ui->leSpectrumName->text();
+    m_curComponentSpectrum->m_spectrum.setX(ui->leSpectrumRed->text().toFloat());
+    m_curComponentSpectrum->m_spectrum.setY(ui->leSpectrumGreen->text().toFloat());
+    m_curComponentSpectrum->m_spectrum.setZ(ui->leSpectrumBlue->text().toFloat());
+    PopulateSpectraEditList();
+    PopulateCmbSpectra();
+
+    m_renderingParams.Save(m_RenderParamsFilename);
+    RenderPreview(m_renderingParams.previewSize());
+}
+
 void MainWindow::Render()
 {
+
+    QString problemSpectrum = m_galaxy.VerifySpectra(&m_renderingParams);
+    if (problemSpectrum!="") {
+        QMessageBox msgBox;
+        msgBox.setText("The spectrum named '" + problemSpectrum +"' is missing. Please set up this spectrum in the 'spectra' tab before proceeding. Rendering halted.");
+        msgBox.exec();
+        return;
+    }
+
+
     EnableGUIEditing(false);
     m_renderingParams.Save(m_RenderParamsFilename);
     m_rasterizer->setNewSize(m_renderingParams.size());
@@ -363,6 +417,13 @@ void MainWindow::EnableGUIEditing(bool value)
     ui->btnClone->setEnabled(value);
     ui->btnDelete->setEnabled(value);
     ui->lstGalaxies->setEnabled(value);
+
+    ui->cmbSpectraEdit->setEnabled(value);
+    ui->leSpectrumRed->setEnabled(value);
+    ui->leSpectrumGreen->setEnabled(value);
+    ui->leSpectrumBlue->setEnabled(value);
+    ui->leSpectrumName->setEnabled(value);
+
 }
 
 void MainWindow::SaveGalaxy()
@@ -387,7 +448,6 @@ void MainWindow::CreateNewGalaxy()
 
 void MainWindow::loop()
 {
-//    qDebug() << m_renderingParams.camera().target();
     if (m_rasterizer->getState()==Rasterizer::State::done) {
         //ui->myGLWidget->SetTexture(m_rasterizer->getBuffer());
         UpdateImage();
@@ -430,7 +490,7 @@ void MainWindow::on_cmbComponentType_activated(const QString &arg1)
         return;
     m_curComponentParams->setClassName(arg1);
     ui->cmbComponentType->setCurrentText(arg1);
-    m_galaxy.SetupComponents();
+    m_galaxy.SetupComponents(&m_renderingParams);
     UpdateGUI();
     UpdateComponentsGUI();
 
@@ -514,9 +574,8 @@ void MainWindow::on_cmbSpectrum_activated(const QString &arg1)
         return;
     m_curComponentParams->setSpectrum(arg1);
     ui->cmbSpectrum->setCurrentText(arg1);
-    m_galaxy.SetupComponents();
-    UpdateComponentsGUI();
-
+    m_galaxy.SetupComponents(&m_renderingParams);
+    UpdateComponentsData();
 }
 
 
@@ -654,8 +713,16 @@ void MainWindow::on_hsSaturation_sliderMoved(int position)
 
 void MainWindow::on_btnSaveImage_clicked()
 {
+    QString baseFile = Util::getFileName(m_renderingParams.imageDirectory(),"Image","png");
     QString filename = m_renderingParams.imageDirectory() +
-            Util::getFileName(m_renderingParams.imageDirectory(),"Image","png");
+            baseFile +".png";
+    if (ui->chkSaveFits->isChecked()) {
+        FitsIO::SaveFloat(m_renderingParams.imageDirectory() + baseFile + "_red.fits", 0, m_rasterizer->getRenderBuffer());
+        FitsIO::SaveFloat(m_renderingParams.imageDirectory() + baseFile + "_green.fits", 1, m_rasterizer->getRenderBuffer());
+        FitsIO::SaveFloat(m_renderingParams.imageDirectory() + baseFile + "_blue.fits", 2, m_rasterizer->getRenderBuffer());
+    }
+//      FitsIO::SaveFloat(m_renderingParams.imageDirectory() +"test.fits", 0, m_rasterizer->getRenderBuffer());
+
     m_rasterizer->getImageShadowBuffer()->save(filename);
     GMessages::Message("Galaxy png saved to " + filename);
 
@@ -693,8 +760,9 @@ void MainWindow::on_btnNewComponent_2_clicked()
 {
     if (m_galaxy.componentParams().size()<=1)
         return;
+
     m_galaxy.componentParams().removeAll(m_curComponentParams);
-    m_galaxy.SetupComponents();
+    m_galaxy.SetupComponents(&m_renderingParams);
     m_curComponentParams = m_galaxy.componentParams()[0];
     UpdateComponentsGUI();
     PopulateCmbComponents();
@@ -708,7 +776,6 @@ void MainWindow::on_btnClone_clicked()
     SaveGalaxy();
     PopulateGalaxyList();
     UpdateGalaxyGUI();
-
 }
 
 void MainWindow::on_pushButton_clicked()
@@ -729,4 +796,84 @@ void MainWindow::on_btnHelpComponents_clicked()
     DialogRendererHelp* dr = new DialogRendererHelp("Components parameters panel", Util::loadTextFile(":/TabComponentsHelp.txt") );
     dr->show();
 
+}
+
+void MainWindow::on_btnHelpPostProcessing_clicked()
+{
+    DialogRendererHelp* dr = new DialogRendererHelp("Post-processing tools", Util::loadTextFile(":/TabPostProcessingHelp.txt") );
+    dr->show();
+}
+
+
+void MainWindow::on_actionAbout_triggered()
+{
+    DialogAbout* da = new DialogAbout();
+    da->show();
+}
+
+void MainWindow::on_cmbSpectraEdit_activated(const QString &arg1)
+{
+    m_curComponentSpectrum = m_renderingParams.spectra().FindSpectrum(arg1);
+    UpdateSpectrumParamsGUI();
+}
+
+void MainWindow::on_leSpectrumName_editingFinished()
+{
+    UpdateSpectrumParamsData();
+}
+
+void MainWindow::on_leSpectrumRed_editingFinished()
+{
+    UpdateSpectrumParamsData();
+
+}
+
+void MainWindow::on_leSpectrumGreen_editingFinished()
+{
+    UpdateSpectrumParamsData();
+}
+
+void MainWindow::on_leSpectrumBlue_editingFinished()
+{
+    UpdateSpectrumParamsData();
+}
+
+void MainWindow::on_btnNewSpectrum_clicked()
+{
+    m_curComponentSpectrum = new ComponentSpectrum(QVector3D(1,1,1),"New Spectrum");
+    m_renderingParams.spectra().m_spectra.append(m_curComponentSpectrum);
+    PopulateSpectraEditList();
+    UpdateSpectrumParamsGUI();
+
+
+}
+
+void MainWindow::on_btnDeleteSpectrum_clicked()
+{
+    if (m_curComponentSpectrum==nullptr)
+        return;
+
+    QMessageBox msgBox;
+    msgBox.setText("Are you sure you wish to delete the spectrum '" + m_curComponentSpectrum->name() + "'?");
+    msgBox.setInformativeText("This action cannot be undone.");
+    msgBox.setStandardButtons(QMessageBox::Ok |  QMessageBox::Cancel);
+    msgBox.setDefaultButton(QMessageBox::Cancel);
+    int ret = msgBox.exec();
+    if (ret==QMessageBox::Ok) {
+        m_renderingParams.spectra().m_spectra.removeAll(m_curComponentSpectrum);
+        if (m_renderingParams.spectra().m_spectra.size()!=0)
+            m_curComponentSpectrum = m_renderingParams.spectra().m_spectra[0];
+        else
+            m_curComponentSpectrum = nullptr;
+
+        PopulateSpectraEditList();
+        UpdateSpectrumParamsGUI();
+    }
+
+}
+
+void MainWindow::on_btnHelpSpectra_clicked()
+{
+    DialogRendererHelp* dr = new DialogRendererHelp("Spectra", Util::loadTextFile(":/TabSpectraHelp.txt") );
+    dr->show();
 }

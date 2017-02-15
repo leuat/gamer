@@ -4,8 +4,9 @@
     </qresource>
     <qresource prefix="/">
         <file>TabRenderingHelp.txt</file>
-        <file>test.txt</file>
         <file>TabGalaxyHelp.txt</file>
         <file>TabComponentsHelp.txt</file>
+        <file>TabPostProcessingHelp.txt</file>
+        <file>TabSpectraHelp.txt</file>
     </qresource>
 </RCC>

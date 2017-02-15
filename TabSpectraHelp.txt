@@ -1,0 +1,8 @@
+<h2>The spectra</h2>
+Every component has a certain spectrum assigned to it. Here, you can define your own specta by creating new / editing old / deleting. The spectrum is uniquely defined by a name.
+When a galaxy is missing a spectrum, a warning will be issued before rendering. <br>
+<h2>Parameter list</h2>
+<ul>
+    <li><b>Name</b>: Unique name for spectrum. If you rename an already existing spectrum, remember to change the name in the component parameters section!
+    <li><b>Red/Green/blue</b>: Spectrum color component.
+</ul>

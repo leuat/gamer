@@ -129,7 +129,7 @@ QString Util::getFileName(QString dir, QString baseName, QString type)
         }
     }
     maxNumber++;
-    return baseName + QString::number(maxNumber).rightJustified(4, '0') + "." + type;
+    return baseName + QString::number(maxNumber).rightJustified(4, '0');// + "." + type;
 
 }
 

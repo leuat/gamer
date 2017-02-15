@@ -20,8 +20,6 @@ void GalaxyComponentBulge::calculateIntensity(RasterPixel* rp, QVector3D& p, Gal
     componentIntensity(rp, p, weight);
 }
 
-
-
 void GalaxyComponentDisk::componentIntensity(RasterPixel* rp, QVector3D& p, float ival) {
     float p2 = 0.5;
     if (ival<0.0005)

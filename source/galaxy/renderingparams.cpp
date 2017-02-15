@@ -32,6 +32,11 @@ void RenderingParams::setRayStep(float rayStep)
     m_rayStep = rayStep;
 }
 
+Spectra& RenderingParams::spectra()
+{
+    return m_spectra;
+}
+
 QString RenderingParams::imageDirectory() const
 {
     return m_imageDirectory;

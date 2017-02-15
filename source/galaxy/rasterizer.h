@@ -25,6 +25,7 @@ public:
 private:
     QVector<GalaxyInstance*> m_galaxies;
     RenderingParams* m_renderingParams;
+
     QVector<int> m_renderList;
     QImage* m_imageBuffer = nullptr;
     QImage* m_imageShadowBuffer = nullptr;
@@ -99,6 +100,7 @@ protected:
     float getPercentDone() const;
     QImage *getImageShadowBuffer() const;
     QElapsedTimer getTimer() const;
+    Buffer2D *getRenderBuffer() const;
 };
 
 

@@ -126,12 +126,33 @@ private slots:
 
     void on_btnHelpComponents_clicked();
 
+    void on_btnHelpPostProcessing_clicked();
+
+    void on_actionAbout_triggered();
+
+    void on_cmbSpectraEdit_activated(const QString &arg1);
+
+    void on_leSpectrumName_editingFinished();
+
+    void on_leSpectrumRed_editingFinished();
+
+    void on_leSpectrumGreen_editingFinished();
+
+    void on_leSpectrumBlue_editingFinished();
+
+    void on_btnNewSpectrum_clicked();
+
+    void on_btnDeleteSpectrum_clicked();
+
+    void on_btnHelpSpectra_clicked();
+
 private:
     Ui::MainWindow *ui;
     Rasterizer* m_rasterizer = nullptr;
     RenderingParams m_renderingParams;
     Galaxy m_galaxy;
     ComponentParams* m_curComponentParams = nullptr;
+    ComponentSpectrum* m_curComponentSpectrum = nullptr;
     QBasicTimer m_timer;
 
     float m_postSliderScale = 30;
@@ -146,6 +167,7 @@ private:
     void PopulateCmbSpectra();
     void PopulateImageSize();
     void PopulateGalaxyList();
+    void PopulateSpectraEditList();
 
     void UpdateComponentsGUIbyType();
 
@@ -157,6 +179,9 @@ private:
     void UpdateRenderingParamsGUI();
     void UpdateRenderingParamsData();
     void UpdatePostProcessingData();
+
+    void UpdateSpectrumParamsGUI();
+    void UpdateSpectrumParamsData();
 
     void Render();
     void RenderDirect();

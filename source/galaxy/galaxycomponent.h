@@ -47,8 +47,8 @@ public:
     float getWinding( float rad);
 
     ComponentParams& getComponentParams();
-    ComponentSpectrum *getSpectrum() const;
-    void setSpectrum(ComponentSpectrum *spectrum);
+    ComponentSpectrum* getSpectrum() const;
+    void setSpectrum(ComponentSpectrum* spectrum);
 };
 
 

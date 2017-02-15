@@ -64,19 +64,29 @@ void Galaxy::setGalaxyParams(const GalaxyParams &galaxyParams)
     m_galaxyParams = galaxyParams;
 }
 
-void Galaxy::SetupSpectra()
+void Galaxy::SetupSpectra(RenderingParams* rp)
 {
-    GMessages::Debug("Setting up components");
+//    GMessages::Debug("Setting up components");
     for (GalaxyComponent* gc : m_components) {
-        gc->setSpectrum(Spectra::FindSpectrum(gc->getComponentParams().spectrum()));
+        gc->setSpectrum(rp->spectra().FindSpectrum(gc->getComponentParams().spectrum()));
         if (gc->getSpectrum() == nullptr) {
-            qDebug() << "ERROR Could not find spectrum : " << gc->getComponentParams().spectrum();
-            exit(1);
+            gc->setSpectrum(rp->spectra().m_default);
+            GMessages::Message("Warning: Could not find spectrum '" + gc->getComponentParams().spectrum() + "', using white as default.");
         }
     }
 }
 
-void Galaxy::SetupComponents() {
+QString Galaxy::VerifySpectra(RenderingParams *rp)
+{
+    for (GalaxyComponent* gc : m_components) {
+        if (rp->spectra().FindSpectrum(gc->getComponentParams().spectrum())==nullptr)
+            return gc->getComponentParams().spectrum();
+    }
+    return "";
+
+}
+
+void Galaxy::SetupComponents(RenderingParams* rp) {
 
     m_components.clear();
     for (ComponentParams* cp : m_componentParams) {
@@ -84,7 +94,7 @@ void Galaxy::SetupComponents() {
         ngc->Initialize(cp, &m_galaxyParams);
         m_components.append (ngc);
     }
-    SetupSpectra();
+    SetupSpectra(rp);
 }
 
 ComponentParams* Galaxy::AddComponent(int count) {
@@ -122,7 +132,7 @@ ComponentParams* Galaxy::AddComponent(int count) {
         m_componentParams.append(cp);
     }
 
-    SetupComponents();
+//    SetupComponents(rp);
     return cp;
 
 }
@@ -173,7 +183,7 @@ bool Galaxy::Load(QString filename) {
     in >> *this;
 
     file.close();
-    SetupComponents();
+//    SetupComponents(rp);
     GMessages::Debug("Loaded galaxy '" +filename +"'.");
 
     return true;

@@ -1,0 +1,8 @@
+<h2>Post Processing</h2>
+In this panel, you can edit post-processing effects. The effects only affect the final color (png) image, and does not apply to raw FITS files. Parameters
+are:
+<ul>
+    <li><b>Exposure</b>: The pixel is scaled with 1/exposure.
+    <li><b>Gamma</b>: The pixel is scaled with pow(pixel, gamma)
+    <li><b>Saturation</b>: Color saturation, from black/white to intense colors.
+</ul>

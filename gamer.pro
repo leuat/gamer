@@ -40,7 +40,10 @@ SOURCES += \
     source/util/gmessages.cpp \
     source/noise/iqnoise.cpp \
     source/util/buffer2d.cpp \
-    dialogrendererhelp.cpp
+    dialogrendererhelp.cpp \
+    source/util/fitsio.cpp \
+    dialogabout.cpp \
+    source/util/fitsparam.cpp
 
 HEADERS  += \
     source/galaxy/rasterizer.h \
@@ -65,10 +68,14 @@ HEADERS  += \
     source/util/gmessages.h \
     source/noise/iqnoise.h \
     source/util/buffer2d.h \
-    dialogrendererhelp.h
+    dialogrendererhelp.h \
+    source/util/fitsio.h \
+    dialogabout.h \
+    source/util/fitsparam.h
 
 FORMS    += mainwindow.ui \
-    dialogrendererhelp.ui
+    dialogrendererhelp.ui \
+    dialogabout.ui
 
 RESOURCES += \
     gamerresources.qrc

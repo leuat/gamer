@@ -6,6 +6,7 @@
 #include <QVector>
 #include "source/galaxy/galaxyparams.h"
 #include "source/galaxy/componentparams.h"
+#include "source/galaxy/renderingparams.h"
 
 class GalaxyComponent;
 
@@ -20,7 +21,7 @@ private:
 
 public:
 
-    void SetupComponents();
+    void SetupComponents(RenderingParams* rp);
     ComponentParams* AddComponent(int);
 
     Galaxy() {}
@@ -70,7 +71,8 @@ public:
     void setDisplayName(const QString &displayName);
     void setComponentParams(const QVector<ComponentParams* > &componentParams);
     void setGalaxyParams(const GalaxyParams &galaxyParams);
-    void SetupSpectra();
+    void SetupSpectra(RenderingParams* rp);
+    QString VerifySpectra(RenderingParams* rp);
 };
 
 

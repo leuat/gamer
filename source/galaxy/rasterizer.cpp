@@ -39,17 +39,19 @@ QElapsedTimer Rasterizer::getTimer() const
     return m_timer;
 }
 
+Buffer2D *Rasterizer::getRenderBuffer() const
+{
+    return m_renderBuffer;
+}
+
 void Rasterizer::run()
 {
     m_mutex.lock();
     m_mutex.unlock();
     Prepare();
-    m_state=State::rendering;
 
-//    m_timer;
-//    m_timer;
+    m_state=State::rendering;
     m_timer.start();
-//    sleep(5000);
     RenderPixels();
     GMessages::Message("Rendering took " + Util::MilisecondToString(m_timer.elapsed()));
     m_state=State::done;
@@ -142,7 +144,7 @@ void Rasterizer::Prepare() {
 
     for (GalaxyInstance* gi : m_galaxies) {
         gi->GetGalaxy()->galaxyParams().setNoise(m_noise);
-        gi->GetGalaxy()->SetupComponents();
+        gi->GetGalaxy()->SetupComponents(m_renderingParams);
     }
 
     prepareBuffer();
@@ -194,7 +196,6 @@ Galaxy* Rasterizer::AddGalaxy(GalaxyInstance* gi) {
 
 
 void Rasterizer::RenderPixels() {
-
     int size = pow(m_renderingParams->size(),2);
     float delta = 1.0/(float)size;
     m_percentDone = 0;
@@ -210,8 +211,6 @@ void Rasterizer::RenderPixels() {
 
         int i = idx%(int)m_renderingParams->size();
         int j = (idx-i)/(int)m_renderingParams->size();
-
-
 
         //m_renderBuffer->setPixel(i,j,rgb.rgba());
         m_renderBuffer->DrawBox(m_backBuffer, i,j, 6, rp.I());
@@ -250,6 +249,7 @@ void Rasterizer::AssembleImage()
     */
 
 void  Rasterizer::Render() {
+
     if (!isRunning()) {
         QString  size = QString::number(m_renderingParams->size());
         GMessages::Message("Starting rendering of image with size " + size + "x" + size + " on " + QString::number(std::thread::hardware_concurrency()) + " cores.");

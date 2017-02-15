@@ -33,6 +33,13 @@ QVector3D Buffer2D::Get(const int i, const int j)
     return m_buffer[ x + y*m_size];
 }
 
+QVector3D Buffer2D::Get(const int i)
+{
+    int x = Util::clamp(i,0,m_size*m_size);
+    return m_buffer[ x ];
+}
+
+
 void Buffer2D::DrawBox(Buffer2D* backImage,  const int i, const int j, const int size, QVector3D val) {
     QVector3D mark = QVector3D(1,1,1);
     for (int x=max(0, i-size/2);x<=min(m_size-1, i+size/2);x++)
@@ -68,6 +75,11 @@ void Buffer2D::ToColorBuffer(QImage *image, QImage* shadowImage, float exposure,
     }
 }
 
+int Buffer2D::size() const
+{
+    return m_size;
+}
+
 QColor Buffer2D::PostProcess(const QVector3D &val, float exposure, float gamma, float saturation)
 {
     QVector3D v = val;
@@ -94,4 +106,16 @@ void Buffer2D::fill(const QVector3D v)
 {
     for (int i=0;i<m_buffer.size();i++)
         m_buffer[i] = v;
+}
+
+QByteArray *Buffer2D::toQByteArray(int no)
+{
+    QByteArray* ba = new QByteArray();
+    for (int i=0;i<m_size;i++)
+        for (int j=0;j<m_size;j++) {
+            float val = Get(j, m_size-1-i)[no];
+            ba->append((const char*)(&val), sizeof(float));
+        }
+   return ba;
+
 }

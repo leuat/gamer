@@ -1,4 +1,4 @@
-<h2>The components list</h2>
+<h2>Galaxy component list</h2>
 Galaxies contains a list of components. A galaxy can contain any number of components, and there are in total four component types that you can create or delete from the list. To create a
 new component, press the "New component" button. The new component will be added to the end of the list, with a basic <b>bulge</b> component template.
 You can select any component from the uppermost drop-down list. Each component can be switched on / off by clicking the "is active" checkbox. In addition, each component

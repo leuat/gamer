@@ -6,12 +6,12 @@ ComponentParams& GalaxyComponent::getComponentParams()
     return m_componentParams;
 }
 
-ComponentSpectrum *GalaxyComponent::getSpectrum() const
+ComponentSpectrum* GalaxyComponent::getSpectrum() const
 {
     return m_spectrum;
 }
 
-void GalaxyComponent::setSpectrum(ComponentSpectrum *spectrum)
+void GalaxyComponent::setSpectrum(ComponentSpectrum* spectrum)
 {
     m_spectrum = spectrum;
 }
