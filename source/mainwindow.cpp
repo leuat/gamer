@@ -22,6 +22,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ui->setupUi(this);
     m_rasterizer = new Rasterizer(&m_renderingParams);
+    m_renderQueue.setRasterizer(m_rasterizer);
     ui->myGLWidget->setRenderingParams(&m_renderingParams);
     GMessages::Initialize(ui->lstMessages);
 
@@ -276,7 +277,7 @@ void MainWindow::UpdateRenderingParamsGUI()
     ui->hsSaturation->setValue(m_renderingParams.saturation()*m_postSliderScale);
     PopulateGalaxyList();
     PopulateSpectraEditList();
-
+    UpdateStarsGUI();
 }
 
 
@@ -335,6 +336,24 @@ void MainWindow::UpdateSpectrumParamsData()
 
     m_renderingParams.Save(m_RenderParamsFilename);
     RenderPreview(m_renderingParams.previewSize());
+}
+
+void MainWindow::UpdateStarsGUI()
+{
+    ui->leNoStars->setText( QString::number(m_renderingParams.noStars()));
+    ui->leBaseSize->setText( QString::number(m_renderingParams.starSize()));
+    ui->leSpreadSize->setText( QString::number(m_renderingParams.starSizeSpread()));
+    ui->leStarStrength->setText( QString::number(m_renderingParams.starStrength()));
+}
+
+void MainWindow::UpdateStarsData()
+{
+    m_renderingParams.setNoStars(ui->leNoStars->text().toInt());
+    m_renderingParams.setStarSize(ui->leBaseSize->text().toFloat());
+    m_renderingParams.setStarSizeSpread(ui->leSpreadSize->text().toFloat());
+    m_renderingParams.setStarStrength(ui->leStarStrength->text().toFloat());
+    m_rasterizer->RenderStars();
+    UpdateImage();
 }
 
 void MainWindow::Render()
@@ -424,6 +443,8 @@ void MainWindow::EnableGUIEditing(bool value)
     ui->leSpectrumBlue->setEnabled(value);
     ui->leSpectrumName->setEnabled(value);
 
+    ui->btnNewSpectrum->setEnabled(value);
+    ui->btnDeleteSpectrum->setEnabled(value);
 }
 
 void MainWindow::SaveGalaxy()
@@ -876,4 +897,27 @@ void MainWindow::on_btnHelpSpectra_clicked()
 {
     DialogRendererHelp* dr = new DialogRendererHelp("Spectra", Util::loadTextFile(":/TabSpectraHelp.txt") );
     dr->show();
+}
+
+void MainWindow::on_leNoStars_editingFinished()
+{
+    UpdateStarsData();
+}
+
+void MainWindow::on_leBaseSize_editingFinished()
+{
+    UpdateStarsData();
+
+}
+
+void MainWindow::on_leSpreadSize_editingFinished()
+{
+    UpdateStarsData();
+
+}
+
+void MainWindow::on_leStarStrength_editingFinished()
+{
+    UpdateStarsData();
+
 }

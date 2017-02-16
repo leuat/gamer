@@ -5,6 +5,7 @@
 #include <QWindow>
 #include <QTimer>
 #include "source/galaxy/rasterizer.h"
+#include "source/galaxy/renderqueue.h"
 #include "source/galaxy/renderingparams.h"
 #include "source/galaxy/galaxy.h"
 #include "source/galaxy/galaxycomponent.h"
@@ -146,9 +147,18 @@ private slots:
 
     void on_btnHelpSpectra_clicked();
 
+    void on_leNoStars_editingFinished();
+
+    void on_leBaseSize_editingFinished();
+
+    void on_leSpreadSize_editingFinished();
+
+    void on_leStarStrength_editingFinished();
+
 private:
     Ui::MainWindow *ui;
     Rasterizer* m_rasterizer = nullptr;
+    RenderQueue m_renderQueue;
     RenderingParams m_renderingParams;
     Galaxy m_galaxy;
     ComponentParams* m_curComponentParams = nullptr;
@@ -183,9 +193,13 @@ private:
     void UpdateSpectrumParamsGUI();
     void UpdateSpectrumParamsData();
 
+    void UpdateStarsGUI();
+    void UpdateStarsData();
+
     void Render();
     void RenderDirect();
     void RenderPreview(int size);
+    void RenderStars();
 
     void EnableGUIEditing(bool value);
 

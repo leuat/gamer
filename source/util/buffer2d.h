@@ -5,6 +5,8 @@
 #include <QImage>
 #include <QRgb>
 
+
+
 class Buffer2D
 {
     QVector<QVector3D> m_buffer;
@@ -18,6 +20,7 @@ public:
     void Initialize(int size);
 
     void Set(const int i, const int j, const QVector3D& v);
+    void Set(const int i, const QVector3D& v);
     QVector3D Get(const int i, const int j);
     QVector3D Get(const int i);
 
@@ -25,7 +28,14 @@ public:
     void ToColorBuffer(QImage* image, QImage* shadowImage, float exposure, float gamma, float saturation);
     void fill(const QVector3D v);
     void SaveFits(QString filename);
+    void RenderStars(int noStars, int baseSize, int sizeSpread, float strength);
     QByteArray* toQByteArray(int no);
+
+    void Add(Buffer2D* other);
+    void CopyTo(Buffer2D* to);
+
+    void RenderGaussian(int i, int j, int w, QVector3D cs);
+
 
     int size() const;
 };

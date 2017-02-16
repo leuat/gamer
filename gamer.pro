@@ -43,7 +43,8 @@ SOURCES += \
     dialogrendererhelp.cpp \
     source/util/fitsio.cpp \
     dialogabout.cpp \
-    source/util/fitsparam.cpp
+    source/util/fitsparam.cpp \
+    source/galaxy/renderqueue.cpp
 
 HEADERS  += \
     source/galaxy/rasterizer.h \
@@ -71,7 +72,9 @@ HEADERS  += \
     dialogrendererhelp.h \
     source/util/fitsio.h \
     dialogabout.h \
-    source/util/fitsparam.h
+    source/util/fitsparam.h \
+    source/util/random.h \
+    source/galaxy/renderqueue.h
 
 FORMS    += mainwindow.ui \
     dialogrendererhelp.ui \

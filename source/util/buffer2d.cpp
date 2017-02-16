@@ -1,6 +1,8 @@
 #include "buffer2d.h"
 #include "source/util/util.h"
 #include "source/util/gmessages.h"
+#include "source/util/random.h"
+
 Buffer2D::Buffer2D()
 {
 
@@ -39,6 +41,11 @@ QVector3D Buffer2D::Get(const int i)
     return m_buffer[ x ];
 }
 
+void Buffer2D::Set(const int i, const QVector3D& v)
+{
+    int x = Util::clamp(i,0,m_size*m_size);
+    m_buffer[ x ] = v;
+}
 
 void Buffer2D::DrawBox(Buffer2D* backImage,  const int i, const int j, const int size, QVector3D val) {
     QVector3D mark = QVector3D(1,1,1);
@@ -108,6 +115,41 @@ void Buffer2D::fill(const QVector3D v)
         m_buffer[i] = v;
 }
 
+void Buffer2D::RenderStars(int noStars, int baseSize, int sizeSpread, float strength)
+{
+    fill(QVector3D(0,0,0));
+
+    for (int i=0;i<noStars;i++) {
+        int x = random() % m_size;
+        int y = random() % m_size;
+
+
+        float cx = min ((double)rand()/(double)RAND_MAX + 0.6 ,1.0);
+        float cy = min ((float)rand()/(float)RAND_MAX + 0.6f ,cx);
+        float cz = min ((double)rand()/(double)RAND_MAX + 0.6 ,1.0);
+
+
+        float sz = max(Random::nextGaussian(baseSize, sizeSpread), baseSize/3.0);
+
+
+        int asz = (int)(sz*m_size)/245.0;
+        float ss = sz*abs (Random::nextGaussian(strength, strength));
+//        ss = strength;
+
+        //qDebug() << "asz: " << asz;
+        //qDebug() << "ss: " << ss;
+
+        RenderGaussian(x,y,asz, ss*QVector3D(cx,cy,cz));
+
+/*        buffers[0].RenderGaussian(x,y, asz, ss*c.x);
+        buffers[1].RenderGaussian(x,y, asz, ss*c.y);
+        buffers[2].RenderGaussian(x,y, asz, ss*c.z);
+*/
+
+    }
+
+}
+
 QByteArray *Buffer2D::toQByteArray(int no)
 {
     QByteArray* ba = new QByteArray();
@@ -117,5 +159,46 @@ QByteArray *Buffer2D::toQByteArray(int no)
             ba->append((const char*)(&val), sizeof(float));
         }
    return ba;
+
+}
+
+void Buffer2D::Add(Buffer2D *other)
+{
+    if (other->size() != m_size) {
+        qDebug() << "ERROR! Buffers do not have the same size.";
+        return;
+    }
+
+    for (int i=0;i<m_buffer.size();i++) {
+        m_buffer[i] += other->Get(i);
+
+    }
+}
+
+void Buffer2D::CopyTo(Buffer2D *to)
+{
+    to->Initialize(m_size);
+    for (int i=0;i<m_buffer.size();i++)
+        to->Set(i, m_buffer[i]);
+}
+
+void Buffer2D::RenderGaussian(int i, int j, int w, QVector3D cs)
+{
+    for (int x=-w/2; x<w/2; x++)
+        for (int y = -w/2; y<w/2;y++) {
+            int xx = i + x;
+            int yy = j + y;
+            float dx =x/(float)w;
+            float dy = y/(float)w;
+            if (xx>=0 && xx<m_size && yy>=0 && yy<m_size) {
+                float d = (dx*dx + dy*dy);
+                float ss = 0.01f;
+                float v = exp (-d/ss);
+                QVector3D val = Util::maxQvector3D(v*cs, Get(xx,yy));
+                Set(xx,yy,val);
+                //	buffer[ xx + yy*_width] = Mathf.Max (buffer[xx+yy*_width], v*s);
+            }
+
+        }
 
 }

@@ -113,11 +113,17 @@ void Rasterizer::prepareBuffer()
             delete m_backBuffer;
         if (m_imageShadowBuffer)
             delete m_imageShadowBuffer;
+        if (m_starsBuffer)
+            delete m_starsBuffer;
+
 
         m_imageBuffer = new QImage(size,size,QImage::Format_ARGB32);
         m_renderBuffer = new Buffer2D(size);
         m_backBuffer = new Buffer2D(size);
         m_imageShadowBuffer = new QImage(size, size,QImage::Format_ARGB32);
+        m_starsBuffer = new Buffer2D(size);
+        RenderStars();
+
     }
     m_imageBuffer->fill(QColor(0,0,0));
     m_backBuffer->fill(QVector3D(0,0,0));
@@ -151,6 +157,18 @@ void Rasterizer::Prepare() {
     prepareRenderList();
 
     m_renderingParams->camera().setupViewmatrix();
+}
+
+void Rasterizer::RenderStars()
+{
+    if (m_starsBuffer==nullptr)
+        return;
+
+    m_starsBuffer->RenderStars(m_renderingParams->noStars(),
+                               m_renderingParams->starSize(),
+                               m_renderingParams->starSizeSpread(),
+                               m_renderingParams->starStrength());
+
 }
 
 
@@ -221,7 +239,15 @@ void Rasterizer::RenderPixels() {
 
 void Rasterizer::AssembleImage()
 {
-    m_renderBuffer->ToColorBuffer(m_imageBuffer, m_imageShadowBuffer,
+
+
+    Buffer2D temp;
+    m_renderBuffer->CopyTo(&temp);
+
+    if (!m_isPreview)
+        temp.Add(m_starsBuffer);
+
+    temp.ToColorBuffer(m_imageBuffer, m_imageShadowBuffer,
                                   m_renderingParams->exposure(),
                                   m_renderingParams->gamma(),
                                   m_renderingParams->saturation());
@@ -253,6 +279,7 @@ void  Rasterizer::Render() {
     if (!isRunning()) {
         QString  size = QString::number(m_renderingParams->size());
         GMessages::Message("Starting rendering of image with size " + size + "x" + size + " on " + QString::number(std::thread::hardware_concurrency()) + " cores.");
+        m_isPreview = false;
         start(HighPriority);
     } else {
         m_restart = true;
@@ -264,6 +291,7 @@ void  Rasterizer::Render() {
 void Rasterizer::RenderDirect()
 {
     Prepare();
+    m_isPreview = true;
     RenderPixels();
 }
 

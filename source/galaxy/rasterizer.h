@@ -32,11 +32,15 @@ private:
     // Backbuffer used to mark whether pixel is set or not
     Buffer2D* m_backBuffer = nullptr;
     Buffer2D* m_renderBuffer = nullptr;
+    Buffer2D* m_starsBuffer = nullptr;
+
     bool m_restart = false;
     bool m_abort = false;
     State m_state = State::idle;
 
     Noise* m_noise = nullptr;
+
+    bool m_isPreview = false;
 
     QMutex m_mutex;
     QWaitCondition m_condition;
@@ -68,6 +72,7 @@ protected:
     void setNewSize(int s);
     void prepareBuffer();
     void Prepare();
+    void RenderStars();
 
     void Abort() {
         m_abort = true;

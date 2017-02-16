@@ -150,7 +150,9 @@ public:
         str+= QString::number(s) + "." + QString::number(ds) + "s ";
         return str;
     }
-
+    static QVector3D maxQvector3D(const QVector3D a, const QVector3D b) {
+        return QVector3D(max(a.x(), b.x()),max(a.y(), b.y()),max(a.z(), b.z()));
+    }
 
 };
 
