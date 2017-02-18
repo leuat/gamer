@@ -3,7 +3,7 @@
 QListWidget* GMessages::m_widget = nullptr;
 QVector<QString> GMessages::m_messages;
 
-int GMessages::m_maxMessageCount = 5;
+int GMessages::m_maxMessageCount = 7;
 bool GMessages::m_debugMessages = false;
 bool GMessages::m_verbatim = true;
 

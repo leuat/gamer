@@ -24,6 +24,8 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+    enum State { Idle, Rendering, Queueing };
+
 private slots:
     void loadFile();
 
@@ -155,6 +157,8 @@ private slots:
 
     void on_leStarStrength_editingFinished();
 
+    void on_btnQueue_clicked();
+
 private:
     Ui::MainWindow *ui;
     Rasterizer* m_rasterizer = nullptr;
@@ -164,6 +168,7 @@ private:
     ComponentParams* m_curComponentParams = nullptr;
     ComponentSpectrum* m_curComponentSpectrum = nullptr;
     QBasicTimer m_timer;
+    State m_state = State::Idle;
 
     float m_postSliderScale = 30;
 
@@ -196,7 +201,7 @@ private:
     void UpdateStarsGUI();
     void UpdateStarsData();
 
-    void Render();
+    void Render(bool queue);
     void RenderDirect();
     void RenderPreview(int size);
     void RenderStars();

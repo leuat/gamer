@@ -19,7 +19,7 @@
 
 class Rasterizer : public QThread {
 public:
-    enum State { idle, rendering, done };
+    enum State { idle, rendering, done, aborting };
 
 
 private:
@@ -53,20 +53,25 @@ protected:
 
  public:
 
-
+    Rasterizer() {
+        m_noise = new Simplex(1,1,1,1);
+    }
     Rasterizer(RenderingParams* rp) {
         m_renderingParams = rp;
 //        m_noise = new IQnoise(1,1,1,1);
         m_noise = new Simplex(1,1,1,1);
     }
+
     ~Rasterizer() {
         m_mutex.lock();
         m_abort = true;
         m_condition.wakeOne();
         m_mutex.unlock();
-
         wait();
+        ReleaseBuffers();
     }
+
+    void ReleaseBuffers();
 
     void prepareRenderList();
     void setNewSize(int s);
@@ -79,19 +84,21 @@ protected:
         requestInterruption();
         quit();
         wait();
+        m_state = State::aborting;
         GMessages::Message("Aborting threaded rendering!");
     }
     Galaxy* AddGalaxy(QString file, QVector3D position, QVector3D orientation, float iscale, float redshift, QString name);
 
     Galaxy* AddGalaxy(GalaxyInstance* gi);
 
+    void CopyFrom(Rasterizer* from);
     void RenderPixels();
     void AssembleImage();
     void Render();
     void RenderDirect();
     void InitializeRendering();
     QVector3D setupCamera(int idx);
-    RasterPixel* renderPixel(QVector3D dir, QVector<GalaxyInstance*> gals);
+    QVector3D renderPixel(QVector3D dir, QVector<GalaxyInstance*> gals);
     void getIntensity(GalaxyInstance* gi, RasterPixel* rp, QVector3D isp1, QVector3D isp2);
 
 
@@ -106,6 +113,9 @@ protected:
     QImage *getImageShadowBuffer() const;
     QElapsedTimer getTimer() const;
     Buffer2D *getRenderBuffer() const;
+    void setRenderingParams(RenderingParams *renderingParams);
+    QVector<GalaxyInstance *> getGalaxies() const;
+    bool getAbort() const;
 };
 
 

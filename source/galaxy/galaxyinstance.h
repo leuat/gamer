@@ -8,7 +8,6 @@
 class GalaxyInstance {
 private:
     Galaxy* m_galaxy;
-    void SetGalaxy(Galaxy* g);
     float m_intensityScale=1, m_redshift=1;
     QVector3D m_position = QVector3D(0,0,0);
     QVector3D m_orientation = QVector3D(0,1,0);
@@ -24,7 +23,7 @@ public:
     float m_winding;
     float m_currentRadius;
 
-
+    void SetGalaxy(Galaxy* g);
     GalaxyInstance();
     GalaxyInstance* Clone();
     void setupQuaternions();

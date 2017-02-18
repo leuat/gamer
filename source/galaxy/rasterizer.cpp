@@ -9,6 +9,7 @@
 #include "source/util/gmessages.h"
 #include "thread"
 
+
 RenderingParams* Rasterizer::getRenderingParams()
 {
     return m_renderingParams;
@@ -44,6 +45,21 @@ Buffer2D *Rasterizer::getRenderBuffer() const
     return m_renderBuffer;
 }
 
+void Rasterizer::setRenderingParams(RenderingParams *renderingParams)
+{
+    m_renderingParams = renderingParams;
+}
+
+QVector<GalaxyInstance *> Rasterizer::getGalaxies() const
+{
+    return m_galaxies;
+}
+
+bool Rasterizer::getAbort() const
+{
+    return m_abort;
+}
+
 void Rasterizer::run()
 {
     m_mutex.lock();
@@ -52,11 +68,29 @@ void Rasterizer::run()
 
     m_state=State::rendering;
     m_timer.start();
+//    qDebug() << m_renderingParams->camera().perspective();
+//    qDebug() << m_renderingParams->camera().camera();
     RenderPixels();
     GMessages::Message("Rendering took " + Util::MilisecondToString(m_timer.elapsed()));
     m_state=State::done;
 
 }
+
+void Rasterizer::ReleaseBuffers()
+{
+    if (m_imageBuffer)
+        delete m_imageBuffer;
+    if (m_renderBuffer)
+        delete m_renderBuffer;
+    if (m_backBuffer)
+        delete m_backBuffer;
+    if (m_imageShadowBuffer)
+        delete m_imageShadowBuffer;
+    if (m_starsBuffer)
+        delete m_starsBuffer;
+
+}
+
 
 void Rasterizer::prepareRenderList() {
     m_renderList.resize(m_renderingParams->size() * m_renderingParams->size());
@@ -101,21 +135,9 @@ void Rasterizer::prepareBuffer()
 
     if (m_state == State::rendering)
         return;
-
     int size = m_renderingParams->size();
-
     if (m_imageBuffer == nullptr || m_imageBuffer->width() != size || m_imageShadowBuffer->width()!=size) {
-        if (m_imageBuffer)
-            delete m_imageBuffer;
-        if (m_renderBuffer)
-            delete m_renderBuffer;
-        if (m_backBuffer)
-            delete m_backBuffer;
-        if (m_imageShadowBuffer)
-            delete m_imageShadowBuffer;
-        if (m_starsBuffer)
-            delete m_starsBuffer;
-
+        ReleaseBuffers();
 
         m_imageBuffer = new QImage(size,size,QImage::Format_ARGB32);
         m_renderBuffer = new Buffer2D(size);
@@ -129,6 +151,7 @@ void Rasterizer::prepareBuffer()
     m_backBuffer->fill(QVector3D(0,0,0));
     m_renderBuffer->fill(QVector3D(0,0,0));
     m_imageShadowBuffer->fill(QColor(0,0,0));
+
 
 }
 
@@ -186,6 +209,13 @@ Galaxy* Rasterizer::AddGalaxy(GalaxyInstance* gi) {
     return gi->GetGalaxy();
 }
 
+void Rasterizer::CopyFrom(Rasterizer *from)
+{
+    m_galaxies.clear();
+    for (GalaxyInstance* gi: from->getGalaxies())
+        m_galaxies.append( gi->Clone());
+}
+
 /*		public static void SaveGalaxyList(string filename, List<GalaxyInstance> gi) {
             XmlSerializer serializer = new XmlSerializer(typeof(List<GalaxyInstance>));
             TextWriter textWriter = new StreamWriter(filename);
@@ -221,19 +251,22 @@ void Rasterizer::RenderPixels() {
     for (int k=0;k<size;k++) {
         if (m_abort)
             continue;
-
+//        if (m_isPreview)
+//            qDebug() << k;
         int idx = m_renderList[ k ];
+
         QVector3D dir = setupCamera(idx);
-        RasterPixel rp = renderPixel(dir, m_galaxies);
+        QVector3D I = renderPixel(dir, m_galaxies);
         m_percentDone+=delta;
 
         int i = idx%(int)m_renderingParams->size();
         int j = (idx-i)/(int)m_renderingParams->size();
 
         //m_renderBuffer->setPixel(i,j,rgb.rgba());
-        m_renderBuffer->DrawBox(m_backBuffer, i,j, 6, rp.I());
+        m_renderBuffer->DrawBox(m_backBuffer, i,j, m_renderingParams->size()/60, I);
 
     }
+
     m_abort = false;
 }
 
@@ -360,7 +393,7 @@ QVector3D Rasterizer::setupCamera(int idx) {
     return m_renderingParams->camera().coord2ray(i,j, m_renderingParams->size());
 }
 
-RasterPixel* Rasterizer::renderPixel(QVector3D dir, QVector<GalaxyInstance*> gals) {
+QVector3D Rasterizer::renderPixel(QVector3D dir, QVector<GalaxyInstance*> gals) {
     QVector3D isp1, isp2;
     //dir*=-1;
     RasterPixel* rp = new RasterPixel();
@@ -371,8 +404,12 @@ RasterPixel* Rasterizer::renderPixel(QVector3D dir, QVector<GalaxyInstance*> gal
 
     for (int i=0;i<gals.size();i++) {
         GalaxyInstance* gi = gals[i];
-
         Galaxy* g = gi->GetGalaxy();
+        if (g==nullptr) {
+            qDebug() << "Error! Could not find galaxy in Rasterizer::renderPixel!" ;
+            exit(1);
+        }
+
         float t1, t2;
         bool intersects = Util::IntersectSphere(m_renderingParams->camera().camera() - gi->position(), dir,
 
@@ -395,8 +432,9 @@ RasterPixel* Rasterizer::renderPixel(QVector3D dir, QVector<GalaxyInstance*> gal
 
     }
     rp->I()*=.01/m_renderingParams->rayStep();
-
-    return rp;
+    QVector3D I = rp->I();
+    delete rp;
+    return rp->I();
 }
 
 
@@ -409,6 +447,7 @@ void Rasterizer::getIntensity(GalaxyInstance* gi, RasterPixel* rp, QVector3D isp
     int N = (int)(length/step);
     QVector3D p = origin;
     rp->scale = step;
+
 
     QVector3D camera = m_renderingParams->camera().camera();
     int cnt = 0;
@@ -439,6 +478,8 @@ void Rasterizer::getIntensity(GalaxyInstance* gi, RasterPixel* rp, QVector3D isp
 
             if (gc->getComponentParams().active()==1)
                 gc->calculateIntensity( rp, p, gi, step*200);
+      //      if (random()%100==0)
+//            qDebug() << rp->I();
         }
         step = curStep;
         p=p-dir*step;

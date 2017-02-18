@@ -22,7 +22,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ui->setupUi(this);
     m_rasterizer = new Rasterizer(&m_renderingParams);
-    m_renderQueue.setRasterizer(m_rasterizer);
     ui->myGLWidget->setRenderingParams(&m_renderingParams);
     GMessages::Initialize(ui->lstMessages);
 
@@ -53,6 +52,10 @@ MainWindow::MainWindow(QWidget *parent) :
     m_rasterizer->AddGalaxy(new GalaxyInstance(&m_galaxy, m_galaxy.galaxyParams().name(),
                                               QVector3D(0,0,0), QVector3D(0,1,0).normalized(), 1, 0)  );
 
+    // Copy rasterizer to queue renderer
+    //m_renderQueue.setRasterizer(m_rasterizer);
+
+
     timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(loop()));
     timer->start(10);
@@ -75,7 +78,8 @@ void MainWindow::loadFile()
 
 void MainWindow::on_renderButton_clicked()
 {
-    Render();
+    m_state = State::Rendering;
+    Render(false);
 }
 
 void MainWindow::on_actionLoad_triggered()
@@ -356,7 +360,7 @@ void MainWindow::UpdateStarsData()
     UpdateImage();
 }
 
-void MainWindow::Render()
+void MainWindow::Render(bool queue)
 {
 
     QString problemSpectrum = m_galaxy.VerifySpectra(&m_renderingParams);
@@ -371,7 +375,13 @@ void MainWindow::Render()
     EnableGUIEditing(false);
     m_renderingParams.Save(m_RenderParamsFilename);
     m_rasterizer->setNewSize(m_renderingParams.size());
-    m_rasterizer->Render();
+
+    if (queue) {
+        QString filename = Util::getFileName(m_renderingParams.imageDirectory(),"QueuedImage","png");
+        m_renderQueue.Add(m_rasterizer, m_renderingParams,filename);
+    }
+    else
+        m_rasterizer->Render();
 
 }
 
@@ -395,7 +405,9 @@ void MainWindow::RenderPreview(int size)
 
 void MainWindow::EnableGUIEditing(bool value)
 {
+    //if (m_state == State::Rendering)
     ui->myGLWidget->disableInput(!value);
+
     ui->actionLoad->setEnabled(value);
     ui->actionSave->setEnabled(value);
     ui->renderButton->setEnabled(value);
@@ -445,6 +457,8 @@ void MainWindow::EnableGUIEditing(bool value)
 
     ui->btnNewSpectrum->setEnabled(value);
     ui->btnDeleteSpectrum->setEnabled(value);
+
+    ui->btnQueue->setEnabled(value);
 }
 
 void MainWindow::SaveGalaxy()
@@ -469,30 +483,62 @@ void MainWindow::CreateNewGalaxy()
 
 void MainWindow::loop()
 {
-    if (m_rasterizer->getState()==Rasterizer::State::done) {
-        //ui->myGLWidget->SetTexture(m_rasterizer->getBuffer());
-        UpdateImage();
-        EnableGUIEditing(true);
-        m_rasterizer->setState(Rasterizer::State::idle);
-    }
-    if (m_rasterizer->getState()==Rasterizer::State::rendering)
-        UpdateImage();
 
-    ui->pgbRendering->setValue((int)(m_rasterizer->getPercentDone()*100.0)+1);
+    // Important: call RenderQueue first!
+    m_renderQueue.Update();
 
     // Preview image
     if (ui->myGLWidget->redraw()) {
         RenderPreview(m_renderingParams.previewSize());
         m_renderingParams.Save(m_RenderParamsFilename);
+    }
+
+    Rasterizer* curRast = m_rasterizer;
+    if (m_state==State::Rendering) {
+        EnableGUIEditing(false);
+        if (curRast->getState()==Rasterizer::State::done) {
+            //ui->myGLWidget->SetTexture(curRast->getBuffer());
+            UpdateImage();
+        }
+        if (curRast->getState()==Rasterizer::State::rendering) {
+            UpdateImage();
+        }
+    }
+
+
+    if (m_renderQueue.isRendering()) {
+        m_state = State::Queueing;
+        EnableGUIEditing(true);
+        ui->renderButton->setEnabled(false);
+        curRast = &m_renderQueue.current()->rasterizer();
 
     }
+    else {
+        //m_state = State::Idle;
+        //EnableGUIEditing(true);
+    }
+
+ /*   if (m_state==State::Queueing) {
+        if (m_renderQueue.current()==nullptr) {
+            setEnabled(true);
+        }
+        else
+            curRast = &m_renderQueue.current()->rasterizer();
+    }*/
+    ui->pgbRendering->setValue((int)(curRast->getPercentDone()*100.0)+1);
+    if (curRast->getState()==Rasterizer::State::done) {
+        EnableGUIEditing(true);
+        m_state = State::Idle;
+        curRast->setState(Rasterizer::State::idle);
+
+    }
+
     // ETA time
-    if (m_rasterizer->getState()==Rasterizer::State::rendering) {
-        float time = m_rasterizer->getTimer().elapsed();
-        float percentage = m_rasterizer->getPercentDone();
+    if (curRast->getState()==Rasterizer::State::rendering) {
+        float time = curRast->getTimer().elapsed();
+        float percentage = curRast->getPercentDone();
         float timeLeft = time/(percentage) - time;
         ui->lblEta->setText("ETA: " + Util::MilisecondToString(timeLeft));
-
     }
     else
         ui->lblEta->setText("");
@@ -662,7 +708,8 @@ void MainWindow::UpdateImage()
 
 void MainWindow::on_actionRender_triggered()
 {
-    Render();
+    m_state = State::Rendering;
+    Render(false);
 }
 
 void MainWindow::on_cmbImageSize_activated(const QString &arg1)
@@ -678,6 +725,8 @@ void MainWindow::on_leRayStep_editingFinished()
 void MainWindow::on_btnAbort_clicked()
 {
     m_rasterizer->Abort();
+    m_renderQueue.Abort();
+    m_state = State::Idle;
     EnableGUIEditing(true);
 
 }
@@ -920,4 +969,10 @@ void MainWindow::on_leStarStrength_editingFinished()
 {
     UpdateStarsData();
 
+}
+
+void MainWindow::on_btnQueue_clicked()
+{
+    m_state = State::Queueing;
+    Render(true);
 }

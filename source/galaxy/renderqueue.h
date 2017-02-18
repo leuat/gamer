@@ -8,28 +8,32 @@
 class RenderQueueItem
 {
 private:
+    Rasterizer m_rasterizer;
     RenderingParams m_renderingParams;
     QString m_filename;
 
 public:
-    RenderQueueItem(RenderingParams rp, QString filename);
+    RenderQueueItem(Rasterizer* r, RenderingParams rp, QString filename);
     RenderingParams& renderingParams();
     void setRenderingParams(RenderingParams renderingParams);
     QString filename() const;
+    Rasterizer& rasterizer() ;
 };
 
 class RenderQueue {
 private:
     QVector<RenderQueueItem*> m_queue;
-    Rasterizer* m_rasterizer;
     RenderQueueItem* m_current = nullptr;
 
 public:
     RenderQueue();
     ~RenderQueue();
 
-    void Add(RenderingParams rp, QString filename);
+    void Add(Rasterizer* r, RenderingParams rp, QString filename);
+    void PostRendering();
     void Update();
+    bool isRendering();
+    void Abort();
 
-    void setRasterizer(Rasterizer *rasterizer);
+    RenderQueueItem *current() const;
 };
