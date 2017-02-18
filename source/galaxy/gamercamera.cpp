@@ -1,4 +1,6 @@
-﻿#include <QMatrix3x3>
+﻿#define _USE_MATH_DEFINES
+#include <cmath>
+#include <QMatrix3x3>
 #include "source/galaxy/gamercamera.h"
 #include "math.h"
 #include <QVector2D>
@@ -214,9 +216,9 @@ QVector3D GamerCamera::coord2ray(float x, float y, float width) {
     float dx=tan(FOV*0.5f)*(x/(width/2.0)-1.0f)/aspect_ratio;
     float dy=tan(FOV*0.5f)*(1.0- y/(width/2.0));
 
-    float far = 10;
+    float f = 10;
 
-    QVector3D Pfar = QVector3D(dx*far, dy*far, far);
+    QVector3D Pfar = QVector3D(dx*f, dy*f, f);
     QVector3D res = m_viewMatrix*Pfar;
     res = res.normalized();
 

@@ -38,7 +38,7 @@ public:
     float cosh(const float x);
     float getHeightModulation(float height);
     float getRadialIntensity(const float rad);
-    float getRadius(QVector3D p, QVector3D& P, float& dott, GalaxyInstance* gi);
+    float getRadius(const QVector3D& p, QVector3D& P, float& dott, GalaxyInstance* gi);
     QVector3D twirl( QVector3D& p,  const float twirl);
     float getPerlinCloudNoise(QVector3D& p, const float t, const int NN, const float ks, const float pers);
     float findDifference( float t1,  float t2);

@@ -8,6 +8,8 @@ private:
 
 public:
     float winding, radius;
+    float z;
+    QVector3D P;
 
     void Add(RasterPixel* o);
     float scale = 1;

@@ -36,7 +36,7 @@ GalaxyComponent* Galaxy::instantiate(QString className) {
     return ngc;
 }
 
-QVector<GalaxyComponent *> Galaxy::components() const
+QVector<GalaxyComponent*>& Galaxy::components()
 {
     return m_components;
 }

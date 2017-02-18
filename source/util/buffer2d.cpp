@@ -120,8 +120,8 @@ void Buffer2D::RenderStars(int noStars, int baseSize, int sizeSpread, float stre
     fill(QVector3D(0,0,0));
 
     for (int i=0;i<noStars;i++) {
-        int x = random() % m_size;
-        int y = random() % m_size;
+        int x = rand() % m_size;
+        int y = rand() % m_size;
 
 
         float cx = min ((double)rand()/(double)RAND_MAX + 0.6 ,1.0);

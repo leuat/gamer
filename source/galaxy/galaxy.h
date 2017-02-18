@@ -33,7 +33,7 @@ public:
     void Save(QString filename);
     bool Load(QString filename);
     QVector<ComponentParams *>& componentParams();
-    QVector<GalaxyComponent *> components() const;
+    QVector<GalaxyComponent *>& components();
     GalaxyParams& galaxyParams();
 
     friend QDataStream& operator << ( QDataStream & s, Galaxy& g) {

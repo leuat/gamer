@@ -17,7 +17,7 @@ void GLWidget::initializeGL() {
     glFrustum(-1, 1, -1, 1, 5, 700); // near and far match your triangle Z distance
 
     glMatrixMode(GL_MODELVIEW);
-    glGenTextures(1, &m_textureID); // Obtain an id for the texture
+    glGenTextures(1, &m_textureID); // Obtain an id for the texture*/
     QTimer *timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(update()));
     timer->start(10);

@@ -17,6 +17,7 @@
 #include <QElapsedTimer>
 #include <QTextStream>
 #include <QDebug>
+//#include "random.h"
 
 #define Q_TIMER_START()  \
 {                        \
@@ -105,12 +106,24 @@ public:
             }
     }
 
+/*    static QVector<int> ShuffleArray(QVector<int>& a)
+    {
+        for (int i = a.size(); i > 0; i--)
+        {
+            int j = rand()%i;// r.Next(i);
+            int k = a[j];
+            a[j] = a[i - 1];
+            a[i - 1]  = k;
+        }
+        return a;
+    }
+*/
     template<typename T>
     static QVector<T> ShuffleArray(QVector<T> a)
     {
         for (int i = a.size(); i > 0; i--)
         {
-            T j = random()%i;// r.Next(i);
+            T j = rand()%i;// r.Next(i);
             T k = a[j];
             a[j] = a[i - 1];
             a[i - 1]  = k;

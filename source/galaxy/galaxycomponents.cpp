@@ -8,7 +8,7 @@ void GalaxyComponentBulge::componentIntensity(RasterPixel* rp, QVector3D& p, flo
 
     float rad = (pos.length()+0.01f)*m_componentParams.r0();
     rad+=0.01f;
-    float i = rho_0 * (pow(rad,-0.855)*exp(-pow(rad,1/4.0f)) -0.05f) *m_currentGI->intensityScale();
+    float i =    rho_0 * (pow(rad,-0.855)*exp(-pow(rad,1/4.0f)) -0.05f) *m_currentGI->intensityScale();
 
 
     if (i<0) i=0;

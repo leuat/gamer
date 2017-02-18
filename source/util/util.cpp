@@ -28,33 +28,6 @@ void Util::Tokenize(const string& str,
 }	
 
 
-void Util::string2char(string s, char* to) {
-  if (s.size()>sizeof(to))
-    throw string("Error in string2char: string length>char length");
-  for (int i=0;s.size();i++)
-    to[i] = s[i];
-}
-
-string Util::toString(double d, string param) {
-  char buffer[200];
-#ifdef __WIN32
-  sprintf_s(buffer,sizeof(buffer),param.c_str(),(float)d);
-#elseif
-  sprintf(buffer,param.c_str(),(float)d);
-#endif
-
-  sprintf(buffer,param.c_str(),(float)d);
-
-  return string(buffer);
-}
-
-string Util::toString(double d) {
-  return toString(d, "%.2f");
-}
-string Util::toString(int d) {
-  return toString(d, "%.0f");
-}
-
   
 const char* Util::read_textfile(string filename) {
   ifstream f(filename.c_str(), ios::in);

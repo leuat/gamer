@@ -1,9 +1,11 @@
 #pragma once
-
+#define _USE_MATH_DEFINES
+#include <cmath>
 #include "math.h"
 #include <QVector3D>
 #include <QDataStream>
 #include "source/noise/noise.h"
+
 
 class GalaxyParams {
 public:
@@ -52,7 +54,7 @@ public:
     GalaxyParams();
     float bulgeDust() const;
     void setBulgeDust(float bulgeDust);
-    QVector3D axis() const;
+    QVector3D& axis();
     void setAxis(const QVector3D &axis);
     float arm1() const;
     void setArm1(float arm1);
@@ -70,7 +72,7 @@ public:
     void setWindingN(float windingN);
     float innerTwirl() const;
     void setInnerTwirl(float innerTwirl);
-    QVector3D bulgeAxis() const;
+    QVector3D& bulgeAxis();
     void setBulgeAxis(const QVector3D &bulgeAxis);
     QString name() const;
     void setName(const QString &name);

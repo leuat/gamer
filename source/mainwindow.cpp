@@ -44,8 +44,6 @@ MainWindow::MainWindow(QWidget *parent) :
         m_renderingParams.setCurrentGalaxy(m_galaxy.galaxyParams().name());
     }
 
-
-
     PrepareNewGalaxy();
 
     // Adding a single galaxy to the rasterizer
@@ -58,7 +56,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(loop()));
-    timer->start(10);
+    timer->start(25);
     ui->myGLWidget->setRedraw(true);
 
 
@@ -131,6 +129,9 @@ void MainWindow::PopulateImageSize()
 
 void MainWindow::PopulateGalaxyList()
 {
+
+
+
     QDirIterator it(m_renderingParams.galaxyDirectory(),
                     QStringList() << "*.gax", QDir::Files, QDirIterator::Subdirectories);
     ui->lstGalaxies->clear();

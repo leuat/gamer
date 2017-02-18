@@ -62,33 +62,35 @@ void GalaxyComponent::calculateIntensity(RasterPixel* rp, QVector3D& p,
                                          GalaxyInstance* gi, const float weight) {
     QVector3D P;
     m_currentGI = gi;
-    float z = 1;
-    float m_currentRadius;
-    m_currentRadius = getRadius(p, P, z, gi);
-    z = getHeightModulation(z);
+//    float z = 1;
+//    float m_currentRadius;
+//    m_currentRadius = getRadius(p, P, z, gi);
+//    z = getHeightModulation(z);
+//    float z = rp->z;
+//    float m_currentRadius = rp->radius;
+
     float armVal = 1;
     float m_winding = 0;
-
-    if (z>0.01)
+    if (rp->z>0.1)
     {
 
-        float intensity = getRadialIntensity(m_currentRadius);
+        float intensity = getRadialIntensity(rp->radius);
         if (intensity>0.1) intensity = 0.1;
         if (intensity >0.001) {
 
             float scale = 1;
             if (m_componentParams.className() == "Dust" || m_componentParams.className() == "Dust2")
-                scale = Util::smoothstep(0, 1.0f*m_galaxyParams->bulgeDust(), m_currentRadius);
+                scale = Util::smoothstep(0, 1.0f*m_galaxyParams->bulgeDust(), rp->radius);
             if (m_componentParams.arm()!=0) {
-                armVal = calculateArmValue(m_currentRadius, P);
-                m_winding = getWinding(m_currentRadius)*m_componentParams.winding();///(rad+1.0);
+                armVal = calculateArmValue(rp->radius, rp->P);
+                m_winding = getWinding(rp->radius)*m_componentParams.winding();///(rad+1.0);
 
             }
             rp->winding = m_winding;
-            rp->radius = m_currentRadius;
+//            rp->radius = m_currentRadius;
 
             // equation 5 from the paper
-            float val = (m_componentParams.strength())*scale*armVal*z*intensity*gi->intensityScale();
+            float val = (m_componentParams.strength())*scale*armVal*rp->z*intensity*gi->intensityScale();
             if (val * weight > 0.0005) {
                 componentIntensity(rp, p, val * weight);
             }
@@ -102,7 +104,7 @@ float GalaxyComponent::getRadialIntensity(const float rad) {
 }
 
 
-float GalaxyComponent::getRadius(QVector3D p, QVector3D& P, float& dott, GalaxyInstance* gi)  {
+float GalaxyComponent::getRadius(const QVector3D& p, QVector3D& P, float& dott, GalaxyInstance* gi)  {
     dott = QVector3D::dotProduct(p, gi->orientation());
     P = p - gi->orientation()*dott;
     return P.length()/ m_galaxyParams->axis().x();

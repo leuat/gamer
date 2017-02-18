@@ -10,7 +10,7 @@ void GalaxyParams::setBulgeDust(float bulgeDust)
     m_bulgeDust = bulgeDust;
 }
 
-QVector3D GalaxyParams::axis() const
+QVector3D& GalaxyParams::axis()
 {
     return m_axis;
 }
@@ -100,7 +100,7 @@ void GalaxyParams::setInnerTwirl(float innerTwirl)
     m_innerTwirl = innerTwirl;
 }
 
-QVector3D GalaxyParams::bulgeAxis() const
+QVector3D& GalaxyParams::bulgeAxis()
 {
     return m_bulgeAxis;
 }
@@ -137,6 +137,6 @@ GalaxyParams::GalaxyParams() {
     m_arm3 = M_PI/2.0;
     m_arm4 = M_PI + M_PI/2.0;
 
-    m_randShiftX = random()%1024;
-    m_randShiftY = random()%1023;
+    m_randShiftX = rand()%1024;
+    m_randShiftY = rand()%1023;
 }
