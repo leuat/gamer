@@ -263,7 +263,8 @@ void Rasterizer::RenderPixels() {
         int j = (idx-i)/(int)m_renderingParams->size();
 
         //m_renderBuffer->setPixel(i,j,rgb.rgba());
-        m_renderBuffer->DrawBox(m_backBuffer, i,j, m_renderingParams->size()/60, I);
+//        m_renderBuffer->DrawBox(m_backBuffer, i,j, m_renderingParams->size()/60, I);
+        m_renderBuffer->DrawBox(m_backBuffer, i,j, 1, I);
 
     }
 
@@ -396,7 +397,7 @@ QVector3D Rasterizer::setupCamera(int idx) {
 QVector3D Rasterizer::renderPixel(QVector3D dir, QVector<GalaxyInstance*> gals) {
     QVector3D isp1, isp2;
     //dir*=-1;
-    RasterPixel* rp = new RasterPixel();
+    RasterPixel rp;// = new RasterPixel();
 
     QVector3D viewDir = (m_renderingParams->camera().camera()-m_renderingParams->camera().target()).normalized();
     if (QVector3D::dotProduct(viewDir,dir)<0)
@@ -428,13 +429,15 @@ QVector3D Rasterizer::renderPixel(QVector3D dir, QVector<GalaxyInstance*> gals) 
 */
 
         if (intersects)
-            getIntensity(gi, rp, isp1, isp2);
+            getIntensity(gi, &rp, isp1, isp2);
 
     }
-    rp->I()*=.01/m_renderingParams->rayStep();
+    return rp.I()*0.01/m_renderingParams->rayStep();
+/*    rp->I()*=.01/m_renderingParams->rayStep();
+
     QVector3D I = rp->I();
     delete rp;
-    return rp->I();
+    return rp->I();*/
 }
 
 
@@ -457,8 +460,8 @@ void Rasterizer::getIntensity(GalaxyInstance* gi, RasterPixel* rp, QVector3D isp
         //step = Util::clamp((p-camera).length()*m_renderingParams->rayStep(), 0.00001, 0.1);
         //step = m_renderingParams->rayStep();
 
-        float curStep = 0.1;
-//        float curStep = m_renderingParams->rayStep();
+//        float curStep = 0.1;
+        float curStep = m_renderingParams->rayStep();
         QVector3D P;
         float m_currentRadius;
 
@@ -474,7 +477,7 @@ void Rasterizer::getIntensity(GalaxyInstance* gi, RasterPixel* rp, QVector3D isp
 
             // BULGEN er problemet for faen. jaja.
             float hmod = m_renderingParams->rayStep() + (1-rp->z)*0.01;
-            curStep = max(min(curStep, hmod), m_renderingParams->rayStep());
+  //          curStep = max(min(curStep, hmod), m_renderingParams->rayStep());
 
 
             if (gc->getComponentParams().active()==1) {

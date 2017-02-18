@@ -79,6 +79,7 @@ protected:
     void Prepare();
     void RenderStars();
 
+
     void Abort() {
         m_abort = true;
         requestInterruption();

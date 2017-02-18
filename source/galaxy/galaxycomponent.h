@@ -36,7 +36,7 @@ public:
     //virtuafloat getIntensityModifier();
     void setGalaxyParam(GalaxyParams* gp);
     float cosh(const float x);
-    float getHeightModulation(float height);
+    virtual float getHeightModulation(float height);
     float getRadialIntensity(const float rad);
     float getRadius(const QVector3D& p, QVector3D& P, float& dott, GalaxyInstance* gi);
     QVector3D twirl( QVector3D& p,  const float twirl);

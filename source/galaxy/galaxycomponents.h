@@ -9,7 +9,8 @@ public:
     void componentIntensity(RasterPixel* rp, QVector3D& p, float ival) override;
 
     void calculateIntensity(RasterPixel* rp, QVector3D& p, GalaxyInstance* gi, float weight) override;
-		
+    float getHeightModulation(float height) override;
+
 };
 
 class GalaxyComponentDisk : GalaxyComponent {

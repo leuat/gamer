@@ -404,6 +404,55 @@ void MainWindow::RenderPreview(int size)
     m_renderingParams.setRayStep(oldStep);
 }
 
+
+void MainWindow::RenderSkybox() {
+
+    QVector<QVector3D> planes, ups;
+    planes.resize(6);
+    ups.resize(6);
+    planes[0] = QVector3D(0,0,-1);
+    planes[1] = QVector3D(0,0,1);
+    planes[2] = QVector3D(0,1,0);
+    planes[3] = QVector3D(0,-1,0);
+    planes[4] = QVector3D(1,0,0);
+    planes[5] = QVector3D(-1,0,0);
+
+    ups[0] = QVector3D(0,-1,0);
+    ups[1] = QVector3D(0,-1,0);
+    ups[2] = QVector3D(0,0,1);
+    ups[3] = QVector3D(0,0,-1);
+    ups[4] = QVector3D(0,-1,0);
+    ups[5] = QVector3D(0,-1,0);
+
+    QVector<QString> names;
+    names.resize(6);
+    names[0] ="Z-";
+    names[1] ="Z+";
+    names[2] ="Y-";
+    names[3] ="Y+";
+    names[4] ="X-";
+    names[5] ="X+";
+
+    //RP.camera.setRotMatrix(resetCamera.GetRotationMatrix());
+    //m_renderingParams.camera().setRotMatrix();
+    RenderingParams reset = m_renderingParams;
+
+
+    for (int i=0;i<6;i++) {
+        m_renderingParams.camera().setCamera( reset.camera().camera() );
+        m_renderingParams.camera().setTarget( reset.camera().camera() + planes[i] );
+        m_renderingParams.camera().setUp(ups[i]);
+        m_renderingParams.camera().setPerspective(90);
+        //QString fname = Util::getFileName(m_renderingParams.imageDirectory(),"SkyboxZ-","png");
+        QString fname = "Skybox" + names[i];
+        m_renderQueue.Add(m_rasterizer, m_renderingParams, fname);
+    }
+
+    m_renderingParams = reset;
+
+}
+
+
 void MainWindow::EnableGUIEditing(bool value)
 {
     //if (m_state == State::Rendering)
@@ -487,7 +536,6 @@ void MainWindow::loop()
 
     // Important: call RenderQueue first!
     m_renderQueue.Update();
-
     // Preview image
     if (ui->myGLWidget->redraw()) {
         RenderPreview(m_renderingParams.previewSize());
@@ -505,6 +553,7 @@ void MainWindow::loop()
             UpdateImage();
         }
     }
+    UpdateImage();
 
 
     if (m_renderQueue.isRendering()) {
@@ -531,6 +580,7 @@ void MainWindow::loop()
         EnableGUIEditing(true);
         m_state = State::Idle;
         curRast->setState(Rasterizer::State::idle);
+        UpdateImage();
 
     }
 
@@ -976,4 +1026,9 @@ void MainWindow::on_btnQueue_clicked()
 {
     m_state = State::Queueing;
     Render(true);
+}
+
+void MainWindow::on_btnSkybox_clicked()
+{
+    RenderSkybox();
 }

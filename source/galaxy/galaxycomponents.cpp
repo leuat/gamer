@@ -22,6 +22,14 @@ void GalaxyComponentBulge::calculateIntensity(RasterPixel* rp, QVector3D& p, Gal
     componentIntensity(rp, p, weight);
 }
 
+float GalaxyComponentBulge::getHeightModulation(float height)
+{
+    float rho_0 = m_componentParams.strength();
+    float rad = (height+0.01f)*m_componentParams.r0();
+
+    return rho_0 * (pow(rad,-0.855)*exp(-pow(rad,1/4.0f)) -0.05f)*0.1;
+}
+
 void GalaxyComponentDisk::componentIntensity(RasterPixel* rp, QVector3D& p, float ival) {
     float p2 = 0.5;
     if (ival<0.0005)

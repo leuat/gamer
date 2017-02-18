@@ -159,6 +159,8 @@ private slots:
 
     void on_btnQueue_clicked();
 
+    void on_btnSkybox_clicked();
+
 private:
     Ui::MainWindow *ui;
     Rasterizer* m_rasterizer = nullptr;
@@ -201,10 +203,12 @@ private:
     void UpdateStarsGUI();
     void UpdateStarsData();
 
+
     void Render(bool queue);
     void RenderDirect();
     void RenderPreview(int size);
     void RenderStars();
+    void RenderSkybox();
 
     void EnableGUIEditing(bool value);
 
