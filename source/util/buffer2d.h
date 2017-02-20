@@ -15,6 +15,7 @@ class Buffer2D
     QColor PostProcess(const QVector3D& v, float exposure, float gamma, float saturation);
 
 public:
+    ~Buffer2D();
     Buffer2D();
     Buffer2D(int size);
     void Initialize(int size);

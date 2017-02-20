@@ -124,7 +124,7 @@ public:
     {
         for (int i = a.size(); i > 0; i--)
         {
-            T j = rand()%i;// r.Next(i);
+            int j = rand()%i;// r.Next(i);
             T k = a[j];
             a[j] = a[i - 1];
             a[i - 1]  = k;
@@ -170,3 +170,12 @@ public:
 
 };
 
+template <typename T>
+struct PtrLess // public std::binary_function<bool, const T*, const T*>
+{
+  bool operator()(const T* a, const T* b) const
+  {
+    // may want to check that the pointers aren't zero...
+    return *a < *b;
+  }
+};

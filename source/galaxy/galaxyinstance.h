@@ -39,4 +39,7 @@ public:
     void setPosition(const QVector3D &position);
     QVector3D orientation() const;
     void setOrientation(const QVector3D &orientation);
+
+
+
 };

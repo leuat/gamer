@@ -19,6 +19,8 @@ void Buffer2D::Initialize(int size)
     m_size = size;
     for (int i=0;i<size*size;i++)
         m_buffer[i] = QVector3D(0,0,0);
+
+//    qDebug() << "initialized buffer of size " + QString::number(m_buffer.size());
 }
 
 void Buffer2D::Set(const int i, const int j, const QVector3D &v)
@@ -107,6 +109,12 @@ QColor Buffer2D::PostProcess(const QVector3D &val, float exposure, float gamma, 
      QVector3D c = Util::clamp(v*s, 0, 255);
      return QColor(c.z(), c.y(),c.x());
 
+}
+
+Buffer2D::~Buffer2D()
+{
+//    qDebug() << "Releasing old buffer";
+    m_buffer.resize(0);
 }
 
 void Buffer2D::fill(const QVector3D v)

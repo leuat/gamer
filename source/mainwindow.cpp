@@ -14,6 +14,8 @@
 #include "dialogabout.h"
 #include "source/util/fitsio.h"
 #include <QElapsedTimer>
+#include "source/util/random.h"
+//#include <QListData>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -22,7 +24,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ui->setupUi(this);
     Util::path = QCoreApplication::applicationDirPath() + "/../../";
-    m_rasterizer = new Rasterizer(&m_renderingParams);
+    m_rastGalaxy = new Rasterizer(&m_renderingParams);
+    m_rastScene = new Rasterizer(&m_renderingParams);
     ui->myGLWidget->setRenderingParams(&m_renderingParams);
     GMessages::Initialize(ui->lstMessages);
 
@@ -44,21 +47,29 @@ MainWindow::MainWindow(QWidget *parent) :
         m_galaxy.AddComponent(10);
         m_renderingParams.setCurrentGalaxy(m_galaxy.galaxyParams().name());
     }
-
+    m_rasterizer = m_rastGalaxy;
     PrepareNewGalaxy();
 
     // Adding a single galaxy to the rasterizer
-    m_rasterizer->AddGalaxy(new GalaxyInstance(&m_galaxy, m_galaxy.galaxyParams().name(),
+    m_rastGalaxy->AddGalaxy(new GalaxyInstance(&m_galaxy, m_galaxy.galaxyParams().name(),
                                               QVector3D(0,0,0), QVector3D(0,1,0).normalized(), 1, 0)  );
 
     // Copy rasterizer to queue renderer
     //m_renderQueue.setRasterizer(m_rasterizer);
-    GMessages::Message(Util::path);
+
+
+
+
+    UpdateSceneGUI();
+
     timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(loop()));
     timer->start(25);
     ui->myGLWidget->setRedraw(true);
     setWindowTitle("Gamer " + QString::number(m_version));
+
+
+
 
 //    ui->leRayStep->setVisible(false);
 //    ui->lblRaystep->setVisible(false);
@@ -139,11 +150,12 @@ void MainWindow::PopulateGalaxyList()
     QDirIterator it(Util::path + m_renderingParams.galaxyDirectory(),
                     QStringList() << "*.gax", QDir::Files, QDirIterator::Subdirectories);
     ui->lstGalaxies->clear();
-
+    ui->lstSceneGalaxies->clear();
     while (it.hasNext()) {
         QString filename = it.next();
         QString name = filename.split("/").last();
         ui->lstGalaxies->addItem(name);
+        ui->lstSceneGalaxies->addItem(name);
     }
 }
 
@@ -365,6 +377,7 @@ void MainWindow::UpdateStarsData()
     UpdateImage();
 }
 
+
 void MainWindow::Render(bool queue)
 {
 
@@ -538,7 +551,6 @@ void MainWindow::CreateNewGalaxy()
 
 void MainWindow::loop()
 {
-
     // Important: call RenderQueue first!
     m_renderQueue.Update();
     // Preview image
@@ -546,6 +558,7 @@ void MainWindow::loop()
         RenderPreview(m_renderingParams.previewSize());
         m_renderingParams.Save(m_RenderParamsFilename);
     }
+
 
     Rasterizer* curRast = m_rasterizer;
     if (m_state==State::Rendering) {
@@ -558,7 +571,7 @@ void MainWindow::loop()
             UpdateImage();
         }
     }
-    UpdateImage();
+//    UpdateImage();
 
 
     if (m_renderQueue.isRendering()) {
@@ -1037,3 +1050,91 @@ void MainWindow::on_btnSkybox_clicked()
 {
     RenderSkybox();
 }
+
+
+void MainWindow::on_btnSceneMode_clicked()
+{
+    m_sceneMode = !m_sceneMode;
+    if (m_sceneMode)
+        m_rasterizer = m_rastScene;
+    else
+        m_rasterizer = m_rastGalaxy;
+
+    UpdateSceneGUI();
+    RenderPreview(m_renderingParams.previewSize());
+}
+
+void MainWindow::UpdateSceneGUI()
+{
+    if (m_sceneMode) {
+        ui->btnSceneMode->setText("Galaxy Mode");
+        ui->grpGalaxies->setVisible(false);
+        ui->grpScene->setVisible(true);
+    }
+    else {
+        ui->btnSceneMode->setText("Scene mode");
+        ui->grpGalaxies->setVisible(true);
+        ui->grpScene->setVisible(false);
+    }
+
+}
+
+
+void MainWindow::on_btnAddGalaxyToScene_clicked()
+{
+    if (ui->lstSceneGalaxies->currentItem()==nullptr)
+        return;
+    ui->lstSceneGalaxiesTo->addItem( ui->lstSceneGalaxies->currentItem()->text());
+
+}
+
+void MainWindow::on_btnAddGalaxyToScene_2_clicked()
+{
+    for (int i=0;i<ui->lstSceneGalaxies->count();i++)
+        ui->lstSceneGalaxiesTo->addItem(ui->lstSceneGalaxies->item(i)->text());
+
+}
+
+void MainWindow::on_btnRemoveGalaxyFromScene_clicked()
+{
+    if (ui->lstSceneGalaxiesTo->currentItem()==nullptr)
+        return;
+    delete ui->lstSceneGalaxiesTo->currentItem();
+
+}
+
+void MainWindow::on_btnCreateScene_clicked()
+{
+    // Create the scene
+    m_rasterizer->Clear();
+    m_rasterizer->getGalaxies().clear();
+    m_galaxies.clear();
+    for (int i=0;i<ui->lstSceneGalaxiesTo->count();i++) {
+        QString gal = ui->lstSceneGalaxiesTo->item(i)->text();
+        Galaxy* g = new Galaxy();
+        g->Load(m_renderingParams.galaxyDirectory() + gal);
+        m_galaxies.append(g);
+    }
+    if (m_galaxies.size()==0)
+        return;
+    int N = ui->leNoGalaxies->text().toInt();
+    float boxSize = ui->leBoxSize->text().toFloat();
+    for (int i=0;i<N;i++) {
+        Galaxy* g = m_galaxies[ rand()%m_galaxies.size() ];
+        QVector3D orientation = QVector3D( Random::nextFloat(-1,1), Random::nextFloat(-1,1), Random::nextFloat(-1,1)).normalized();
+        QVector3D pos = QVector3D( Random::nextFloat(-1,1), Random::nextFloat(-1,1), Random::nextFloat(-1,1));
+        if (i!=0)
+            pos*=boxSize;
+
+//        pos = QVector3D(2*i,0,0);
+
+        m_rasterizer->AddGalaxy(new GalaxyInstance(g, g->galaxyParams().name(),
+                                                  pos,
+                                                  orientation,
+                                                   1, 0)  );
+
+    }
+    RenderPreview(m_renderingParams.previewSize());
+
+}
+

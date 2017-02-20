@@ -62,12 +62,15 @@ protected:
         m_noise = new Simplex(1,1,1,1);
     }
 
+    void Clear();
+
     ~Rasterizer() {
         m_mutex.lock();
         m_abort = true;
         m_condition.wakeOne();
         m_mutex.unlock();
         wait();
+        Clear();
         ReleaseBuffers();
     }
 

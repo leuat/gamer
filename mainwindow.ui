@@ -17,7 +17,7 @@
    <string>Gamer 1.0</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <widget class="QTabWidget" name="tab_3">
+   <widget class="QTabWidget" name="tabWidget">
     <property name="geometry">
      <rect>
       <x>19</x>
@@ -135,7 +135,10 @@
        <string>Preview Image size</string>
       </property>
      </widget>
-     <widget class="QGroupBox" name="groupBox_3">
+     <widget class="QGroupBox" name="grpGalaxies">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
       <property name="geometry">
        <rect>
         <x>30</x>
@@ -274,6 +277,162 @@
       <property name="text">
        <string>Help</string>
       </property>
+     </widget>
+     <widget class="QPushButton" name="btnSceneMode">
+      <property name="geometry">
+       <rect>
+        <x>340</x>
+        <y>150</y>
+        <width>111</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>PushButton</string>
+      </property>
+     </widget>
+     <widget class="QGroupBox" name="grpScene">
+      <property name="geometry">
+       <rect>
+        <x>30</x>
+        <y>200</y>
+        <width>531</width>
+        <height>301</height>
+       </rect>
+      </property>
+      <property name="title">
+       <string>Scene mode</string>
+      </property>
+      <widget class="QListWidget" name="lstSceneGalaxies">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>30</y>
+         <width>131</width>
+         <height>261</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QListWidget" name="lstSceneGalaxiesTo">
+       <property name="geometry">
+        <rect>
+         <x>200</x>
+         <y>30</y>
+         <width>131</width>
+         <height>261</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="btnAddGalaxyToScene">
+       <property name="geometry">
+        <rect>
+         <x>170</x>
+         <y>100</y>
+         <width>21</width>
+         <height>23</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>&gt;</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="btnRemoveGalaxyFromScene">
+       <property name="geometry">
+        <rect>
+         <x>170</x>
+         <y>200</y>
+         <width>21</width>
+         <height>23</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>&lt;</string>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="leNoGalaxies">
+       <property name="geometry">
+        <rect>
+         <x>440</x>
+         <y>29</y>
+         <width>71</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="inputMask">
+        <string>00000</string>
+       </property>
+       <property name="text">
+        <string>5000</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_23">
+       <property name="geometry">
+        <rect>
+         <x>360</x>
+         <y>30</y>
+         <width>61</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>No galaxies:</string>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="leBoxSize">
+       <property name="geometry">
+        <rect>
+         <x>440</x>
+         <y>49</y>
+         <width>71</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="inputMask">
+        <string>00000</string>
+       </property>
+       <property name="text">
+        <string>250</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_43">
+       <property name="geometry">
+        <rect>
+         <x>360</x>
+         <y>50</y>
+         <width>61</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Box size</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="btnCreateScene">
+       <property name="geometry">
+        <rect>
+         <x>360</x>
+         <y>100</y>
+         <width>75</width>
+         <height>23</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Create</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="btnAddGalaxyToScene_2">
+       <property name="geometry">
+        <rect>
+         <x>170</x>
+         <y>150</y>
+         <width>21</width>
+         <height>23</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>&gt;&gt;</string>
+       </property>
+      </widget>
      </widget>
     </widget>
     <widget class="QWidget" name="tabGalaxy">
@@ -984,7 +1143,7 @@
         </rect>
        </property>
        <property name="maximum">
-        <number>100</number>
+        <number>200</number>
        </property>
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
@@ -1618,7 +1777,7 @@
      <x>0</x>
      <y>0</y>
      <width>1215</width>
-     <height>22</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuRender">

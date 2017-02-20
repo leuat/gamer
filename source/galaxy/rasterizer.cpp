@@ -76,6 +76,11 @@ void Rasterizer::run()
 
 }
 
+void Rasterizer::Clear()
+{
+    m_galaxies.clear();
+}
+
 void Rasterizer::ReleaseBuffers()
 {
     if (m_imageBuffer)
@@ -139,11 +144,9 @@ void Rasterizer::prepareBuffer()
     }
 
 
-    qDebug() << "PREPARING;";
     int size = m_renderingParams->size();
     if (m_imageBuffer == nullptr || m_imageBuffer->width() != size || m_imageShadowBuffer->width()!=size) {
         ReleaseBuffers();
-
         m_imageBuffer = new QImage(size,size,QImage::Format_ARGB32);
         m_renderBuffer = new Buffer2D(size);
         m_backBuffer = new Buffer2D(size);
@@ -152,7 +155,7 @@ void Rasterizer::prepareBuffer()
         RenderStars();
 
     }
-    qDebug() << "DONE PREPARING";
+
     m_imageBuffer->fill(QColor(0,0,0));
     m_backBuffer->fill(QVector3D(0,0,0));
     m_renderBuffer->fill(QVector3D(0,0,0));
@@ -160,23 +163,23 @@ void Rasterizer::prepareBuffer()
 
 
 }
-
+bool galaxySort(GalaxyInstance* a, GalaxyInstance* b)
+{
+    return a->position().length() > b->position().length();
+}
 
 void Rasterizer::Prepare() {
-    //sort (galaxies.begin(), galaxies.end(), galaxySort);
 
-    /*			galaxies.Sort(
-                delegate(GalaxyInstance i1, GalaxyInstance i2)
-                {
-                float d = (i1.position-m_renderingParams->camera.camera).magnitude - (i2.position-m_renderingParams->camera.camera).magnitude;
-                if (d<0) return 1;
-                else return -1;
-//				return (i1.param.position-m_renderingParams->camera.camera).magnitude> (i2.param.position-m_renderingParams->camera.camera).magnitude;
-                }
-            );
-            //            buffer = new ColorBuffer2D(m_renderingParams->size, m_renderingParams->size);
-*/
+    // Sort
+    for (GalaxyInstance* gi : m_galaxies)
+        gi->setPosition(gi->position() - m_renderingParams->camera().camera());
 
+    qSort(m_galaxies.begin(), m_galaxies.end(),  galaxySort);
+
+    for (GalaxyInstance* gi : m_galaxies)
+        gi->setPosition(gi->position() + m_renderingParams->camera().camera());
+
+    // Done sorting
     for (GalaxyInstance* gi : m_galaxies) {
         gi->GetGalaxy()->galaxyParams().setNoise(m_noise);
         gi->GetGalaxy()->SetupComponents(m_renderingParams);
@@ -367,8 +370,8 @@ QVector3D Rasterizer::renderPixel(QVector3D dir, QVector<GalaxyInstance*> gals) 
                                                 g->galaxyParams().axis(), isp1, isp2, t1, t2);
 
         if (t2>0) {
- //           qDebug() << "BEHIND";
-            isp2 = m_renderingParams->camera().camera()+ gi->position();// + m_renderingParams->direction*
+//            qDebug() << "BEHIND";
+            isp2 = m_renderingParams->camera().camera()- gi->position();// + m_renderingParams->direction*
         }
 
         if (t1>0 && t2>0)

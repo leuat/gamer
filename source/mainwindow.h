@@ -161,16 +161,32 @@ private slots:
 
     void on_btnSkybox_clicked();
 
+
+    void on_btnSceneMode_clicked();
+
+    void on_btnAddGalaxyToScene_clicked();
+
+    void on_btnRemoveGalaxyFromScene_clicked();
+
+    void on_btnCreateScene_clicked();
+
+    void on_btnAddGalaxyToScene_2_clicked();
+
 private:
     Ui::MainWindow *ui;
-    Rasterizer* m_rasterizer = nullptr;
+    Rasterizer* m_rasterizer = nullptr; // Pointer to the current rasterizer
+    Rasterizer* m_rastGalaxy = nullptr;
+    Rasterizer* m_rastScene = nullptr;
     RenderQueue m_renderQueue;
     RenderingParams m_renderingParams;
     Galaxy m_galaxy;
-    float m_version = 1.01;
+    QVector<Galaxy*> m_galaxies;
+
+    float m_version = 1.02;
     ComponentParams* m_curComponentParams = nullptr;
     ComponentSpectrum* m_curComponentSpectrum = nullptr;
     QBasicTimer m_timer;
+    bool m_sceneMode = false;
     State m_state = State::Idle;
 
     float m_postSliderScale = 30;
@@ -203,6 +219,8 @@ private:
 
     void UpdateStarsGUI();
     void UpdateStarsData();
+
+    void UpdateSceneGUI();
 
 
     void Render(bool queue);
