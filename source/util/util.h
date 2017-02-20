@@ -17,6 +17,7 @@
 #include <QElapsedTimer>
 #include <QTextStream>
 #include <QDebug>
+
 //#include "random.h"
 
 #define Q_TIMER_START()  \
@@ -47,7 +48,7 @@ public:
     static void verify_file(string filename);
     static bool verify_file_bool(string filename);
     static string trim(string s);
-
+    static QString path;
     static float floatRandom(const float & min, const float & max) {
         static std::mt19937 generator;
         std::uniform_real_distribution<float> distribution(min, max);

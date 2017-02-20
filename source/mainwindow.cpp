@@ -21,6 +21,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
 
     ui->setupUi(this);
+    Util::path = QCoreApplication::applicationDirPath() + "/../../";
     m_rasterizer = new Rasterizer(&m_renderingParams);
     ui->myGLWidget->setRenderingParams(&m_renderingParams);
     GMessages::Initialize(ui->lstMessages);
@@ -52,12 +53,15 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // Copy rasterizer to queue renderer
     //m_renderQueue.setRasterizer(m_rasterizer);
-
-
+    GMessages::Message(Util::path);
     timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(loop()));
     timer->start(25);
     ui->myGLWidget->setRedraw(true);
+    setWindowTitle("Gamer " + QString::number(m_version));
+
+//    ui->leRayStep->setVisible(false);
+//    ui->lblRaystep->setVisible(false);
 
 
 }
@@ -132,7 +136,7 @@ void MainWindow::PopulateGalaxyList()
 
 
 
-    QDirIterator it(m_renderingParams.galaxyDirectory(),
+    QDirIterator it(Util::path + m_renderingParams.galaxyDirectory(),
                     QStringList() << "*.gax", QDir::Files, QDirIterator::Subdirectories);
     ui->lstGalaxies->clear();
 
@@ -378,7 +382,7 @@ void MainWindow::Render(bool queue)
     m_rasterizer->setNewSize(m_renderingParams.size());
 
     if (queue) {
-        QString filename = Util::getFileName(m_renderingParams.imageDirectory(),"QueuedImage","png");
+        QString filename = Util::getFileName(Util::path + m_renderingParams.imageDirectory(),"QueuedImage","png");
         m_renderQueue.Add(m_rasterizer, m_renderingParams,filename);
     }
     else
@@ -469,6 +473,7 @@ void MainWindow::EnableGUIEditing(bool value)
     ui->leArm3->setEnabled(value);
     ui->leArm4->setEnabled(value);
     ui->leDelta->setEnabled(value);
+    ui->btnSkybox->setEnabled(value);
     ui->leGalaxyName->setEnabled(value);
     ui->leNoArms->setEnabled(value);
     ui->leNoiseOffset->setEnabled(value);
@@ -700,7 +705,7 @@ void MainWindow::on_cmbSpectrum_activated(const QString &arg1)
 
 void MainWindow::on_leGalaxyName_editingFinished()
 {
-    QFile file (m_renderingParams.galaxyDirectory() + m_galaxy.galaxyParams().name() + ".gax");
+    QFile file (Util::path +m_renderingParams.galaxyDirectory() + m_galaxy.galaxyParams().name() + ".gax");
     file.remove();
     UpdateGalaxyData();
     PopulateGalaxyList();
@@ -834,17 +839,17 @@ void MainWindow::on_hsSaturation_sliderMoved(int position)
 
 void MainWindow::on_btnSaveImage_clicked()
 {
-    QString baseFile = Util::getFileName(m_renderingParams.imageDirectory(),"Image","png");
+    QString baseFile = Util::getFileName(Util::path + m_renderingParams.imageDirectory(),"Image","png");
     QString filename = m_renderingParams.imageDirectory() +
             baseFile +".png";
     if (ui->chkSaveFits->isChecked()) {
-        FitsIO::SaveFloat(m_renderingParams.imageDirectory() + baseFile + "_red.fits", 0, m_rasterizer->getRenderBuffer());
-        FitsIO::SaveFloat(m_renderingParams.imageDirectory() + baseFile + "_green.fits", 1, m_rasterizer->getRenderBuffer());
-        FitsIO::SaveFloat(m_renderingParams.imageDirectory() + baseFile + "_blue.fits", 2, m_rasterizer->getRenderBuffer());
+        FitsIO::SaveFloat(Util::path + m_renderingParams.imageDirectory() + baseFile + "_red.fits", 0, m_rasterizer->getRenderBuffer());
+        FitsIO::SaveFloat(Util::path + m_renderingParams.imageDirectory() + baseFile + "_green.fits", 1, m_rasterizer->getRenderBuffer());
+        FitsIO::SaveFloat(Util::path + m_renderingParams.imageDirectory() + baseFile + "_blue.fits", 2, m_rasterizer->getRenderBuffer());
     }
 //      FitsIO::SaveFloat(m_renderingParams.imageDirectory() +"test.fits", 0, m_rasterizer->getRenderBuffer());
 
-    m_rasterizer->getImageShadowBuffer()->save(filename);
+    m_rasterizer->getImageShadowBuffer()->save(Util::path + filename);
     GMessages::Message("Galaxy png saved to " + filename);
 
 }
@@ -871,7 +876,7 @@ void MainWindow::on_btnDelete_clicked()
     int ret = msgBox.exec();
     if (ret==QMessageBox::Ok) {
         QString filename= m_renderingParams.galaxyDirectory() + gax;
-        QFile file (filename);
+        QFile file (Util::path +filename);
         file.remove();
         PopulateGalaxyList();
     }
@@ -928,7 +933,7 @@ void MainWindow::on_btnHelpPostProcessing_clicked()
 
 void MainWindow::on_actionAbout_triggered()
 {
-    DialogAbout* da = new DialogAbout();
+    DialogAbout* da = new DialogAbout(m_version);
     da->show();
 }
 

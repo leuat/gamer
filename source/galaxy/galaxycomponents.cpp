@@ -3,13 +3,13 @@
 #include "source/util/util.h"
 
 void GalaxyComponentBulge::componentIntensity(RasterPixel* rp, QVector3D& p, float ival) {
-    float rho_0 = m_componentParams.strength()*ival;
+    double rho_0 = m_componentParams.strength()*ival;
     QVector3D pos = m_currentGI->rotmat()*(p);
 
-    float rad = (pos.length()+0.01f)*m_componentParams.r0();
-    rad+=0.01f;
+    double rad = (pos.length()+0.01)*m_componentParams.r0();
+    rad+=0.01;
     float i =    rho_0 * (pow(rad,-0.855)*exp(-pow(rad,1/4.0f)) -0.05f) *m_currentGI->intensityScale();
-
+//    double i = rho_0*1/rad*0.5;
 
     if (i<0) i=0;
     rp->setI(rp->I() + i*m_spectrum->spectrum()*rp->scale);

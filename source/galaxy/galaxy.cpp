@@ -4,7 +4,7 @@
 #include <QFile>
 #include <QDataStream>
 #include "source/util/gmessages.h"
-
+#include "source/util/util.h"
 
 
 QVector<ComponentParams* >& Galaxy::componentParams()
@@ -159,7 +159,7 @@ Galaxy* Galaxy::Clone() {
 
 void Galaxy::Save(QString filename)
 {
-    QFile file(filename);
+    QFile file(Util::path + filename);
     if(!file.open(QIODevice::WriteOnly)) {
         qDebug() << "Could not open " << filename;
         return;
@@ -176,7 +176,7 @@ void Galaxy::Save(QString filename)
 
 
 bool Galaxy::Load(QString filename) {
-    QFile file(filename);
+    QFile file(Util::path + filename);
     if(!file.open(QIODevice::ReadOnly)) {
         qDebug() << "Could not open " << filename;
         return false;

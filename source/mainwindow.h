@@ -167,6 +167,7 @@ private:
     RenderQueue m_renderQueue;
     RenderingParams m_renderingParams;
     Galaxy m_galaxy;
+    float m_version = 1.01;
     ComponentParams* m_curComponentParams = nullptr;
     ComponentSpectrum* m_curComponentSpectrum = nullptr;
     QBasicTimer m_timer;

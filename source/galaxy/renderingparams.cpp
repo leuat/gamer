@@ -1,5 +1,6 @@
 ﻿#include "source/galaxy/renderingparams.h"
 #include <QFile>
+#include "source/util/util.h"
 
 int RenderingParams::size() const
 {
@@ -149,7 +150,7 @@ void RenderingParams::setGalaxyDirectory(const QString &galaxyDirectory)
 
 void RenderingParams::Save(QString filename)
 {
-    QFile file(filename);
+    QFile file(Util::path + filename);
     if(!file.open(QIODevice::WriteOnly)) {
         qDebug() << "Could not open " << filename;
         return;
@@ -165,7 +166,7 @@ void RenderingParams::Save(QString filename)
 void RenderingParams::Load(QString filename)
 {
 //    qDebug() << "TAR" << camera().target();
-    QFile file(filename);
+    QFile file(Util::path + filename);
     if(!file.open(QIODevice::ReadOnly)) {
         return;
     }

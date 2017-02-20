@@ -2,6 +2,8 @@
 #include <QDebug>
 //#include <QtGlobal>
 
+QString Util::path = "";
+
 void Util::Tokenize(const string& str,
                       vector<string>& tokens,
                       const string& delimiters)

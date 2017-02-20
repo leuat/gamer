@@ -133,8 +133,13 @@ void Rasterizer::prepareBuffer()
 {
     // Do not changes buffers if rendering!
 
-    if (m_state == State::rendering)
+    if (m_state == State::rendering) {
+        qDebug() << "RETURNING STILL RENDERING";
         return;
+    }
+
+
+    qDebug() << "PREPARING;";
     int size = m_renderingParams->size();
     if (m_imageBuffer == nullptr || m_imageBuffer->width() != size || m_imageShadowBuffer->width()!=size) {
         ReleaseBuffers();
@@ -147,6 +152,7 @@ void Rasterizer::prepareBuffer()
         RenderStars();
 
     }
+    qDebug() << "DONE PREPARING";
     m_imageBuffer->fill(QColor(0,0,0));
     m_backBuffer->fill(QVector3D(0,0,0));
     m_renderBuffer->fill(QVector3D(0,0,0));
@@ -263,8 +269,8 @@ void Rasterizer::RenderPixels() {
         int j = (idx-i)/(int)m_renderingParams->size();
 
         //m_renderBuffer->setPixel(i,j,rgb.rgba());
-//        m_renderBuffer->DrawBox(m_backBuffer, i,j, m_renderingParams->size()/60, I);
-        m_renderBuffer->DrawBox(m_backBuffer, i,j, 1, I);
+        m_renderBuffer->DrawBox(m_backBuffer, i,j, m_renderingParams->size()/60, I);
+//        m_renderBuffer->DrawBox(m_backBuffer, i,j, 1, I);
 
     }
 
@@ -329,62 +335,6 @@ void Rasterizer::RenderDirect()
     RenderPixels();
 }
 
-/*
-    void RenderSkybox() {
-
-            Vector3[] planes = new Vector3[6];
-            Vector3[] ups = new Vector3[6];
-            planes[0] = new Vector3(0,0,-1);
-            planes[1] = new Vector3(0,0,1);
-            planes[2] = new Vector3(0,1,0);
-            planes[3] = new Vector3(0,-1,0);
-            planes[4] = new Vector3(1,0,0);
-            planes[5] = new Vector3(-1,0,0);
-
-            ups[0] = new Vector3(0,-1f,0);
-            ups[1] = new Vector3(0,-1f,0);
-            ups[2] = new Vector3(0,0,1);
-            ups[3] = new Vector3(0,0,-1);
-            ups[4] = new Vector3(0,-1f,0);
-            ups[5] = new Vector3(0,-1f,0);
-
-            string[] names = new string[6];
-            names[0] ="Z-";
-            names[1] ="Z+";
-            names[2] ="Y+";
-            names[3] ="Y-";
-            names[4] ="X-";
-            names[5] ="X+";
-
-            resetCamera = m_renderingParams->camera.copy();
-            
-            time = 0;
-            currentState = RenderState.RequestCancel;
-            //			currentTask = null;
-            Abort(); // threads
-            //m_renderingParams->camera.setRotation(new Vector3(0, 45, 45));
-            m_renderingParams->camera.setRotMatrix(resetCamera.GetRotationMatrix());
-            //UnityEngine.Debug.Log(m_renderingParams->camera.rotMatrix);
-            
-
-            for (int i=0;i<6;i++) {
-                RenderImageSaveTask r = new RenderImageSaveTask("skybox" + names[i] + ".png", this);
-                
-                r.camera = resetCamera.camera;
-                r.target = resetCamera.camera + planes[i];
-                r.up =  ups[i];
-
-                r.FOV = 90;
-                taskList.Add (r);
-            }
-
-            //			m_renderingParams->camera = oldCam;
-
-
-            currentState = RenderState.Idle;
-        }
-
-        */
 
 QVector3D Rasterizer::setupCamera(int idx) {
     int i = idx%(int)m_renderingParams->size();
@@ -452,16 +402,22 @@ void Rasterizer::getIntensity(GalaxyInstance* gi, RasterPixel* rp, QVector3D isp
     rp->scale = step;
 
 
-//    QVector3D camera = m_renderingParams->camera().camera();
+    QVector3D camera = m_renderingParams->camera().camera() - gi->position();
     int cnt = 0;
  //   for (int i=0;i<N;i++)
+    float avgStep = 0;
+    float minRayStep = 0.0002;
+    if (m_isPreview)
+        minRayStep = 0.01;
     while(QVector3D::dotProduct(p-origin,(isp2-origin).normalized())<length)
     {
-        //step = Util::clamp((p-camera).length()*m_renderingParams->rayStep(), 0.00001, 0.1);
-        //step = m_renderingParams->rayStep();
-
-//        float curStep = 0.1;
-        float curStep = m_renderingParams->rayStep();
+        float curStep = Util::clamp((p-camera).length()*m_renderingParams->rayStep(), minRayStep, 0.025);
+        step = curStep;
+        avgStep +=step;
+//        step = m_renderingParams->rayStep();
+//        curStep = step;
+     //   float curStep = 0.1;
+        //curStep = m_renderingParams->rayStep();
         QVector3D P;
         float m_currentRadius;
 
@@ -472,28 +428,33 @@ void Rasterizer::getIntensity(GalaxyInstance* gi, RasterPixel* rp, QVector3D isp
         for ( GalaxyComponent* gc : g->components())
         {
          ///  GalaxyComponent* c = g->com
-              rp->radius = gc->getRadius(p, rp->P, rp->z, gi);
-              rp->z = gc->getHeightModulation(rp->z);
-
-            // BULGEN er problemet for faen. jaja.
-            float hmod = m_renderingParams->rayStep() + (1-rp->z)*0.01;
-  //          curStep = max(min(curStep, hmod), m_renderingParams->rayStep());
-
-
-            if (gc->getComponentParams().active()==1) {
+            if (gc->getComponentParams().active()==1 && gc->getComponentParams().className()!="bulge") {
+                rp->radius = gc->getRadius(p, rp->P, rp->z, gi);
+                rp->z = gc->getHeightModulation(rp->z);
+              // BULGEN er problemet for faen. jaja.
+    //          float hmod = m_renderingParams->rayStep() + (1-rp->z)*0.01;
+    //          curStep = max(min(curStep, hmod), m_renderingParams->rayStep());
                 gc->calculateIntensity( rp, p, gi, step*200);
             }
+            else
+                if (gc->getComponentParams().active()==1 && gc->getComponentParams().className()=="bulge") {
+                    float N = 1;
+                    for (int i=0;i<N;i++) {
+                        QVector3D np = p - curStep/N*i*dir*1;
+                        gc->calculateIntensity( rp, np, gi, step*200.0/N);
+                    }
+                }
         }
         step = curStep;
         p=p-dir*step;
         cnt++;
         //rp.I()Floor(0);
     }
-/*
-    if (rand()%1000==1)
-        qDebug() << "average: " << cnt << "isps: " << isp1 << ", " << isp2;
 
- */
+/*    if (rand()%10000==1)
+        qDebug() << "average: " << cnt << "curstep: " << avgStep/(float)cnt;
+*/
+
 
 }
 

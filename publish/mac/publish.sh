@@ -1,7 +1,6 @@
-rm -rf gamer
+rm -rf Gamer.app
 rm gamer_osx.tar.gz
-mkdir gamer
-cp -r ../data/* gamer
-cp ../../build/Gamer.app/Contents/MacOS/Gamer gamer/gamer
-tar -cvzf gamer_osx.tar.gz gamer
+cp -r ../../build/Gamer.app Gamer.app
+cp -r ../data/* Gamer.app
+tar -cvzf gamer_osx.tar.gz Gamer.app
 scp gamer_osx.tar.gz leuat@www.irio.co.uk:www/gamer

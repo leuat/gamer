@@ -1,5 +1,6 @@
 #include "renderqueue.h"
 #include "source/util/fitsio.h"
+#include "source/util/util.h"
 #include <QDebug>
 
 RenderingParams& RenderQueueItem::renderingParams()
@@ -52,7 +53,7 @@ void RenderQueue::PostRendering() {
 
 
 //    m_rasterizer.getImageShadowBuffer()->save(filename);
-    m_current->rasterizer().getImageShadowBuffer()->save(filename);
+    m_current->rasterizer().getImageShadowBuffer()->save(Util::path + filename);
     GMessages::Message("Galaxy png saved to " + filename);
 
 }
