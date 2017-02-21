@@ -320,7 +320,7 @@ void Rasterizer::AssembleImage()
         }
     */
 
-void  Rasterizer::Render() {
+void  Rasterizer::RenderOMP() {
 
     if (!isRunning()) {
         QString  size = QString::number(m_renderingParams->size());
@@ -387,7 +387,7 @@ QVector3D Rasterizer::renderPixel(QVector3D dir, QVector<GalaxyInstance*> gals) 
 }
 
 /*
- * The hart of the rendering: iterates through a galaxy
+ * The heart of the rendering: iterates through a galaxy
  *
  * */
 void Rasterizer::getIntensity(GalaxyInstance* gi, RasterPixel* rp, QVector3D isp1, QVector3D isp2) {
@@ -418,11 +418,12 @@ void Rasterizer::getIntensity(GalaxyInstance* gi, RasterPixel* rp, QVector3D isp
 //        step = m_renderingParams->rayStep();
 
         for ( GalaxyComponent* gc : g->components())
+        if (gc->getComponentParams().active()==1)
         {
          ///  GalaxyComponent* c = g->com
             // Only if directed forwards
             if (QVector3D::dotProduct(p-camera, dir)>0)
-            if (gc->getComponentParams().active()==1 && gc->getComponentParams().className()!="bulge") {
+            if (gc->getComponentParams().className()!="bulge") {
                 rp->radius = gc->getRadius(p, rp->P, rp->z, gi);
                 rp->z = gc->getHeightModulation(rp->z);
               // BULGEN er problemet for faen. jaja.
@@ -431,7 +432,7 @@ void Rasterizer::getIntensity(GalaxyInstance* gi, RasterPixel* rp, QVector3D isp
                 gc->calculateIntensity( rp, p, gi, step*200);
             }
 
-            if (gc->getComponentParams().active()==1 && gc->getComponentParams().className()=="bulge")
+            if (gc->getComponentParams().className()=="bulge")
                         gc->calculateIntensity( rp, p, gi, step*200.0);
         }
         step = curStep;

@@ -42,7 +42,7 @@ public:
 
     static void Update() {
         if (m_widget == nullptr) {
-            qDebug() << "GMessages::Update widget is null!";
+            //qDebug() << "GMessages::Update widget is null!";
             return;
         }
         m_widget->clear();

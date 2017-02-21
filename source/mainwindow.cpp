@@ -17,6 +17,8 @@
 #include "source/util/random.h"
 //#include <QListData>
 
+float MainWindow::m_version = 1.02;
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -399,7 +401,7 @@ void MainWindow::Render(bool queue)
         m_renderQueue.Add(m_rasterizer, m_renderingParams,filename);
     }
     else
-        m_rasterizer->Render();
+        m_rasterizer->RenderOMP();
 
 }
 
@@ -454,7 +456,7 @@ void MainWindow::RenderSkybox() {
     //m_renderingParams.camera().setRotMatrix();
     RenderingParams reset = m_renderingParams;
 
-
+    m_renderingParams.camera().setRotMatrix(reset.camera().GetRotationMatrix()  );
     for (int i=0;i<6;i++) {
         m_renderingParams.camera().setCamera( reset.camera().camera() );
         m_renderingParams.camera().setTarget( reset.camera().camera() + planes[i] );

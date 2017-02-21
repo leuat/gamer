@@ -98,7 +98,7 @@ protected:
     void CopyFrom(Rasterizer* from);
     void RenderPixels();
     void AssembleImage();
-    void Render();
+    void RenderOMP();
     void RenderDirect();
     void InitializeRendering();
     QVector3D setupCamera(int idx);

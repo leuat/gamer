@@ -172,6 +172,9 @@ private slots:
 
     void on_btnAddGalaxyToScene_2_clicked();
 
+
+
+
 private:
     Ui::MainWindow *ui;
     Rasterizer* m_rasterizer = nullptr; // Pointer to the current rasterizer
@@ -182,7 +185,7 @@ private:
     Galaxy m_galaxy;
     QVector<Galaxy*> m_galaxies;
 
-    float m_version = 1.02;
+    static float m_version;
     ComponentParams* m_curComponentParams = nullptr;
     ComponentSpectrum* m_curComponentSpectrum = nullptr;
     QBasicTimer m_timer;
@@ -237,6 +240,12 @@ private:
 
 public slots:
    void loop();
+
+public:
+   static float Version() {
+       return m_version;
+   }
+
 };
 
 #endif // MAINWINDOW_H
