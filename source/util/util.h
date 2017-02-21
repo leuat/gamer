@@ -55,6 +55,11 @@ public:
         return distribution(generator);
     }
 
+
+    static QVector3D floor(const QVector3D v) {
+        return QVector3D( max(0.0f, v.x()), max(0.0f,v.y()), max(0.0f,v.z())  );
+    }
+
     static bool IntersectSphere(QVector3D o, QVector3D d, QVector3D r,QVector3D& isp1,QVector3D& isp2, float& t0, float& t1) {
 
         r.setX(1.0/(r.x()*r.x()));

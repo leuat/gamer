@@ -414,7 +414,7 @@ void MainWindow::RenderPreview(int size)
 {
     int oldSize = m_renderingParams.size();
     float oldStep = m_renderingParams.rayStep();
-    m_renderingParams.setRayStep(0.01);
+    m_renderingParams.setRayStep(0.1);
     m_rasterizer->setNewSize(size);
     RenderDirect();
     m_renderingParams.setSize(oldSize);

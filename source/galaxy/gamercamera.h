@@ -41,7 +41,7 @@ public:
 private:
 
     QMatrix4x4 m_viewMatrix, m_viewMatrixInv;
-    QMatrix4x4 m_rotMatrix;
+    QMatrix4x4 m_rotMatrix, m_projection, m_invVP;
 
     void setRotation(QVector3D& v);
 
