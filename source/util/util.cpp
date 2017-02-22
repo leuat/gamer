@@ -72,13 +72,13 @@ string Util::trim(string strin)
   return str;
 }    
 
-float Util::clamp(float val, float mi, float ma) {
+float Util::clamp(float val, const float mi, const float ma) {
     val = min(ma, val);
     val = max(mi, val);
     return val;
 }
 
-QVector3D Util::clamp(QVector3D val, float min, float max)
+QVector3D Util::clamp(const QVector3D val, const float min, const float max)
 {
     QVector3D v = val;
     v.setX(clamp(val.x(),min,max));

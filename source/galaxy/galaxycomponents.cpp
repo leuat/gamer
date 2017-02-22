@@ -13,13 +13,14 @@ void GalaxyComponentBulge::componentIntensity(RasterPixel* rp, QVector3D& p, flo
 
     if (i<0) i=0;
     rp->setI(rp->I() + i*m_spectrum->spectrum()*rp->scale);
-
+    rp->tmp = i;
 }
 
-void GalaxyComponentBulge::calculateIntensity(RasterPixel* rp, QVector3D& p, GalaxyInstance* gi, float weight) {
+float GalaxyComponentBulge::calculateIntensity(RasterPixel* rp, QVector3D& p, GalaxyInstance* gi, float weight) {
     m_currentGI = gi;
 //    m_componentParams.setZ0(0.25);
     componentIntensity(rp, p, weight);
+    return rp->tmp;
 }
 
 float GalaxyComponentBulge::getHeightModulation(float height)

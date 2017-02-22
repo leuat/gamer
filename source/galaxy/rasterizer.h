@@ -109,8 +109,6 @@ protected:
     QVector3D setupCamera(int idx);
     QVector3D renderPixel(QVector3D dir, QVector<GalaxyInstance*> gals);
     void getIntensity(GalaxyInstance* gi, RasterPixel* rp, QVector3D isp1, QVector3D isp2);
-
-
 		
     QImage *getBuffer() const;
     RenderingParams* getRenderingParams();

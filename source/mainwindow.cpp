@@ -76,7 +76,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->myGLWidget->setRedraw(true);
     setWindowTitle("Gamer " + QString::number(m_version));
 
-
+//    m_renderingParams.camera().setCamera(QVector3D(0.5,0,0));
+//    m_renderingParams.camera().setUp(QVector3D(0,1,0));
 
 
 //    ui->leRayStep->setVisible(false);
@@ -489,6 +490,8 @@ void MainWindow::EnableGUIEditing(bool value)
 {
     //if (m_state == State::Rendering)
     ui->myGLWidget->disableInput(!value);
+
+    ui->cmbRenderer->setEnabled(value);
 
     ui->actionLoad->setEnabled(value);
     ui->actionSave->setEnabled(value);

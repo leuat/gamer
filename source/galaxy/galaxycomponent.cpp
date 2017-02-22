@@ -58,7 +58,7 @@ float GalaxyComponent::getHeightModulation(float height) {
 
 
 
-void GalaxyComponent::calculateIntensity(RasterPixel* rp, QVector3D& p,
+float GalaxyComponent::calculateIntensity(RasterPixel* rp, QVector3D& p,
                                          GalaxyInstance* gi, const float weight) {
     QVector3D P;
     m_currentGI = gi;
@@ -71,7 +71,7 @@ void GalaxyComponent::calculateIntensity(RasterPixel* rp, QVector3D& p,
 
     float armVal = 1;
     float m_winding = 0;
-    if (rp->z>0.1)
+    if (rp->z>0.01)
     {
 
         float intensity = getRadialIntensity(rp->radius);
@@ -81,9 +81,12 @@ void GalaxyComponent::calculateIntensity(RasterPixel* rp, QVector3D& p,
             float scale = 1;
             if (m_componentParams.className() == "Dust" || m_componentParams.className() == "Dust2")
                 scale = Util::smoothstep(0, 1.0f*m_galaxyParams->bulgeDust(), rp->radius);
+
             if (m_componentParams.arm()!=0) {
                 armVal = calculateArmValue(rp->radius, rp->P);
-                m_winding = getWinding(rp->radius)*m_componentParams.winding();///(rad+1.0);
+
+                if (m_componentParams.winding()!=0)
+                    m_winding = getWinding(rp->radius)*m_componentParams.winding();///(rad+1.0);
 
             }
             rp->winding = m_winding;
@@ -93,9 +96,12 @@ void GalaxyComponent::calculateIntensity(RasterPixel* rp, QVector3D& p,
             float val = (m_componentParams.strength())*scale*armVal*rp->z*intensity*gi->intensityScale();
             if (val * weight > 0.0005) {
                 componentIntensity(rp, p, val * weight);
+                return val;
             }
+            else return 0;
         }
     }
+    else return 0;
 }
 
 float GalaxyComponent::getRadialIntensity(const float rad) {
@@ -162,7 +168,7 @@ float GalaxyComponent::calculateArmValue( float rad,  const QVector3D& P) {
 }
 
 
-float GalaxyComponent::getArm( float rad,  QVector3D p,  float disp) {
+float GalaxyComponent::getArm( const float rad,  const QVector3D& p,  const float disp) {
     float m_workWinding = getWinding(rad);
     float m_workTheta = -getTheta(p);
 
@@ -172,7 +178,7 @@ float GalaxyComponent::getArm( float rad,  QVector3D p,  float disp) {
 
 
 
-float GalaxyComponent::getTheta( QVector3D p ) {
+float GalaxyComponent::getTheta( const QVector3D& p ) {
     QVector3D quatRot = m_currentGI->rotmat()*p;
     return atan2(quatRot.x(), quatRot.z()) + m_componentParams.delta();
 }

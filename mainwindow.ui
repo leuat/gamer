@@ -30,7 +30,7 @@
      <number>-3</number>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="tabScene">
      <attribute name="title">
@@ -59,7 +59,7 @@
        </rect>
       </property>
       <property name="toolTip">
-       <string>Image size squared</string>
+       <string>Image size</string>
       </property>
       <property name="toolTipDuration">
        <number>-1</number>
@@ -94,7 +94,7 @@
        </rect>
       </property>
       <property name="toolTip">
-       <string>Ray tracing step length: 0.01 for preview, 0.001 for small images, 0.0001 for close-up large images</string>
+       <string>Ray tracing step length: 0.01 for preview, 0.025 for small images, 0.01 for close-up large images</string>
       </property>
       <property name="inputMask">
        <string>0.00000</string>
@@ -208,7 +208,7 @@
        </rect>
       </property>
       <property name="toolTip">
-       <string>Ray tracing step length: 0.01 for preview, 0.001 for small images, 0.0001 for close-up large images</string>
+       <string>Field of view: Angle of image in degrees (0-180)</string>
       </property>
       <property name="inputMask">
        <string>000.0</string>
@@ -251,6 +251,9 @@
         <width>111</width>
         <height>31</height>
        </rect>
+      </property>
+      <property name="toolTip">
+       <string>Switch between a single galaxy or a scene of galaxies</string>
       </property>
       <property name="text">
        <string>PushButton</string>

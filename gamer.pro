@@ -53,7 +53,6 @@ SOURCES += \
     source/galaxy/renderqueue.cpp \
     source/consolerenderer.cpp \
     source/galaxy/rasterthread.cpp \
-    source/galaxy/rasterizeromp.cpp
 
 HEADERS  += \
     source/galaxy/rasterizer.h \

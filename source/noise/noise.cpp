@@ -24,7 +24,6 @@ double Noise::get( const double x, const double y, const double z, const double 
     double maxAmplitude = 0;
 //    A*p^()
 
-
     for( int i=0; i < octaves; i++ ) {
         double v = raw_3d( (x+0.1231*i) * freq, (y+0.6123*i) * freq, (z+100.539127*i) * freq );
 //        double v = raw_3d( (x) * freq, (y) * freq, (z) * freq );

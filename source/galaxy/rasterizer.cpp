@@ -282,8 +282,6 @@ void Rasterizer::RenderPixelsOMP()
     for (int k=0;k<size;k++) {
         if (m_abort)
             continue;
-//        if (m_isPreview)
-//            qDebug() << k;
         int idx = m_renderList[ k ];
 
         QVector3D dir = setupCamera(idx);
@@ -293,9 +291,7 @@ void Rasterizer::RenderPixelsOMP()
         int i = idx%(int)m_renderingParams->size();
         int j = (idx-i)/(int)m_renderingParams->size();
 
-        //m_renderBuffer->setPixel(i,j,rgb.rgba());
         m_renderBuffer->DrawBox(m_backBuffer, i,j, boxSize, I);
-//        m_renderBuffer->DrawBox(m_backBuffer, i,j, 1, I);
 
     }
 
@@ -342,7 +338,7 @@ void  Rasterizer::Render() {
 
     if (!isRunning()) {
         QString  size = QString::number(m_renderingParams->size());
-        GMessages::Message("Starting rendering of image with size " + size + "x" + size + " on " + QString::number(std::thread::hardware_concurrency()) + " cores.");
+        GMessages::Message("Starting OMP rendering of image with size " + size + "x" + size + " on " + QString::number(std::thread::hardware_concurrency()) + " cores.");
         m_isPreview = false;
         start(HighPriority);
     } else {
@@ -416,53 +412,61 @@ void Rasterizer::getIntensity(GalaxyInstance* gi, RasterPixel* rp, QVector3D isp
     QVector3D dir = (isp1-isp2).normalized();
     Galaxy* g = gi->GetGalaxy();
     float step = m_renderingParams->rayStep();
-//    int N = (int)(length/step);
+    int N = (int)(length/step);
     QVector3D p = origin;
     rp->scale = step;
 
 
     QVector3D camera = m_renderingParams->camera().camera() - gi->position();
     int cnt = 0;
- //   for (int i=0;i<N;i++)
     float avgStep = 0;
-    float minRayStep = 0.0002;
+    float minRayStep = 0.0005;
     if (m_isPreview)
-        minRayStep = 0.05;
+        minRayStep = 0.01;
 
     while(QVector3D::dotProduct(p-origin,(isp2-origin).normalized())<length)
     {
-        float curStep = Util::clamp((p-camera).length()*m_renderingParams->rayStep(), minRayStep, 0.025);
+        float curStep = Util::clamp((p-camera).length()*m_renderingParams->rayStep(), minRayStep, 0.05);
         step = curStep;
         avgStep +=step;
-//        step = m_renderingParams->rayStep();
 
-        for ( GalaxyComponent* gc : g->components())
-        if (gc->getComponentParams().active()==1)
-        {
-         ///  GalaxyComponent* c = g->com
-            // Only if directed forwards
-            if (QVector3D::dotProduct(p-camera, dir)>0)
-            if (gc->getComponentParams().className()!="bulge") {
-                rp->radius = gc->getRadius(p, rp->P, rp->z, gi);
-                rp->z = gc->getHeightModulation(rp->z);
-              // BULGEN er problemet for faen. jaja.
-    //          float hmod = m_renderingParams->rayStep() + (1-rp->z)*0.01;
-    //          curStep = max(min(curStep, hmod), m_renderingParams->rayStep());
-                gc->calculateIntensity( rp, p, gi, step*200);
+        float modifier = 0;
+//        if (QVector3D::dotProduct(p-camera, dir)<0)
+//            break;
+//        if (1==0)
+        for ( GalaxyComponent* gc : g->components()) {
+            if (gc->getComponentParams().active()==1)
+            {
+                ///  GalaxyComponent* c = g->com
+                // Only if directed forwards
+                if (QVector3D::dotProduct(p-camera, dir)>0)
+                    if (gc->getComponentParams().className()!="bulge") {
+                        rp->radius = gc->getRadius(p, rp->P, rp->z, gi);
+                        rp->z = gc->getHeightModulation(rp->z);
+                        // BULGEN er problemet for faen. jaja.
+//                       float hmod = m_renderingParams->rayStep() + (1-rp->z)*0.01;
+                       //curStep = max(min(curStep, hmod), m_renderingParams->rayStep());
+  //                     curStep += (1-rp->z)*0.01;
+    //                   step = curStep;
+                       modifier = max(modifier, gc->calculateIntensity( rp, p, gi, step*200));
+                    }
+
+                if (gc->getComponentParams().className()=="bulge")
+                    modifier = max(gc->calculateIntensity( rp, p, gi, step*200.0), modifier);
             }
-
-            if (gc->getComponentParams().className()=="bulge")
-                        gc->calculateIntensity( rp, p, gi, step*200.0);
         }
+//        curStep+= 0.1*exp(-modifier*1.0);
+
         step = curStep;
         p=p-dir*step;
         cnt++;
+
         rp->setI( Util::floor(rp->I()));
     }
 
-/*    if (rand()%10000==1)
-        qDebug() << "average: " << cnt << "curstep: " << avgStep/(float)cnt;
-*/
+//        if (rand()%100==1)
+  //      qDebug() << "average: " << cnt << "curstep: " << avgStep/(float)cnt;
+
 
 
 }

@@ -1,5 +1,6 @@
 #include "rasterthread.h"
 #include "rasterizer.h"
+#include "source/util/util.h"
 #include <thread>
 
 void RasterThread::Render()
@@ -10,6 +11,10 @@ void RasterThread::Render()
     int chunk = m_renderList.size()/N;
     int position = 0;
     m_timer.start();
+    int size = m_renderingParams->size();
+
+    GMessages::Message("Starting threaded rendering of image with size " + QString::number(size) + "x" + QString::number(size) + " on " + QString::number(std::thread::hardware_concurrency()) + " cores.");
+
     for (int i=0;i<N;i++) {
         RasterThread* rt = new RasterThread(this,position, position + chunk);
         position+=chunk;
@@ -24,7 +29,6 @@ void RasterThread::RenderPixels()
     if (m_isPreview) {
         RenderPixelsOMP();
         return;
-
     }
     int size = m_to - m_from;
     float delta = 1.0/(float)size;
@@ -33,8 +37,6 @@ void RasterThread::RenderPixels()
     for (int k=m_from;k<m_to;k++) {
         if (m_abort)
             continue;
-//        if (m_isPreview)
-//            qDebug() << k;
         int idx = m_renderList[ k ];
 
         QVector3D dir = setupCamera(idx);
@@ -44,9 +46,7 @@ void RasterThread::RenderPixels()
         int i = idx%(int)m_renderingParams->size();
         int j = (idx-i)/(int)m_renderingParams->size();
 
-        //m_renderBuffer->setPixel(i,j,rgb.rgba());
         m_renderBuffer->DrawBox(m_backBuffer, i,j, boxSize, I);
-//        m_renderBuffer->DrawBox(m_backBuffer, i,j, 1, I);
 
     }
 
@@ -62,13 +62,18 @@ void RasterThread::AssembleImage()
 
 Rasterizer::State RasterThread::getState()
 {
-    if (m_threads.size() == 0)
+
+    if (m_threads.size() == 0) {
+
         return m_state;
+    }
 
     for (Rasterizer* r : m_threads)
         if (r->getState()==State::rendering)
             return State::rendering;
 
+    m_threads.clear();
+    GMessages::Message("Rendering took " + Util::MilisecondToString(m_timer.elapsed()));
     return State::done;
 
 }

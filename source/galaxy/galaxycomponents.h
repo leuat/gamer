@@ -8,7 +8,7 @@ class GalaxyComponentBulge : GalaxyComponent {
 public:
     void componentIntensity(RasterPixel* rp, QVector3D& p, float ival) override;
 
-    void calculateIntensity(RasterPixel* rp, QVector3D& p, GalaxyInstance* gi, float weight) override;
+    float calculateIntensity(RasterPixel* rp, QVector3D& p, GalaxyInstance* gi, float weight) override;
     float getHeightModulation(float height) override;
 
 };

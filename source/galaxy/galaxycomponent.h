@@ -29,7 +29,7 @@ public:
     GalaxyComponent();
     void Initialize(ComponentParams* cp, GalaxyParams* gp);
     virtual void componentIntensity(RasterPixel* rp, QVector3D& p, float ival );
-    virtual void calculateIntensity(RasterPixel* rp,  QVector3D& p,
+    virtual float calculateIntensity(RasterPixel* rp,  QVector3D& p,
                                     GalaxyInstance* gi, const float weight);
 
 
@@ -43,8 +43,8 @@ public:
     float getPerlinCloudNoise(QVector3D& p, const float t, const int NN, const float ks, const float pers);
     float findDifference( float t1,  float t2);
     float calculateArmValue( float rad,  const QVector3D& P);
-    float getArm( float rad,  QVector3D p,  float disp);
-    float getTheta( QVector3D p );
+    float getArm( const float rad,  const QVector3D& p,  const float disp);
+    float getTheta( const QVector3D& p );
     float getWinding( float rad);
 
     ComponentParams& getComponentParams();
