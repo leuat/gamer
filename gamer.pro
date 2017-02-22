@@ -52,7 +52,6 @@ SOURCES += \
     source/util/fitsparam.cpp \
     source/galaxy/renderqueue.cpp \
     source/consolerenderer.cpp \
-    source/util/cmpi.cpp \
     source/galaxy/rasterthread.cpp \
     source/galaxy/rasterizeromp.cpp
 
@@ -86,7 +85,6 @@ HEADERS  += \
     source/util/random.h \
     source/galaxy/renderqueue.h \
     source/consolerenderer.h \
-    source/util/cmpi.h \
     source/galaxy/rasterthread.h \
     source/galaxy/rasterizeromp.h
 
