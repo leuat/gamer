@@ -3,6 +3,7 @@
 #include "mainwindow.h"
 #include "source/util/util.h"
 #include "thread"
+#include "source/galaxy/rasterthread.h"
 
 using namespace std;
 
@@ -11,7 +12,7 @@ void ConsoleRenderer::PrintUsage()
     cout << "Usage: Gamer [ command ] [ parameters ]" << endl;
     cout << "Commands are : "<<endl;
     cout << "   - galaxy : renders a single galaxy with (example) parameters: " << endl;
-    cout << "   [ method = omp ] [ camera = 1 0 0  ] [ target = 0 0 0  ] [ up = 0 1 0 ] [ fov = 90 ]  [ exposure = 1 ] [ gamma = 1 ] [ saturation = 1 ] [ ray step = 0.025 ] [ galaxy gax file ] [ size = 256 ] [ filename = test{.png} ] " << endl;
+    cout << "   [ method = omp/thread ] [ camera = 1 0 0  ] [ target = 0 0 0  ] [ up = 0 1 0 ] [ fov = 90 ]  [ exposure = 1 ] [ gamma = 1 ] [ saturation = 1 ] [ ray step = 0.025 ] [ galaxy gax file ] [ size = 256 ] [ filename = test{.png} ] " << endl;
     cout << endl;
 
 
@@ -23,6 +24,19 @@ void ConsoleRenderer::RenderSingleGalaxy(QStringList param)
         qDebug() << param.size();
         cout << "Incorrect usage/parameters for galaxy. Usage: " << endl;
         PrintUsage();
+        exit(1);
+
+    }
+    m_rasterizer = nullptr;
+    if (param[1].toLower()=="omp") {
+        m_rasterizer = new Rasterizer();
+    }
+    if (param[1].toLower()=="thread") {
+        m_rasterizer = new RasterThread(&m_renderingParams);
+    }
+    if (m_rasterizer==nullptr) {
+        cout << "ERROR! Cannot recognize " << param[1].toStdString() << endl;
+        cout << "Must be 'omp' or 'thread'" << endl;
         exit(1);
 
     }
@@ -47,20 +61,20 @@ void ConsoleRenderer::RenderSingleGalaxy(QStringList param)
 //    cout << "Loading galaxy " << galaxyFile.toStdString() << endl;
     galaxy.Load(galaxyFile);
 
-    m_rasterizer.setRenderingParams(&m_renderingParams);
-    m_rasterizer.AddGalaxy(new GalaxyInstance(&galaxy, galaxy.galaxyParams().name(),
+    m_rasterizer->setRenderingParams(&m_renderingParams);
+    m_rasterizer->AddGalaxy(new GalaxyInstance(&galaxy, galaxy.galaxyParams().name(),
                                               QVector3D(0,0,0), QVector3D(0,1,0).normalized(), 1, 0)  );
 
     cout << "Starting rendering on " <<  QString::number(std::thread::hardware_concurrency()).toStdString() << " cores." << endl;
     Q_TIMER_START();
-    m_rasterizer.Render();
+    m_rasterizer->Render();
     int prevP = 0;
-    while (m_rasterizer.getState()!= Rasterizer::State::done) {
-        int curP = (m_rasterizer.getPercentDone()*1000.0);
+    while (m_rasterizer->getState()!= Rasterizer::State::done) {
+        int curP = (m_rasterizer->getPercentDone()*1000.0);
         if (curP!=prevP) {
 
             float time = ttimer.elapsed();
-            float percentage = m_rasterizer.getPercentDone();
+            float percentage = m_rasterizer->getPercentDone();
             float timeLeft = time/(percentage) - time;
             QString t;
             t.sprintf("%2.1f", curP*0.1);
@@ -72,8 +86,8 @@ void ConsoleRenderer::RenderSingleGalaxy(QStringList param)
     cout << endl;
 
     Q_TIMER_ELAPSED("Rendering");
-    m_rasterizer.AssembleImage();
-    m_rasterizer.getImageShadowBuffer()->save(outFile + ".png");
+    m_rasterizer->AssembleImage();
+    m_rasterizer->getImageShadowBuffer()->save(outFile + ".png");
     cout << "Image saved to file " << outFile.toStdString() << ".png" << endl;
 
 }

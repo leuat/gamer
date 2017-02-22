@@ -15,7 +15,7 @@ private:
 
 
     RenderingParams m_renderingParams;
-    Rasterizer m_rasterizer;
+    Rasterizer* m_rasterizer;
 
 
 
