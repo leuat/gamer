@@ -8,7 +8,7 @@
 #include "source/util/util.h"
 #include "source/util/gmessages.h"
 #include "thread"
-
+#include <omp.h>
 
 RenderingParams* Rasterizer::getRenderingParams()
 {
@@ -58,6 +58,16 @@ QVector<GalaxyInstance *> Rasterizer::getGalaxies() const
 bool Rasterizer::getAbort() const
 {
     return m_abort;
+}
+
+Buffer2D *Rasterizer::getBackBuffer() const
+{
+    return m_backBuffer;
+}
+
+QVector<int> Rasterizer::getRenderList() const
+{
+    return m_renderList;
 }
 
 void Rasterizer::run()
@@ -252,13 +262,22 @@ void Rasterizer::CopyFrom(Rasterizer *from)
     */
 
 
+
+
+
 void Rasterizer::RenderPixels() {
+    RenderPixelsOMP();
+}
+
+void Rasterizer::RenderPixelsOMP()
+{
     int size = pow(m_renderingParams->size(),2);
     float delta = 1.0/(float)size;
     m_percentDone = 0;
     int boxSize = m_renderingParams->size()/60;
     if (m_isPreview)
         boxSize = 1;
+
 #pragma omp parallel for
     for (int k=0;k<size;k++) {
         if (m_abort)
@@ -281,12 +300,11 @@ void Rasterizer::RenderPixels() {
     }
 
     m_abort = false;
+
 }
 
 void Rasterizer::AssembleImage()
 {
-
-
     Buffer2D temp;
     m_renderBuffer->CopyTo(&temp);
 
@@ -320,7 +338,7 @@ void Rasterizer::AssembleImage()
         }
     */
 
-void  Rasterizer::RenderOMP() {
+void  Rasterizer::Render() {
 
     if (!isRunning()) {
         QString  size = QString::number(m_renderingParams->size());
@@ -333,6 +351,7 @@ void  Rasterizer::RenderOMP() {
     }
 
 }
+
 
 void Rasterizer::RenderDirect()
 {

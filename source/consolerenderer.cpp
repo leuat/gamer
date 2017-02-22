@@ -53,7 +53,7 @@ void ConsoleRenderer::RenderSingleGalaxy(QStringList param)
 
     cout << "Starting rendering on " <<  QString::number(std::thread::hardware_concurrency()).toStdString() << " cores." << endl;
     Q_TIMER_START();
-    m_rasterizer.RenderOMP();
+    m_rasterizer.Render();
     int prevP = 0;
     while (m_rasterizer.getState()!= Rasterizer::State::done) {
         int curP = (m_rasterizer.getPercentDone()*1000.0);

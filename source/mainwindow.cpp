@@ -15,6 +15,7 @@
 #include "source/util/fitsio.h"
 #include <QElapsedTimer>
 #include "source/util/random.h"
+#include "source/galaxy/rasterthread.h"
 //#include <QListData>
 
 float MainWindow::m_version = 1.02;
@@ -26,8 +27,13 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ui->setupUi(this);
     Util::path = QCoreApplication::applicationDirPath() + "/../../";
+/*    m_rastGalaxy = new RasterThread(&m_renderingParams);
+    m_rastScene = new RasterThread(&m_renderingParams);
+*/
+
     m_rastGalaxy = new Rasterizer(&m_renderingParams);
     m_rastScene = new Rasterizer(&m_renderingParams);
+
     ui->myGLWidget->setRenderingParams(&m_renderingParams);
     GMessages::Initialize(ui->lstMessages);
 
@@ -141,7 +147,14 @@ void MainWindow::PopulateImageSize()
                     << "256" << "384" <<  "512" << "768" << "1024"
                     << "1200" << "1600" << "2048";
     ui->cmbImageSize->addItems(l);
+    l = QStringList() << "16" <<"32" << "48" << "64" << "80" << "96";
+
     ui->cmbPreviewSize->addItems(l);
+
+    l = QStringList() << "OpenMP" <<"Threaded";
+
+    ui->cmbRenderer->addItems(l);
+
 }
 
 void MainWindow::PopulateGalaxyList()
@@ -401,7 +414,7 @@ void MainWindow::Render(bool queue)
         m_renderQueue.Add(m_rasterizer, m_renderingParams,filename);
     }
     else
-        m_rasterizer->RenderOMP();
+        m_rasterizer->Render();
 
 }
 
@@ -1140,3 +1153,19 @@ void MainWindow::on_btnCreateScene_clicked()
 
 }
 
+
+void MainWindow::on_cmbRenderer_currentIndexChanged(const QString &arg1)
+{
+    if (arg1 =="OpenMP") {
+        m_rastGalaxy = new Rasterizer(m_rastGalaxy);
+        m_rastScene = new Rasterizer(m_rastScene);
+    }
+    if (arg1=="Threaded"){
+        m_rastGalaxy = new RasterThread(m_rastGalaxy);
+        m_rastScene = new RasterThread(m_rastScene);
+    }
+    if (m_sceneMode)
+        m_rasterizer = m_rastScene;
+    else
+        m_rasterizer = m_rastGalaxy;
+}

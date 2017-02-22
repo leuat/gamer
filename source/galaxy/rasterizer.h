@@ -22,7 +22,7 @@ public:
     enum State { idle, rendering, done, aborting };
 
 
-private:
+protected:
     QVector<GalaxyInstance*> m_galaxies;
     RenderingParams* m_renderingParams;
 
@@ -61,6 +61,11 @@ protected:
 //        m_noise = new IQnoise(1,1,1,1);
         m_noise = new Simplex(1,1,1,1);
     }
+    Rasterizer(Rasterizer* r) {
+        m_renderingParams = r->getRenderingParams();
+        m_galaxies = r->getGalaxies();
+        m_noise = new Simplex(1,1,1,1);
+    }
 
     void Clear();
 
@@ -82,8 +87,7 @@ protected:
     void Prepare();
     void RenderStars();
 
-
-    void Abort() {
+    virtual void Abort() {
         m_abort = true;
         requestInterruption();
         quit();
@@ -96,9 +100,10 @@ protected:
     Galaxy* AddGalaxy(GalaxyInstance* gi);
 
     void CopyFrom(Rasterizer* from);
-    void RenderPixels();
-    void AssembleImage();
-    void RenderOMP();
+    virtual void RenderPixels();
+    void RenderPixelsOMP();
+    virtual void AssembleImage();
+    virtual void Render();
     void RenderDirect();
     void InitializeRendering();
     QVector3D setupCamera(int idx);
@@ -106,20 +111,20 @@ protected:
     void getIntensity(GalaxyInstance* gi, RasterPixel* rp, QVector3D isp1, QVector3D isp2);
 
 
-
-
 		
     QImage *getBuffer() const;
     RenderingParams* getRenderingParams();
-    State getState();
+    virtual State getState();
     void setState(const State &state);
-    float getPercentDone() const;
+    virtual float getPercentDone() const;
     QImage *getImageShadowBuffer() const;
     QElapsedTimer getTimer() const;
     Buffer2D *getRenderBuffer() const;
     void setRenderingParams(RenderingParams *renderingParams);
     QVector<GalaxyInstance *> getGalaxies() const;
     bool getAbort() const;
+    Buffer2D *getBackBuffer() const;
+    QVector<int> getRenderList() const;
 };
 
 

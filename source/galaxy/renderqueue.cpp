@@ -71,7 +71,7 @@ void RenderQueue::Update()
 
     if (m_current->rasterizer().getState() == Rasterizer::State::idle) {
         m_current->rasterizer().setRenderingParams(&m_current->renderingParams());
-        m_current->rasterizer().RenderOMP();
+        m_current->rasterizer().Render();
 
     }
     if (m_current->rasterizer().getState() == Rasterizer::State::done) {

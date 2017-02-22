@@ -9,9 +9,10 @@ QT += opengl
 QT += gui
 
 #lQMAKE_CC = gcc-6
-#QMAKE_CXX = g++-6
+#QMAKE_CXX = g++-6b
 #CONFIG -= c++11
 QMAKE_CXXFLAGS+= -fopenmp
+DEFINES += NO_OPENGL
 QMAKE_LFLAGS +=  -fopenmp
 #QMAKE_LFLAGS +=  -lopengl32
 #QMAKE_CXXFLAGS += -m32
@@ -50,7 +51,10 @@ SOURCES += \
     dialogabout.cpp \
     source/util/fitsparam.cpp \
     source/galaxy/renderqueue.cpp \
-    source/consolerenderer.cpp
+    source/consolerenderer.cpp \
+    source/util/cmpi.cpp \
+    source/galaxy/rasterthread.cpp \
+    source/galaxy/rasterizeromp.cpp
 
 HEADERS  += \
     source/galaxy/rasterizer.h \
@@ -81,7 +85,10 @@ HEADERS  += \
     source/util/fitsparam.h \
     source/util/random.h \
     source/galaxy/renderqueue.h \
-    source/consolerenderer.h
+    source/consolerenderer.h \
+    source/util/cmpi.h \
+    source/galaxy/rasterthread.h \
+    source/galaxy/rasterizeromp.h
 
 FORMS    += mainwindow.ui \
     dialogrendererhelp.ui \
