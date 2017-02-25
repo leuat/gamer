@@ -141,6 +141,10 @@ QMatrix4x4 GamerCamera::GetRotationMatrix() {
     M(3, 0) = 0;
     M(3, 1) = 0;
     M(3, 2) = 0;
+    M = m_viewMatrix;
+    M(3, 0) = 0;
+    M(3, 1) = 0;
+    M(3, 2) = 0;
 
     return M;
 
@@ -182,7 +186,7 @@ void GamerCamera::setupViewmatrix() {
     m_viewMatrix.lookAt(m_target, m_camera, m_up);
 //    m_viewMatrix.lookAt(m_camera, m_target, m_up);
 //    qDebug() << m_camera;
-//    m_viewMatrix = m_rotMatrix*m_viewMatrix;
+    m_viewMatrix = m_rotMatrix*m_viewMatrix;
     // Pre-calculate mvp
 //    m_invVP = (m_projection.inverted()*m_viewMatrix).inverted();
     m_invVP = (m_projection*m_viewMatrix).inverted();
@@ -197,10 +201,6 @@ QVector3D GamerCamera::coord2ray(float x, float y, float width) {
     QVector4D worldPos = m_invVP * screenPos;
     return worldPos.toVector3D().normalized();
 
-    QVector4D near_point = m_invVP* QVector4D(xx, yy, 0, 1);
-    return (near_point - m_camera).normalized().toVector3D();
-
-//    return ray;
 }
 
 

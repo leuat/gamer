@@ -186,8 +186,10 @@ void Rasterizer::Prepare() {
 
     qSort(m_galaxies.begin(), m_galaxies.end(),  galaxySort);
 
-    for (GalaxyInstance* gi : m_galaxies)
+    for (GalaxyInstance* gi : m_galaxies) {
+//        qDebug() << gi->position().length();
         gi->setPosition(gi->position() + m_renderingParams->camera().camera());
+    }
 
     // Done sorting
     for (GalaxyInstance* gi : m_galaxies) {
