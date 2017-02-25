@@ -30,7 +30,7 @@
      <number>-3</number>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>2</number>
     </property>
     <widget class="QWidget" name="tabScene">
      <attribute name="title">
@@ -413,7 +413,7 @@
         <x>40</x>
         <y>60</y>
         <width>321</width>
-        <height>261</height>
+        <height>311</height>
        </rect>
       </property>
       <property name="title">
@@ -441,6 +441,9 @@
          <height>21</height>
         </rect>
        </property>
+       <property name="toolTip">
+        <string>Galaxy winding number B (equation 9 from paper)</string>
+       </property>
        <property name="inputMask">
         <string>0000.00</string>
        </property>
@@ -453,6 +456,9 @@
          <width>113</width>
          <height>21</height>
         </rect>
+       </property>
+       <property name="toolTip">
+        <string>Galaxy winding number N (equation 9 from paper)</string>
        </property>
        <property name="inputMask">
         <string>0000.00</string>
@@ -483,6 +489,9 @@
          <height>21</height>
         </rect>
        </property>
+       <property name="toolTip">
+        <string>Number of arms (1-4)</string>
+       </property>
        <property name="inputMask">
         <string>0000.00</string>
        </property>
@@ -508,6 +517,9 @@
          <width>113</width>
          <height>21</height>
         </rect>
+       </property>
+       <property name="toolTip">
+        <string>Arm 1 position in radians</string>
        </property>
        <property name="inputMask">
         <string>0000.00</string>
@@ -538,6 +550,9 @@
          <height>21</height>
         </rect>
        </property>
+       <property name="toolTip">
+        <string>Arm 2 position in radians</string>
+       </property>
        <property name="inputMask">
         <string>0000.00</string>
        </property>
@@ -567,6 +582,9 @@
          <height>21</height>
         </rect>
        </property>
+       <property name="toolTip">
+        <string>Arm 3 position in radians</string>
+       </property>
        <property name="inputMask">
         <string>0000.00</string>
        </property>
@@ -595,6 +613,9 @@
          <width>113</width>
          <height>21</height>
         </rect>
+       </property>
+       <property name="toolTip">
+        <string>Arm 4 position in radians</string>
        </property>
        <property name="inputMask">
         <string>0000.00</string>
@@ -638,319 +659,65 @@
      <widget class="QLabel" name="label">
       <property name="geometry">
        <rect>
-        <x>70</x>
-        <y>30</y>
-        <width>81</width>
-        <height>16</height>
+        <x>30</x>
+        <y>20</y>
+        <width>131</width>
+        <height>21</height>
        </rect>
       </property>
       <property name="text">
-       <string>Component:</string>
+       <string>Select component:</string>
       </property>
      </widget>
      <widget class="QComboBox" name="cmbComponents">
       <property name="geometry">
        <rect>
-        <x>150</x>
-        <y>25</y>
+        <x>170</x>
+        <y>17</y>
         <width>211</width>
         <height>31</height>
        </rect>
+      </property>
+      <property name="toolTip">
+       <string>Select your galaxy component here</string>
       </property>
      </widget>
      <widget class="QGroupBox" name="groupBox">
       <property name="geometry">
        <rect>
-        <x>70</x>
+        <x>20</x>
         <y>90</y>
-        <width>291</width>
+        <width>511</width>
         <height>431</height>
        </rect>
       </property>
       <property name="title">
-       <string>Parameters</string>
+       <string>Component parameters</string>
       </property>
       <widget class="QComboBox" name="cmbComponentType">
        <property name="geometry">
         <rect>
          <x>90</x>
-         <y>25</y>
+         <y>60</y>
          <width>181</width>
          <height>31</height>
         </rect>
+       </property>
+       <property name="toolTip">
+        <string>Component type: can be bulge, star, disk, dust or dust 2</string>
        </property>
       </widget>
       <widget class="QLabel" name="label_2">
        <property name="geometry">
         <rect>
-         <x>30</x>
-         <y>30</y>
+         <x>20</x>
+         <y>62</y>
          <width>60</width>
-         <height>16</height>
+         <height>21</height>
         </rect>
        </property>
        <property name="text">
         <string>Type:</string>
-       </property>
-      </widget>
-      <widget class="QLineEdit" name="leStrength">
-       <property name="geometry">
-        <rect>
-         <x>140</x>
-         <y>60</y>
-         <width>113</width>
-         <height>21</height>
-        </rect>
-       </property>
-       <property name="inputMask">
-        <string>0000.00</string>
-       </property>
-      </widget>
-      <widget class="QLabel" name="label_3">
-       <property name="geometry">
-        <rect>
-         <x>30</x>
-         <y>60</y>
-         <width>60</width>
-         <height>16</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>Strength</string>
-       </property>
-      </widget>
-      <widget class="QLabel" name="label_4">
-       <property name="geometry">
-        <rect>
-         <x>30</x>
-         <y>90</y>
-         <width>60</width>
-         <height>16</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>Arm</string>
-       </property>
-      </widget>
-      <widget class="QLineEdit" name="leArm">
-       <property name="geometry">
-        <rect>
-         <x>140</x>
-         <y>90</y>
-         <width>113</width>
-         <height>21</height>
-        </rect>
-       </property>
-       <property name="inputMask">
-        <string>0000.00</string>
-       </property>
-      </widget>
-      <widget class="QLabel" name="label_5">
-       <property name="geometry">
-        <rect>
-         <x>30</x>
-         <y>120</y>
-         <width>60</width>
-         <height>16</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>z0</string>
-       </property>
-      </widget>
-      <widget class="QLineEdit" name="leZ0">
-       <property name="geometry">
-        <rect>
-         <x>140</x>
-         <y>120</y>
-         <width>113</width>
-         <height>21</height>
-        </rect>
-       </property>
-       <property name="inputMask">
-        <string>0.000</string>
-       </property>
-      </widget>
-      <widget class="QLabel" name="label_6">
-       <property name="geometry">
-        <rect>
-         <x>30</x>
-         <y>150</y>
-         <width>60</width>
-         <height>16</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>r0</string>
-       </property>
-      </widget>
-      <widget class="QLineEdit" name="leR0">
-       <property name="geometry">
-        <rect>
-         <x>140</x>
-         <y>150</y>
-         <width>113</width>
-         <height>21</height>
-        </rect>
-       </property>
-       <property name="inputMask">
-        <string>0000.00</string>
-       </property>
-      </widget>
-      <widget class="QLabel" name="label_7">
-       <property name="geometry">
-        <rect>
-         <x>30</x>
-         <y>180</y>
-         <width>60</width>
-         <height>16</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>Delta</string>
-       </property>
-      </widget>
-      <widget class="QLineEdit" name="leDelta">
-       <property name="geometry">
-        <rect>
-         <x>140</x>
-         <y>180</y>
-         <width>113</width>
-         <height>21</height>
-        </rect>
-       </property>
-       <property name="inputMask">
-        <string>0000.00</string>
-       </property>
-      </widget>
-      <widget class="QLabel" name="label_8">
-       <property name="geometry">
-        <rect>
-         <x>30</x>
-         <y>210</y>
-         <width>60</width>
-         <height>16</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>Winding</string>
-       </property>
-      </widget>
-      <widget class="QLineEdit" name="leWinding">
-       <property name="geometry">
-        <rect>
-         <x>140</x>
-         <y>210</y>
-         <width>113</width>
-         <height>21</height>
-        </rect>
-       </property>
-       <property name="inputMask">
-        <string>#0000.00</string>
-       </property>
-      </widget>
-      <widget class="QLabel" name="label_9">
-       <property name="geometry">
-        <rect>
-         <x>30</x>
-         <y>240</y>
-         <width>91</width>
-         <height>16</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>Noise Scale</string>
-       </property>
-      </widget>
-      <widget class="QLineEdit" name="leScale">
-       <property name="geometry">
-        <rect>
-         <x>140</x>
-         <y>240</y>
-         <width>113</width>
-         <height>21</height>
-        </rect>
-       </property>
-       <property name="inputMask">
-        <string>0000.00</string>
-       </property>
-      </widget>
-      <widget class="QLabel" name="label_10">
-       <property name="geometry">
-        <rect>
-         <x>30</x>
-         <y>270</y>
-         <width>81</width>
-         <height>16</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>Noise Offset</string>
-       </property>
-      </widget>
-      <widget class="QLineEdit" name="leNoiseOffset">
-       <property name="geometry">
-        <rect>
-         <x>140</x>
-         <y>270</y>
-         <width>113</width>
-         <height>21</height>
-        </rect>
-       </property>
-       <property name="inputMask">
-        <string>#0000.00</string>
-       </property>
-      </widget>
-      <widget class="QLabel" name="label_11">
-       <property name="geometry">
-        <rect>
-         <x>30</x>
-         <y>300</y>
-         <width>81</width>
-         <height>16</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>Noise Tilt</string>
-       </property>
-      </widget>
-      <widget class="QLineEdit" name="leNoiseTilt">
-       <property name="geometry">
-        <rect>
-         <x>140</x>
-         <y>300</y>
-         <width>113</width>
-         <height>21</height>
-        </rect>
-       </property>
-       <property name="inputMask">
-        <string>#00.00</string>
-       </property>
-      </widget>
-      <widget class="QLabel" name="label_12">
-       <property name="geometry">
-        <rect>
-         <x>30</x>
-         <y>330</y>
-         <width>81</width>
-         <height>16</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>Ks</string>
-       </property>
-      </widget>
-      <widget class="QLineEdit" name="lePersistence">
-       <property name="geometry">
-        <rect>
-         <x>140</x>
-         <y>330</y>
-         <width>113</width>
-         <height>21</height>
-        </rect>
-       </property>
-       <property name="inputMask">
-        <string>#00.00</string>
        </property>
       </widget>
       <widget class="QLabel" name="label_13">
@@ -1002,15 +769,374 @@
         </rect>
        </property>
       </widget>
+      <widget class="QGroupBox" name="groupBox_3">
+       <property name="geometry">
+        <rect>
+         <x>290</x>
+         <y>110</y>
+         <width>211</width>
+         <height>241</height>
+        </rect>
+       </property>
+       <property name="title">
+        <string>Noise parameters</string>
+       </property>
+       <widget class="QLineEdit" name="lePersistence">
+        <property name="geometry">
+         <rect>
+          <x>120</x>
+          <y>150</y>
+          <width>81</width>
+          <height>21</height>
+         </rect>
+        </property>
+        <property name="inputMask">
+         <string>#00.00</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_11">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>120</y>
+          <width>81</width>
+          <height>16</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Noise Tilt</string>
+        </property>
+       </widget>
+       <widget class="QLineEdit" name="leWinding">
+        <property name="geometry">
+         <rect>
+          <x>120</x>
+          <y>30</y>
+          <width>81</width>
+          <height>21</height>
+         </rect>
+        </property>
+        <property name="toolTip">
+         <string>Twirl parameter tau. See table 1 in the GAMER paper.</string>
+        </property>
+        <property name="inputMask">
+         <string>#0000.00</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_10">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>90</y>
+          <width>81</width>
+          <height>16</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Noise Offset</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_8">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>30</y>
+          <width>60</width>
+          <height>16</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Twirl</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_12">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>150</y>
+          <width>81</width>
+          <height>16</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Ks</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_9">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>60</y>
+          <width>91</width>
+          <height>16</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Noise Scale</string>
+        </property>
+       </widget>
+       <widget class="QLineEdit" name="leScale">
+        <property name="geometry">
+         <rect>
+          <x>120</x>
+          <y>60</y>
+          <width>81</width>
+          <height>21</height>
+         </rect>
+        </property>
+        <property name="inputMask">
+         <string>0000.00</string>
+        </property>
+       </widget>
+       <widget class="QLineEdit" name="leNoiseTilt">
+        <property name="geometry">
+         <rect>
+          <x>120</x>
+          <y>120</y>
+          <width>81</width>
+          <height>21</height>
+         </rect>
+        </property>
+        <property name="inputMask">
+         <string>#00.00</string>
+        </property>
+       </widget>
+       <widget class="QLineEdit" name="leNoiseOffset">
+        <property name="geometry">
+         <rect>
+          <x>120</x>
+          <y>90</y>
+          <width>81</width>
+          <height>21</height>
+         </rect>
+        </property>
+        <property name="inputMask">
+         <string>#0000.00</string>
+        </property>
+       </widget>
+      </widget>
+      <widget class="QGroupBox" name="groupBox_7">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>110</y>
+         <width>261</width>
+         <height>241</height>
+        </rect>
+       </property>
+       <property name="title">
+        <string>Smooth parameters</string>
+       </property>
+       <widget class="QLineEdit" name="leDelta">
+        <property name="geometry">
+         <rect>
+          <x>130</x>
+          <y>180</y>
+          <width>113</width>
+          <height>21</height>
+         </rect>
+        </property>
+        <property name="toolTip">
+         <string>Azimuthal shift parameter delta. See table 1 in the GAMER paper.</string>
+        </property>
+        <property name="inputMask">
+         <string>0000.00</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_6">
+        <property name="geometry">
+         <rect>
+          <x>20</x>
+          <y>150</y>
+          <width>60</width>
+          <height>16</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>r1</string>
+        </property>
+       </widget>
+       <widget class="QLineEdit" name="leInner">
+        <property name="geometry">
+         <rect>
+          <x>130</x>
+          <y>120</y>
+          <width>113</width>
+          <height>21</height>
+         </rect>
+        </property>
+        <property name="toolTip">
+         <string>Radial drop-off parameter r_h. See table 1 in the GAMER paper.</string>
+        </property>
+        <property name="inputMask">
+         <string>0000.00</string>
+        </property>
+       </widget>
+       <widget class="QLineEdit" name="leArm">
+        <property name="geometry">
+         <rect>
+          <x>130</x>
+          <y>60</y>
+          <width>113</width>
+          <height>21</height>
+         </rect>
+        </property>
+        <property name="toolTip">
+         <string>Arm width parameter A_m. See table 1 in the GAMER paper.</string>
+        </property>
+        <property name="inputMask">
+         <string>0000.00</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_4">
+        <property name="geometry">
+         <rect>
+          <x>20</x>
+          <y>60</y>
+          <width>60</width>
+          <height>16</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Arm</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_71">
+        <property name="geometry">
+         <rect>
+          <x>20</x>
+          <y>120</y>
+          <width>60</width>
+          <height>16</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>r0</string>
+        </property>
+       </widget>
+       <widget class="QLineEdit" name="leZ0">
+        <property name="geometry">
+         <rect>
+          <x>130</x>
+          <y>90</y>
+          <width>113</width>
+          <height>21</height>
+         </rect>
+        </property>
+        <property name="toolTip">
+         <string>Height drop-off parameter z_0. See table 1 in the GAMER paper.</string>
+        </property>
+        <property name="inputMask">
+         <string>0.000</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_7">
+        <property name="geometry">
+         <rect>
+          <x>20</x>
+          <y>180</y>
+          <width>60</width>
+          <height>16</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Delta</string>
+        </property>
+       </widget>
+       <widget class="QLineEdit" name="leR0">
+        <property name="geometry">
+         <rect>
+          <x>130</x>
+          <y>150</y>
+          <width>113</width>
+          <height>21</height>
+         </rect>
+        </property>
+        <property name="toolTip">
+         <string>Radial drop-off parameter r_h. See table 1 in the GAMER paper.</string>
+        </property>
+        <property name="inputMask">
+         <string>0000.00</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_5">
+        <property name="geometry">
+         <rect>
+          <x>20</x>
+          <y>90</y>
+          <width>60</width>
+          <height>16</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>z0</string>
+        </property>
+       </widget>
+       <widget class="QLineEdit" name="leStrength">
+        <property name="geometry">
+         <rect>
+          <x>130</x>
+          <y>30</y>
+          <width>113</width>
+          <height>21</height>
+         </rect>
+        </property>
+        <property name="toolTip">
+         <string>Overall instensity modifier I_m that scales the final component value. See table 1 in the GAMER paper.</string>
+        </property>
+        <property name="inputMask">
+         <string>0000.00</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_3">
+        <property name="geometry">
+         <rect>
+          <x>20</x>
+          <y>30</y>
+          <width>60</width>
+          <height>16</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Strength</string>
+        </property>
+       </widget>
+      </widget>
+      <widget class="QLabel" name="label_24">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>30</y>
+         <width>60</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Name</string>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="leComponentName">
+       <property name="geometry">
+        <rect>
+         <x>90</x>
+         <y>30</y>
+         <width>171</width>
+         <height>21</height>
+        </rect>
+       </property>
+      </widget>
      </widget>
      <widget class="QPushButton" name="btnNewComponent">
       <property name="geometry">
        <rect>
-        <x>60</x>
+        <x>20</x>
         <y>60</y>
         <width>141</width>
         <height>32</height>
        </rect>
+      </property>
+      <property name="toolTip">
+       <string>Create a new component. Will be set as bulge.</string>
       </property>
       <property name="text">
        <string>New Component</string>
@@ -1019,7 +1145,7 @@
      <widget class="QPushButton" name="btnNewComponent_2">
       <property name="geometry">
        <rect>
-        <x>200</x>
+        <x>170</x>
         <y>60</y>
         <width>141</width>
         <height>32</height>
@@ -1194,6 +1320,9 @@
          <height>21</height>
         </rect>
        </property>
+       <property name="toolTip">
+        <string>Number of stars to render on final .png</string>
+       </property>
        <property name="inputMask">
         <string>000000</string>
        </property>
@@ -1220,6 +1349,9 @@
          <height>21</height>
         </rect>
        </property>
+       <property name="toolTip">
+        <string>Base size of stars. Should be around 0.5</string>
+       </property>
        <property name="inputMask">
         <string>000.00</string>
        </property>
@@ -1232,6 +1364,9 @@
          <width>151</width>
          <height>21</height>
         </rect>
+       </property>
+       <property name="toolTip">
+        <string>Spread of star size.</string>
        </property>
        <property name="inputMask">
         <string>000.00</string>
@@ -1250,7 +1385,7 @@
         </rect>
        </property>
        <property name="text">
-        <string>Base size</string>
+        <string>Size spread</string>
        </property>
       </widget>
       <widget class="QLabel" name="label_42">
@@ -1274,6 +1409,9 @@
          <width>151</width>
          <height>21</height>
         </rect>
+       </property>
+       <property name="toolTip">
+        <string>Scalar value added to stars.</string>
        </property>
        <property name="inputMask">
         <string>000.00</string>
@@ -1554,7 +1692,7 @@
        </rect>
       </property>
       <property name="toolTip">
-       <string>Image size squared</string>
+       <string>Image size squared used for preview</string>
       </property>
       <property name="toolTipDuration">
        <number>-1</number>
@@ -1601,6 +1739,9 @@
         <height>26</height>
        </rect>
       </property>
+      <property name="toolTip">
+       <string>Choose between OpenMP and QThreaded rendering</string>
+      </property>
      </widget>
     </widget>
    </widget>
@@ -1625,6 +1766,9 @@
       <width>211</width>
       <height>32</height>
      </rect>
+    </property>
+    <property name="toolTip">
+     <string>Render current image</string>
     </property>
     <property name="text">
      <string>&amp;Render</string>
@@ -1654,6 +1798,9 @@
       <width>101</width>
       <height>32</height>
      </rect>
+    </property>
+    <property name="toolTip">
+     <string>Abort all rendering and queues</string>
     </property>
     <property name="text">
      <string>Abort</string>
@@ -1737,6 +1884,9 @@
       <height>32</height>
      </rect>
     </property>
+    <property name="toolTip">
+     <string>Save image to disk (png)</string>
+    </property>
     <property name="text">
      <string>Save image</string>
     </property>
@@ -1779,6 +1929,9 @@
       <height>32</height>
      </rect>
     </property>
+    <property name="toolTip">
+     <string>Queue current image (and continue preview)</string>
+    </property>
     <property name="text">
      <string>Queue</string>
     </property>
@@ -1791,6 +1944,9 @@
       <width>101</width>
       <height>32</height>
      </rect>
+    </property>
+    <property name="toolTip">
+     <string>Render 6 skyboxes</string>
     </property>
     <property name="text">
      <string>Skybox</string>

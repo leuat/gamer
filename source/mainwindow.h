@@ -177,6 +177,12 @@ private slots:
 
     void on_cmbRenderer_currentIndexChanged(const QString &arg1);
 
+
+
+    void on_leInner_editingFinished();
+
+    void on_leComponentName_editingFinished();
+
 private:
     Ui::MainWindow *ui;
     Rasterizer* m_rasterizer = nullptr; // Pointer to the current rasterizer

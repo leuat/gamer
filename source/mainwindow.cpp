@@ -49,6 +49,7 @@ MainWindow::MainWindow(QWidget *parent) :
     UpdateRenderingParamsGUI();
 
     // Try to load
+//    m_renderingParams.setCurrentGalaxy("Spiral");
     m_galaxy.Load(m_renderingParams.galaxyDirectory() + m_renderingParams.currentGalaxy() + ".gax");
 
     if (m_galaxy.componentParams().size()==0) {
@@ -60,11 +61,10 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // Adding a single galaxy to the rasterizer
     m_rastGalaxy->AddGalaxy(new GalaxyInstance(&m_galaxy, m_galaxy.galaxyParams().name(),
-                                              QVector3D(0,0,0), QVector3D(0,1,0).normalized(), 1, 0)  );
+                                              QVector3D(0.0,0.0,0), QVector3D(0,1,0).normalized(), 1, 0)  );
 
     // Copy rasterizer to queue renderer
     //m_renderQueue.setRasterizer(m_rasterizer);
-
 
 
 
@@ -191,6 +191,7 @@ void MainWindow::UpdateComponentsGUIbyType()
         ui->leArm->setVisible(false);
         ui->leZ0->setVisible(false);
         ui->leR0->setVisible(true);
+        ui->leInner->setVisible(false);
         ui->leDelta->setVisible(false);
         ui->leWinding->setVisible(false);
         ui->leScale->setVisible(false);
@@ -205,6 +206,7 @@ void MainWindow::UpdateComponentsGUIbyType()
         ui->leZ0->setVisible(true);
         ui->leR0->setVisible(true);
         ui->leDelta->setVisible(true);
+        ui->leInner->setVisible(true);
         ui->leWinding->setVisible(true);
         ui->leScale->setVisible(true);
         ui->leDelta->setVisible(true);
@@ -224,6 +226,7 @@ void MainWindow::UpdateGalaxyGUI()
     ui->leArm2->setText(QString::number(m_galaxy.galaxyParams().arm2()));
     ui->leArm3->setText(QString::number(m_galaxy.galaxyParams().arm3()));
     ui->leArm4->setText(QString::number(m_galaxy.galaxyParams().arm4()));
+    //ui->leBulgeDust->setText(QString::number(m_galaxy.galaxyParams().bulgeDust()));
 }
 
 void MainWindow::UpdateGalaxyData()
@@ -236,6 +239,7 @@ void MainWindow::UpdateGalaxyData()
     m_galaxy.galaxyParams().setArm2(ui->leArm2->text().toFloat());
     m_galaxy.galaxyParams().setArm3(ui->leArm3->text().toFloat());
     m_galaxy.galaxyParams().setArm4(ui->leArm4->text().toFloat());
+   // m_galaxy.galaxyParams().setBulgeDust(ui->leBulgeDust->text().toFloat());
 
     RenderPreview(m_renderingParams.previewSize());
     SaveGalaxy();
@@ -247,6 +251,7 @@ void MainWindow::UpdateComponentsData() {
     m_curComponentParams->setArm( ui->leArm->text().toFloat());
     m_curComponentParams->setZ0( ui->leZ0->text().toFloat());
     m_curComponentParams->setR0( ui->leR0->text().toFloat());
+    m_curComponentParams->setInner( ui->leInner->text().toFloat());
     m_curComponentParams->setDelta(ui->leDelta->text().toFloat());
     m_curComponentParams->setWinding( ui->leWinding->text().toFloat());
     m_curComponentParams->setScale( ui->leScale->text().toFloat());
@@ -255,6 +260,7 @@ void MainWindow::UpdateComponentsData() {
     m_curComponentParams->setKs(ui->lePersistence->text().toFloat());
     m_curComponentParams->setActive(ui->chkIsActive->isChecked()==true);
     m_curComponentParams->setSpectrum(ui->cmbSpectrum->currentText());
+    m_curComponentParams->setName(ui->leComponentName->text());
     SaveGalaxy();
     RenderPreview(m_renderingParams.previewSize());
 
@@ -269,6 +275,7 @@ void MainWindow::UpdateComponentsGUI()
     ui->leArm->setText(QString::number(m_curComponentParams->arm()));
     ui->leZ0->setText(QString::number(m_curComponentParams->z0()));
     ui->leR0->setText(QString::number(m_curComponentParams->r0()));
+    ui->leInner->setText(QString::number(m_curComponentParams->inner()));
     ui->leDelta->setText(QString::number(m_curComponentParams->delta()));
     ui->leWinding->setText(QString::number(m_curComponentParams->winding()));
     ui->leScale->setText(QString::number(m_curComponentParams->scale()));
@@ -276,19 +283,21 @@ void MainWindow::UpdateComponentsGUI()
     ui->lePersistence->setText(QString::number(m_curComponentParams->ks()));
     ui->leNoiseTilt->setText(QString::number(m_curComponentParams->noiseTilt()));
     ui->chkIsActive->setChecked(m_curComponentParams->active()==1);
+    ui->leComponentName->setText(m_curComponentParams->name());
 }
 
 void MainWindow::PopulateCmbComponents() {
-    int idx = ui->cmbComponents->currentIndex();
+//    int idx = ui->cmbComponents->currentIndex();
     ui->cmbComponents->clear();
-    int i = 0;
+//    int idx = 0
     for (ComponentParams* gc: m_galaxy.componentParams()) {
-        QString s = gc->className() + " " + QString::number(i);
+        QString s = gc->name();//gc->className() + " " + QString::number(i);
         ui->cmbComponents->addItem(s);
-        i++;
+        if (m_curComponentParams == gc)
+            ui->cmbComponents->setCurrentText(gc->name());
     }
-    if (idx!=-1)
-        ui->cmbComponents->setCurrentIndex(idx);
+//    if (idx!=-1)
+//        ui->cmbComponents->setCurrentIndex(idx);
 
 
 }
@@ -430,7 +439,7 @@ void MainWindow::RenderPreview(int size)
 {
     int oldSize = m_renderingParams.size();
     float oldStep = m_renderingParams.rayStep();
-    m_renderingParams.setRayStep(0.1);
+    m_renderingParams.setRayStep(0.025);
     m_rasterizer->setNewSize(size);
     RenderDirect();
     m_renderingParams.setSize(oldSize);
@@ -461,10 +470,10 @@ void MainWindow::RenderSkybox() {
     names.resize(6);
     names[0] ="Z-";
     names[1] ="Z+";
-    names[2] ="Y-";
-    names[3] ="Y+";
-    names[4] ="X-";
-    names[5] ="X+";
+    names[2] ="Y+";
+    names[3] ="Y-";
+    names[4] ="X+";
+    names[5] ="X-";
 
     //RP.camera.setRotMatrix(resetCamera.GetRotationMatrix());
     //m_renderingParams.camera().setRotMatrix();
@@ -492,7 +501,7 @@ void MainWindow::EnableGUIEditing(bool value)
     ui->myGLWidget->disableInput(!value);
 
     ui->cmbRenderer->setEnabled(value);
-
+    ui->leComponentName->setEnabled(value);
     ui->actionLoad->setEnabled(value);
     ui->actionSave->setEnabled(value);
     ui->renderButton->setEnabled(value);
@@ -642,8 +651,9 @@ void MainWindow::on_cmbComponentType_activated(const QString &arg1)
 {
     if (m_curComponentParams==nullptr)
         return;
+//    qDebug() << arg1;
     m_curComponentParams->setClassName(arg1);
-    ui->cmbComponentType->setCurrentText(arg1);
+//    ui->cmbComponentType->setCurrentText(arg1);
     m_galaxy.SetupComponents(&m_renderingParams);
     UpdateGUI();
     UpdateComponentsGUI();
@@ -1171,4 +1181,17 @@ void MainWindow::on_cmbRenderer_currentIndexChanged(const QString &arg1)
         m_rasterizer = m_rastScene;
     else
         m_rasterizer = m_rastGalaxy;
+}
+
+
+void MainWindow::on_leInner_editingFinished()
+{
+    UpdateComponentsData();
+
+}
+
+void MainWindow::on_leComponentName_editingFinished()
+{
+    UpdateComponentsData();
+    PopulateCmbComponents();
 }

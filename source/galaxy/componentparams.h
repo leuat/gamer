@@ -8,10 +8,12 @@ class ComponentParams {
 public:
     QString m_className = "bulge";
     QString m_spectrum = "White";
+    QString m_name = "New component";
     float m_strength = 1;
     float m_arm = 0.5;
     float m_z0 = 0.02;
     float m_r0 = 0.5;
+    float m_inner = 0.0;
     float m_active = 1;
     float m_delta = 0;
     float m_winding = 0.1;
@@ -20,19 +22,24 @@ public:
     float m_noiseTilt = 1;
     float m_ks = 1;
 
+
+
+
+
+
 public:
 
     friend QDataStream& operator << ( QDataStream & s, const ComponentParams& cp) {
         s << cp.m_className  << cp.m_strength << cp.m_spectrum << cp.m_arm << cp.m_z0 << cp.m_r0;
         s << cp.m_active << cp.m_delta << cp.m_winding << cp.m_scale << cp.m_noiseOffset << cp.m_noiseTilt;
-        s << cp.m_ks;
+        s << cp.m_ks << cp.m_inner << cp.m_name;
         return s;
     }
 
     friend QDataStream& operator >> ( QDataStream & s, ComponentParams& cp) {
         s >> cp.m_className  >> cp.m_strength >> cp.m_spectrum >> cp.m_arm >> cp.m_z0 >> cp.m_r0;
         s >> cp.m_active >> cp.m_delta >> cp.m_winding >> cp.m_scale >> cp.m_noiseOffset >> cp.m_noiseTilt;
-        s >> cp.m_ks;
+        s >> cp.m_ks >> cp.m_inner >> cp.m_name;
         return s;
     }
 
@@ -76,6 +83,10 @@ public:
     void setActive(float active);
     QString spectrum() const;
     void setSpectrum(const QString &spectrum);
+    float inner() const;
+    void setInner(float inner);
+    QString name() const;
+    void setName(const QString &name);
 };
 
 

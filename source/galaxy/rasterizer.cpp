@@ -421,8 +421,10 @@ void Rasterizer::getIntensity(GalaxyInstance* gi, RasterPixel* rp, QVector3D isp
     int cnt = 0;
     float avgStep = 0;
     float minRayStep = 0.0005;
-    if (m_isPreview)
+    if (m_isPreview) {
         minRayStep = 0.01;
+//        m_renderingParams->setRayStep(0.005);
+    }
 
     while(QVector3D::dotProduct(p-origin,(isp2-origin).normalized())<length)
     {
@@ -431,8 +433,8 @@ void Rasterizer::getIntensity(GalaxyInstance* gi, RasterPixel* rp, QVector3D isp
         avgStep +=step;
 
         float modifier = 0;
-//        if (QVector3D::dotProduct(p-camera, dir)<0)
-//            break;
+        if (QVector3D::dotProduct(p-camera, dir)<0)
+            break;
 //        if (1==0)
         for ( GalaxyComponent* gc : g->components()) {
             if (gc->getComponentParams().active()==1)

@@ -31,7 +31,6 @@ GalaxyComponent* Galaxy::instantiate(QString className) {
 
     if (ngc==nullptr) {
         qDebug() << "Error: could not instantiate :" << className;
-        exit(1);
     }
     return ngc;
 }
@@ -93,9 +92,12 @@ void Galaxy::SetupComponents(RenderingParams* rp) {
 
     m_components.clear();
     for (ComponentParams* cp : m_componentParams) {
+        //qDebug() << cp->className();
         GalaxyComponent* ngc = instantiate(cp->className());
-        ngc->Initialize(cp, &m_galaxyParams);
-        m_components.append (ngc);
+        if (ngc!=nullptr) {
+            ngc->Initialize(cp, &m_galaxyParams);
+            m_components.append (ngc);
+        }
     }
     SetupSpectra(rp);
 }
@@ -106,6 +108,7 @@ ComponentParams* Galaxy::AddComponent(int count) {
     cp->setStrength(30);
     cp->setR0(5);
     cp->setSpectrum("Yellow");
+    cp->setName("Yellow bulge");
     m_componentParams.append(cp);
 
     if (count>1) {
@@ -117,20 +120,24 @@ ComponentParams* Galaxy::AddComponent(int count) {
         cp->setNoiseTilt(0.3);
         cp->setSpectrum("Blue");
         cp->setScale(1);
+        cp->setName("Blue disk");
+
         //    cp->setN
         m_componentParams.append(cp);
     }
 
     if (count>2) {
         cp = new ComponentParams();
-        cp->setClassName("dust");
+        cp->setClassName("dust2");
         cp->setStrength(250);
         cp->setR0(0.45);
         cp->setArm(0.25);
-        cp->setZ0(0.015);
+        cp->setZ0(0.02);
         cp->setNoiseTilt(1);
+        cp->setNoiseOffset(1);
         cp->setSpectrum("Blue");
-        cp->setScale(1);
+        cp->setName("Red dust");
+        cp->setScale(3);
         //    cp->setN
         m_componentParams.append(cp);
     }

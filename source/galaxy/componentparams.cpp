@@ -120,6 +120,26 @@ void ComponentParams::setSpectrum(const QString &spectrum)
     m_spectrum = spectrum;
 }
 
+float ComponentParams::inner() const
+{
+    return m_inner;
+}
+
+void ComponentParams::setInner(float inner)
+{
+    m_inner = inner;
+}
+
+QString ComponentParams::name() const
+{
+    return m_name;
+}
+
+void ComponentParams::setName(const QString &name)
+{
+    m_name = name;
+}
+
 QString ComponentParams::className() const
 {
     return m_className;

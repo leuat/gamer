@@ -146,19 +146,6 @@ QMatrix4x4 GamerCamera::GetRotationMatrix() {
 
 }
 
-
-void GamerCamera::setupViewmatrix() {
-
-    m_projection.setToIdentity();
-    m_projection.perspective(m_perspective,1,0.1,10);
-    m_viewMatrix.setToIdentity();
-    m_viewMatrix.lookAt(m_camera, m_target, m_up);
-    m_viewMatrix = m_rotMatrix*m_viewMatrix;
-    // Pre-calculate mvp
-    m_invVP = (m_projection.inverted()*m_viewMatrix).inverted();
-
-}
-
 void GamerCamera::RotateVertical(float angle) {
     QVector3D d = m_camera - m_target;
     QVector3D side = QVector3D::crossProduct( m_up, d);
@@ -177,15 +164,43 @@ void GamerCamera::RotateHorisontal(float angle) {
     m_up = QVector3D::crossProduct(d, side).normalized();
 }
 
+
+void GamerCamera::setupViewmatrix() {
+
+
+/*    glm::mat4 proj = glm::perspective(FoV, AspectRatio, Near, Far);
+       glm::mat4 view = glm::lookAt(glm::vec3(0.0f), CameraDirection, CameraUpVector);
+
+       glm::mat4 invVP = glm::inverse(proj * view);
+       glm::vec4 screenPos = glm::vec4(mouseX, -mouseY, 1.0f, 1.0f);
+       glm::vec4 worldPos = invVP * screenPos;
+  */
+
+    m_projection.setToIdentity();
+    m_projection.perspective(m_perspective,1,1,100);
+    m_viewMatrix.setToIdentity();
+    m_viewMatrix.lookAt(m_target, m_camera, m_up);
+//    m_viewMatrix.lookAt(m_camera, m_target, m_up);
+//    qDebug() << m_camera;
+//    m_viewMatrix = m_rotMatrix*m_viewMatrix;
+    // Pre-calculate mvp
+//    m_invVP = (m_projection.inverted()*m_viewMatrix).inverted();
+    m_invVP = (m_projection*m_viewMatrix).inverted();
+
+}
+
 QVector3D GamerCamera::coord2ray(float x, float y, float width) {
     double xx = x / (width  * 0.5) - 1.0;
     double yy = y / (width * 0.5) - 1.0;
 
-    QVector4D screenPos = QVector4D(xx, yy, -1.0, 1.0);
+    QVector4D screenPos = QVector4D(xx, -yy, 1.0, 1.0);
     QVector4D worldPos = m_invVP * screenPos;
-    QVector3D ray = worldPos.toVector3D().normalized();
+    return worldPos.toVector3D().normalized();
 
-    return ray;
+    QVector4D near_point = m_invVP* QVector4D(xx, yy, 0, 1);
+    return (near_point - m_camera).normalized().toVector3D();
+
+//    return ray;
 }
 
 

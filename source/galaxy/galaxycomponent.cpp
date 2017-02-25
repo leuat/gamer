@@ -79,8 +79,12 @@ float GalaxyComponent::calculateIntensity(RasterPixel* rp, QVector3D& p,
         if (intensity >0.001) {
 
             float scale = 1;
-            if (m_componentParams.className() == "Dust" || m_componentParams.className() == "Dust2")
-                scale = Util::smoothstep(0, 1.0f*m_galaxyParams->bulgeDust(), rp->radius);
+//            if (m_componentParams.className() == "dust" || m_componentParams.className() == "dust2") {
+               // if (m_componentParams.className() != "bulge") {
+//                scale = pow(Util::smoothstep(0, 1.0f*m_galaxyParams->bulgeDust(), rp->radius), 4);
+                scale = pow(Util::smoothstep(0, 1.0f*m_componentParams.inner(), rp->radius), 4);
+//                scale=1;
+//            }
 
             if (m_componentParams.arm()!=0) {
                 armVal = calculateArmValue(rp->radius, rp->P);
