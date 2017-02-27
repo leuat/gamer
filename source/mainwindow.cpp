@@ -83,7 +83,7 @@ MainWindow::MainWindow(QWidget *parent) :
     setWindowTitle("Gamer " + QString::number(m_version));
 
 
-    ui->btnSkybox->setVisible(false);
+//    ui->btnSkybox->setVisible(false);
 
 //    m_renderingParams.camera().setCamera(QVector3D(0.5,0,0));
 //    m_renderingParams.camera().setUp(QVector3D(0,1,0));
@@ -488,8 +488,8 @@ void MainWindow::RenderSkybox() {
     RenderingParams reset = m_renderingParams;
     //RP.camera.setRotMatrix(resetCamera.GetRotationMatrix());
 
-    m_renderingParams.camera().setRotMatrix(reset.camera().GetRotationMatrix()  );
     for (int i=0;i<6;i++) {
+        m_renderingParams.camera().setRotMatrix(reset.camera().GetRotationMatrix()  );
         m_renderingParams.camera().setCamera( reset.camera().camera() );
         m_renderingParams.camera().setTarget( reset.camera().camera() + planes[i] );
         m_renderingParams.camera().setUp(ups[i]);

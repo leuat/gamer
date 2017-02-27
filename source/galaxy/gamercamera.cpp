@@ -120,8 +120,8 @@ void GamerCamera::RotateUp(float r) {
 }
 */
 QMatrix4x4 GamerCamera::GetRotationMatrix() {
-    QVector3D zaxis = -(m_camera-m_target).normalized();
-    QVector3D xaxis = (QVector3D::crossProduct(m_up, zaxis)).normalized();
+/*    QVector3D zaxis = (m_camera-m_target).normalized();
+    QVector3D xaxis = (QVector3D::crossProduct(m_up, zaxis)).normalized()*-1;
     QVector3D yaxis = (QVector3D::crossProduct(zaxis, xaxis)).normalized();
 
     QMatrix4x4 M;
@@ -138,15 +138,27 @@ QMatrix4x4 GamerCamera::GetRotationMatrix() {
     M(1, 2) = yaxis.z();
     M(2, 2) = zaxis.z();
 
-/*    M(0, 3) = 0;
+    M(0, 3) = 0;
     M(1, 3) = 0;
     M(2, 3) = 0;
 */
+//    return M;
+    QMatrix4x4 M;
+    M.setToIdentity();
+//    M.lookAt( (m_camera-m_target),QVector3D(0,0,0),m_up);
+    M.lookAt( QVector3D(0,0,0),(m_target-m_camera),m_up);
+    return M;
+    M = m_viewMatrix;
+//    M.translate(m_camera);
+
+    qDebug() << M;
+
+
 //    M = m_viewMatrix.inverted();
-    M(3, 0) = 0;
+/*    M(3, 0) = 0;
     M(3, 1) = 0;
     M(3, 2) = 0;
-
+*/
     return M;
 
 }
@@ -184,13 +196,14 @@ void GamerCamera::setupViewmatrix() {
     m_projection.setToIdentity();
     m_projection.perspective(m_perspective,1,1,100);
     m_viewMatrix.setToIdentity();
-    m_viewMatrix.lookAt(m_target, m_camera, m_up);
+//    m_viewMatrix.lookAt(m_target, m_camera, m_up);
+    m_viewMatrix.lookAt(m_rotMatrix* m_target, m_rotMatrix* m_camera, m_rotMatrix* m_up);
 //    m_viewMatrix.lookAt(m_camera, m_target, m_up);
 //    qDebug() << m_camera;
-    m_viewMatrix = m_rotMatrix* m_viewMatrix;
+//    m_viewMatrix = m_rotMatrix* m_viewMatrix;
     // Pre-calculate mvp
 //    m_invVP = (m_projection.inverted()*m_viewMatrix).inverted();
-    m_invVP = (m_projection*m_rotMatrix*m_viewMatrix).inverted();
+    m_invVP = (m_projection*m_viewMatrix).inverted();
 
 }
 
