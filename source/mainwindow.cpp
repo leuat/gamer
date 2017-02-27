@@ -18,6 +18,8 @@
 #include "source/galaxy/rasterthread.h"
 //#include <QListData>
 
+
+
 float MainWindow::m_version = 1.02;
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -75,6 +77,9 @@ MainWindow::MainWindow(QWidget *parent) :
     timer->start(25);
     ui->myGLWidget->setRedraw(true);
     setWindowTitle("Gamer " + QString::number(m_version));
+
+
+    ui->btnSkybox->setVisible(false);
 
 //    m_renderingParams.camera().setCamera(QVector3D(0.5,0,0));
 //    m_renderingParams.camera().setUp(QVector3D(0,1,0));
@@ -475,9 +480,9 @@ void MainWindow::RenderSkybox() {
     names[4] ="X+";
     names[5] ="X-";
 
-    //RP.camera.setRotMatrix(resetCamera.GetRotationMatrix());
     //m_renderingParams.camera().setRotMatrix();
     RenderingParams reset = m_renderingParams;
+    //RP.camera.setRotMatrix(resetCamera.GetRotationMatrix());
 
     m_renderingParams.camera().setRotMatrix(reset.camera().GetRotationMatrix()  );
     for (int i=0;i<6;i++) {
@@ -500,6 +505,7 @@ void MainWindow::EnableGUIEditing(bool value)
     //if (m_state == State::Rendering)
     ui->myGLWidget->disableInput(!value);
 
+    ui->btnSceneMode->setEnabled(value);
     ui->cmbRenderer->setEnabled(value);
     ui->leComponentName->setEnabled(value);
     ui->actionLoad->setEnabled(value);
@@ -609,8 +615,9 @@ void MainWindow::loop()
 
     }
     else {
-        //m_state = State::Idle;
-        //EnableGUIEditing(true);
+ //       m_state = State::Idle;
+//        EnableGUIEditing(true);
+        curRast = m_rasterizer;
     }
 
  /*   if (m_state==State::Queueing) {

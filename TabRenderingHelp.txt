@@ -14,7 +14,6 @@ saved to the image directory (specified in the "Settings" tab).
 Above the galaxy list, you are presented with some of the global rendering parameters. When changed, they are automatically saved and a new preview image is created. They are:
 <ul>
     <li><b>Image size</b>: Pixel width / height of the rendered image
-    <li><b>Image size</b>: Pixel width / height of the preview image. Lower detail for faster preview.
     <li><b>Ray step value</b>: Internally, every galaxy is confined within a 3D sphere of size 1. The ray step value defines the step size for the ray marching. For images that are either
     large or have a camera that is close to the geometry of the galaxy (disk, dust, bulge etc), a lower step size will result in a much better image. However, increased step size will also
     greatly increase rendering time. If you notice images with circular noise patterns, the step size is probably too high.

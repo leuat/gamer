@@ -30,11 +30,14 @@
      <number>-3</number>
     </property>
     <property name="currentIndex">
-     <number>2</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="tabScene">
      <attribute name="title">
       <string>Rendering</string>
+     </attribute>
+     <attribute name="toolTip">
+      <string>Main rendering tab.</string>
      </attribute>
      <widget class="QLabel" name="label_22">
       <property name="geometry">
@@ -179,6 +182,9 @@
         <pointsize>24</pointsize>
        </font>
       </property>
+      <property name="toolTip">
+       <string>Type to change the name of the current galaxy.</string>
+      </property>
      </widget>
      <widget class="QLabel" name="label_28">
       <property name="geometry">
@@ -300,6 +306,9 @@
          <height>23</height>
         </rect>
        </property>
+       <property name="toolTip">
+        <string>Add selected galaxy to list</string>
+       </property>
        <property name="text">
         <string>&gt;</string>
        </property>
@@ -312,6 +321,9 @@
          <width>21</width>
          <height>23</height>
         </rect>
+       </property>
+       <property name="toolTip">
+        <string>Remove selected galaxy from list</string>
        </property>
        <property name="text">
         <string>&lt;</string>
@@ -384,6 +396,9 @@
          <height>23</height>
         </rect>
        </property>
+       <property name="toolTip">
+        <string>Create a scene with the current galaxy list</string>
+       </property>
        <property name="text">
         <string>Create</string>
        </property>
@@ -397,6 +412,9 @@
          <height>23</height>
         </rect>
        </property>
+       <property name="toolTip">
+        <string>Add all galaxies to list</string>
+       </property>
        <property name="text">
         <string>&gt;&gt;</string>
        </property>
@@ -406,6 +424,9 @@
     <widget class="QWidget" name="tabGalaxy">
      <attribute name="title">
       <string>Galaxy</string>
+     </attribute>
+     <attribute name="toolTip">
+      <string>Global galaxy parameters</string>
      </attribute>
      <widget class="QGroupBox" name="groupBox_2">
       <property name="geometry">
@@ -655,6 +676,9 @@
     <widget class="QWidget" name="tabGalaxy">
      <attribute name="title">
       <string>Components</string>
+     </attribute>
+     <attribute name="toolTip">
+      <string>Galaxy component parameters</string>
      </attribute>
      <widget class="QLabel" name="label">
       <property name="geometry">
@@ -1337,7 +1361,7 @@
         </rect>
        </property>
        <property name="text">
-        <string>Base size</string>
+        <string>Mean size</string>
        </property>
       </widget>
       <widget class="QLineEdit" name="leBaseSize">
@@ -1385,7 +1409,7 @@
         </rect>
        </property>
        <property name="text">
-        <string>Size spread</string>
+        <string>Sigma</string>
        </property>
       </widget>
       <widget class="QLabel" name="label_42">

@@ -120,28 +120,29 @@ void GamerCamera::RotateUp(float r) {
 }
 */
 QMatrix4x4 GamerCamera::GetRotationMatrix() {
-    QVector3D zaxis = (m_camera-m_target).normalized();
-    QVector3D xaxis = (QVector3D::crossProduct(m_up, zaxis)).normalized()*-1;
+    QVector3D zaxis = -(m_camera-m_target).normalized();
+    QVector3D xaxis = (QVector3D::crossProduct(m_up, zaxis)).normalized();
     QVector3D yaxis = (QVector3D::crossProduct(zaxis, xaxis)).normalized();
 
     QMatrix4x4 M;
     M.setToIdentity();
     M(0,0) = xaxis.x();
-    M(0, 1) = yaxis.x();
-    M(0, 2) = zaxis.x();
+    M(1, 0) = yaxis.x();
+    M(2, 0) = zaxis.x();
 
-    M(1, 0) = xaxis.y();
+    M(0, 1) = xaxis.y();
     M(1, 1) = yaxis.y();
-    M(1, 2) = zaxis.y();
+    M(2, 1) = zaxis.y();
 
-    M(2, 0) = xaxis.z();
-    M(2, 1) = yaxis.z();
+    M(0, 2) = xaxis.z();
+    M(1, 2) = yaxis.z();
     M(2, 2) = zaxis.z();
 
-    M(3, 0) = 0;
-    M(3, 1) = 0;
-    M(3, 2) = 0;
-    M = m_viewMatrix;
+/*    M(0, 3) = 0;
+    M(1, 3) = 0;
+    M(2, 3) = 0;
+*/
+//    M = m_viewMatrix.inverted();
     M(3, 0) = 0;
     M(3, 1) = 0;
     M(3, 2) = 0;
@@ -186,10 +187,10 @@ void GamerCamera::setupViewmatrix() {
     m_viewMatrix.lookAt(m_target, m_camera, m_up);
 //    m_viewMatrix.lookAt(m_camera, m_target, m_up);
 //    qDebug() << m_camera;
-    m_viewMatrix = m_rotMatrix*m_viewMatrix;
+    m_viewMatrix = m_rotMatrix* m_viewMatrix;
     // Pre-calculate mvp
 //    m_invVP = (m_projection.inverted()*m_viewMatrix).inverted();
-    m_invVP = (m_projection*m_viewMatrix).inverted();
+    m_invVP = (m_projection*m_rotMatrix*m_viewMatrix).inverted();
 
 }
 
@@ -200,7 +201,6 @@ QVector3D GamerCamera::coord2ray(float x, float y, float width) {
     QVector4D screenPos = QVector4D(xx, -yy, 1.0, 1.0);
     QVector4D worldPos = m_invVP * screenPos;
     return worldPos.toVector3D().normalized();
-
 }
 
 

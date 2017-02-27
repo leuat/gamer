@@ -18,9 +18,10 @@ the dust component absorbs light intensity (see the GAMER paper for details). Bo
     <li><b>Strength</b> :Defines the overall intensity of the component. If a disk component, light intensity is increased. If a dust component, light absorption.
     <li><b>Arm</b> :The width of the components arm, given by the winding parameters in the galaxy settings. For lower values, arms are wider, while high values result in a thin arm. Typical values range between 0 and 1.
     <li><b>Z0</b> :This parameter defines the height of the component above the galaxy plane. Typical values range between 0.001 - 0.05.
-    <li><b>R0</b> :The radial intensity drop-off of the component, typically within 0 and 1. As 1 is at the edge of the  defined agalaxy, typical values range between 0.1 and 0.6.
+    <li><b>R0</b> :The radial intensity start of the component, typically within 0 and 1.
+    <li><b>R1</b> :The radial intensity drop-off of the component, typically within 0 and 1. As 1 is at the edge of the  defined agalaxy, typical values range between 0.1 and 0.6.
     <li><b>Delta</b> :A tangential displacement of the arm, in case a component should be "lagging" behind the main arms. Typically between 0 and &#960;.
-    <li><b>Winding</b> :The tangential winding ("twird") number of the commponent. Higher values yield more tangential "twirl" effect along the arms. Typical values between 0 and 0.5.
+    <li><b>Winding</b> :The tangential winding ("twirl") number of the commponent. Higher values yield more tangential vortex effect along the arms. Typical values between 0 and 0.5.
     <li><b>Noise Scale</b> :The base scale of the procedural noise. Lower values mean larger scales. Typical values range around 1.
     <li><b>Offset </b> :Noise offset is a threshold constant that is added to the noise field. Typical values are centered around 0.
     <li><b>Tilt </b>: The noise field is eventually transformed through an poer function, so the final noise value becomes noise = pow(noise, Tilt). Typicall set around -1 and 1.
@@ -28,4 +29,4 @@ the dust component absorbs light intensity (see the GAMER paper for details). Bo
 </ul>
 <h2>Stars</h2>
 Star components operate on a different set of procedural noise, effectively producing small delta-function-alike perturbations in the 3D field. The main component parameters (strength,
-arm, Z0, R0, Delta and Winding, Noise Tilt, Noise Offset) are the same as in the Disk/Dust. However, the noise scale parmeters operate slightly different. Typical values for the noise scale is here in the range of 10-100.
+arm, Z0, R0, Delta and Winding, Noise Tilt, Noise Offset) are the same as in the Disk/Dust. However, the noise scale parmeters operate slightly different. Typical values for the noise scale is here in the range of 1-100.

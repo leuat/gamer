@@ -6,3 +6,14 @@ are:
     <li><b>Gamma</b>: The pixel is scaled with pow(pixel, gamma)
     <li><b>Saturation</b>: Color saturation, from black/white to intense colors.
 </ul>
+<h2>Foreground star field</h2>
+In addition, it is possible to add a simulated foreground star field to the saved .png image.
+For now, the stars are rendered as 2D gaussian spots, but when a proper PSF is implemented the convolution will take care of the smoothing of the foreground stars.
+
+The parameters are as follows:
+<ul>
+   <li><b>Number of stars</b>: Number of stars to render.
+   <li><b>Mean</b>: The mean width of the stars, normalized to fit the width of the image (so changing resolution won't change the size of the star)
+   <li><b>Sigma</b>: The standard deviation (spread) of the width of the star.
+   <li><b>Intensity</b>: The overall intensity modifier of the star field.
+</ul>
