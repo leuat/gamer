@@ -29,6 +29,10 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ui->setupUi(this);
     Util::path = QCoreApplication::applicationDirPath() + "/../../";
+#if defined(Q_OS_WIN)
+    Util::path = QCoreApplication::applicationDirPath() +"/";
+
+#endif
 /*    m_rastGalaxy = new RasterThread(&m_renderingParams);
     m_rastScene = new RasterThread(&m_renderingParams);
 */
@@ -167,7 +171,7 @@ void MainWindow::PopulateGalaxyList()
 {
 
 
-
+//    qDebug() << Util::path;
     QDirIterator it(Util::path + m_renderingParams.galaxyDirectory(),
                     QStringList() << "*.gax", QDir::Files, QDirIterator::Subdirectories);
     ui->lstGalaxies->clear();
