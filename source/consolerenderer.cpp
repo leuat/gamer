@@ -12,7 +12,8 @@ void ConsoleRenderer::PrintUsage()
     cout << "Usage: Gamer [ command ] [ parameters ]" << endl;
     cout << "Commands are : "<<endl;
     cout << "   - galaxy : renders a single galaxy with (example) parameters: " << endl;
-    cout << "   [ method = omp/thread ] [ camera = 1 0 0  ] [ target = 0 0 0  ] [ up = 0 1 0 ] [ fov = 90 ]  [ exposure = 1 ] [ gamma = 1 ] [ saturation = 1 ] [ ray step = 0.025 ] [ galaxy gax file ] [ size = 256 ] [ filename = test{.png} ] " << endl;
+    cout << "       [ method = omp/thread ] [ camera = 1 0 0  ] [ target = 0 0 0  ] [ up = 0 1 0 ] [ fov = 90 ]  [ exposure = 1 ] [ gamma = 1 ] [ saturation = 1 ] [ ray step = 0.025 ] [ galaxy gax file ] [ size = 256 ] [ filename = test{.png} ] " << endl;
+    cout << "   - skybox [ method = omp/thread ] [ Renderingparams ] [ galaxy file ] [ png size ] " << endl;
     cout << endl;
 
 
@@ -92,6 +93,83 @@ void ConsoleRenderer::RenderSingleGalaxy(QStringList param)
 
 }
 
+void ConsoleRenderer::RenderSkybox(QStringList param)
+{
+    if (param.size()!=5) {
+        qDebug() << param.size();
+        cout << "Incorrect usage/parameters for galaxy. Usage: " << endl;
+        PrintUsage();
+        exit(1);
+
+    }
+    m_rasterizer = nullptr;
+    if (param[1].toLower()=="omp") {
+        m_rasterizer = new Rasterizer();
+    }
+    if (param[1].toLower()=="thread") {
+        m_rasterizer = new RasterThread(&m_renderingParams);
+    }
+    if (m_rasterizer==nullptr) {
+        cout << "ERROR! Cannot recognize " << param[1].toStdString() << endl;
+        cout << "Must be 'omp' or 'thread'" << endl;
+        exit(1);
+
+    }
+    Util::path = "";
+    m_renderingParams.Load(Util::path + param[2]);
+    QString galaxyFile = param[3];
+    m_renderingParams.setSize(param[4].toFloat());
+
+    Galaxy galaxy;
+    galaxy.Load(galaxyFile);
+
+    m_rasterizer->setRenderingParams(&m_renderingParams);
+    m_rasterizer->AddGalaxy(new GalaxyInstance(&galaxy, galaxy.galaxyParams().name(),
+                                              QVector3D(0,0,0), QVector3D(0,1,0).normalized(), 1, 0)  );
+
+
+    RenderQueue rq;
+    rq.RenderSkybox(m_rasterizer, m_renderingParams);
+
+    cout << "Starting rendering on " <<  QString::number(std::thread::hardware_concurrency()).toStdString() << " cores." << endl;
+    Q_TIMER_START();
+    rq.Update();
+    while (rq.isRendering()) {
+        if (rq.current()== nullptr) {
+
+        }
+          else {
+        Rasterizer* rast = &rq.current()->rasterizer();
+        int prevP = 0;
+        while (rast->getState()!= Rasterizer::State::done) {
+            int curP = (rast->getPercentDone()*1000.0);
+            if (curP!=prevP) {
+
+                float time = ttimer.elapsed();
+                float percentage = rast->getPercentDone();
+                float timeLeft = time/(percentage) - time;
+                QString t;
+                t.sprintf("%2.1f", curP*0.1);
+                cout << "\r[ " << t.toStdString() <<  "% ]  with ETA in " << Util::MilisecondToString(timeLeft).toStdString() <<   std::flush;
+                prevP = curP;
+
+            }
+        }
+        cout << endl;
+
+        rast->AssembleImage();
+        rast->getImageShadowBuffer()->save(rq.current()->filename()+ ".png");
+        cout << "Image saved to file " << rq.current()->filename().toStdString() << ".png" << endl;
+
+    }
+        rq.Update();
+        rq.Update();
+
+}
+    Q_TIMER_ELAPSED("Rendering");
+
+}
+
 QVector3D ConsoleRenderer::fromList(QStringList *lst, int i1, int i2, int i3)
 {
     return QVector3D( (*lst)[i1].toFloat(),(*lst)[i2].toFloat(),(*lst)[i3].toFloat() );
@@ -108,6 +186,10 @@ ConsoleRenderer::ConsoleRenderer(int argc, char *argv[])
     }
     if (aLst[0].toLower() == "galaxy") {
         RenderSingleGalaxy(aLst);
+        exit(0);
+    }
+    if (aLst[0].toLower() == "skybox") {
+        RenderSkybox(aLst);
         exit(0);
     }
 

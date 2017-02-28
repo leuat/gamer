@@ -34,6 +34,7 @@ public:
     void Update();
     bool isRendering();
     void Abort();
+    void RenderSkybox(Rasterizer* rasterizer, RenderingParams renderingParams);
 
     RenderQueueItem *current() const;
 };

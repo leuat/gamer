@@ -135,7 +135,7 @@ void MainWindow::PopulateCmbComponentTypes() {
     //ui->cmbComponentType->clear();
     if (m_curComponentParams != nullptr) {
         if (ui->cmbComponentType->count()==0)
-          ui->cmbComponentType->addItems(QStringList() << "bulge" << "disk" << "dust" << "stars" << "dust2" <<  "stars small");
+          ui->cmbComponentType->addItems(QStringList() << "bulge" << "disk" << "dust" << "stars" << "dust2");
         //int idx = ui->cmbComponentType->findData(m_curComponentParams->className());
         ui->cmbComponentType->setCurrentText(m_curComponentParams->className());
     }
@@ -454,54 +454,6 @@ void MainWindow::RenderPreview(int size)
     RenderDirect();
     m_renderingParams.setSize(oldSize);
     m_renderingParams.setRayStep(oldStep);
-}
-
-
-void MainWindow::RenderSkybox() {
-
-    QVector<QVector3D> planes, ups;
-    planes.resize(6);
-    ups.resize(6);
-    planes[0] = QVector3D(0,0,-1);
-    planes[1] = QVector3D(0,0,1);
-    planes[2] = QVector3D(0,1,0);
-    planes[3] = QVector3D(0,-1,0);
-    planes[4] = QVector3D(1,0,0);
-    planes[5] = QVector3D(-1,0,0);
-
-    ups[0] = QVector3D(0,-1,0);
-    ups[1] = QVector3D(0,-1,0);
-    ups[2] = QVector3D(0,0,1);
-    ups[3] = QVector3D(0,0,-1);
-    ups[4] = QVector3D(0,-1,0);
-    ups[5] = QVector3D(0,-1,0);
-
-    QVector<QString> names;
-    names.resize(6);
-    names[0] ="Z-";
-    names[1] ="Z+";
-    names[2] ="Y+";
-    names[3] ="Y-";
-    names[4] ="X+";
-    names[5] ="X-";
-
-    //m_renderingParams.camera().setRotMatrix();
-    RenderingParams reset = m_renderingParams;
-    //RP.camera.setRotMatrix(resetCamera.GetRotationMatrix());
-
-    for (int i=0;i<6;i++) {
-        m_renderingParams.camera().setRotMatrix(reset.camera().GetRotationMatrix()  );
-        m_renderingParams.camera().setCamera( reset.camera().camera() );
-        m_renderingParams.camera().setTarget( reset.camera().camera() + planes[i] );
-        m_renderingParams.camera().setUp(ups[i]);
-        m_renderingParams.camera().setPerspective(90);
-        //QString fname = Util::getFileName(m_renderingParams.imageDirectory(),"SkyboxZ-","png");
-        QString fname = "Skybox" + names[i];
-        m_renderQueue.Add(m_rasterizer, m_renderingParams, fname);
-    }
-
-    m_renderingParams = reset;
-
 }
 
 
@@ -1088,7 +1040,7 @@ void MainWindow::on_btnQueue_clicked()
 
 void MainWindow::on_btnSkybox_clicked()
 {
-    RenderSkybox();
+    m_renderQueue.RenderSkybox(m_rasterizer, m_renderingParams);
 }
 
 

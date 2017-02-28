@@ -238,7 +238,6 @@ private:
     void RenderDirect();
     void RenderPreview(int size);
     void RenderStars();
-    void RenderSkybox();
 
     void EnableGUIEditing(bool value);
 
