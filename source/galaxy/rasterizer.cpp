@@ -162,6 +162,7 @@ void Rasterizer::prepareBuffer()
         m_backBuffer = new Buffer2D(size);
         m_imageShadowBuffer = new QImage(size, size,QImage::Format_ARGB32);
         m_starsBuffer = new Buffer2D(size);
+
         RenderStars();
 
     }
@@ -276,9 +277,11 @@ void Rasterizer::RenderPixelsOMP()
     int size = pow(m_renderingParams->size(),2);
     float delta = 1.0/(float)size;
     m_percentDone = 0;
-    int boxSize = m_renderingParams->size()/60;
+    int boxSize = min(m_renderingParams->size()/60, 4);
     if (m_isPreview)
         boxSize = 1;
+
+//    boxSize = 1;
 
 #pragma omp parallel for
     for (int k=0;k<size;k++) {
@@ -377,7 +380,7 @@ QVector3D Rasterizer::renderPixel(QVector3D dir, QVector<GalaxyInstance*> gals) 
             exit(1);
         }
 
-        float t1, t2;
+        double t1, t2;
         bool intersects = Util::IntersectSphere(m_renderingParams->camera().camera() - gi->position(), dir,
 
                                                 g->galaxyParams().axis(), isp1, isp2, t1, t2);
@@ -385,7 +388,7 @@ QVector3D Rasterizer::renderPixel(QVector3D dir, QVector<GalaxyInstance*> gals) 
         if (t2>0) {
             // Behind! do nothing, take care of it in getIntensity
 //            qDebug() << "BEHIND";
-           // isp2 = m_renderingParams->camera().camera()- gi->position();// + m_renderingParams->direction*
+            isp2 = m_renderingParams->camera().camera()- gi->position();// + m_renderingParams->direction*
         }
 
         if (t1>0 && t2>0)
@@ -410,11 +413,12 @@ QVector3D Rasterizer::renderPixel(QVector3D dir, QVector<GalaxyInstance*> gals) 
 void Rasterizer::getIntensity(GalaxyInstance* gi, RasterPixel* rp, QVector3D isp1, QVector3D isp2) {
     QVector3D origin = isp1;
 
-    float length = (isp1-isp2).length();
+    double length = (isp1-isp2).length();
     QVector3D dir = (isp1-isp2).normalized();
     Galaxy* g = gi->GetGalaxy();
-    float step = m_renderingParams->rayStep();
-    int N = (int)(length/step);
+    double step = m_renderingParams->rayStep();
+    double N = (int)(length/step);
+//    N = 2;
     QVector3D p = origin;
     rp->scale = step;
 
@@ -423,21 +427,27 @@ void Rasterizer::getIntensity(GalaxyInstance* gi, RasterPixel* rp, QVector3D isp
     int cnt = 0;
     float avgStep = 0;
     float minRayStep = 0.0005;
+//    minRayStep = 0.05;
     if (m_isPreview) {
         minRayStep = 0.01;
 //        m_renderingParams->setRayStep(0.005);
     }
-
-    while(QVector3D::dotProduct(p-origin,(isp2-origin).normalized())<length)
+    rp->dir = dir;
+    while(QVector3D::dotProduct(p-origin,(isp2-origin).normalized())<length + step)
     {
         float curStep = Util::clamp((p-camera).length()*m_renderingParams->rayStep(), minRayStep, 0.05);
+//            curStep = m_renderingParams->rayStep();
         step = curStep;
         avgStep +=step;
 
         float modifier = 0;
-        if (QVector3D::dotProduct(p-camera, dir)<0)
-            break;
 //        if (1==0)
+        rp->step = step;
+
+        if (QVector3D::dotProduct(p-camera, dir)<0)
+            step = step + QVector3D::dotProduct(p-camera, dir);
+
+
         for ( GalaxyComponent* gc : g->components()) {
             if (gc->getComponentParams().active()==1)
             {
@@ -455,10 +465,13 @@ void Rasterizer::getIntensity(GalaxyInstance* gi, RasterPixel* rp, QVector3D isp
                        modifier = max(modifier, gc->calculateIntensity( rp, p, gi, step*200));
                     }
 
-                if (gc->getComponentParams().className()=="bulge")
+                if (gc->getComponentParams().className()=="bulge") {
+    //                rp->setI( rp->I() + QVector3D(1,1,1)*step*100);
                     modifier = max(gc->calculateIntensity( rp, p, gi, step*200.0), modifier);
+                }
             }
         }
+
 //        curStep+= 0.1*exp(-modifier*1.0);
 
         step = curStep;
@@ -466,10 +479,15 @@ void Rasterizer::getIntensity(GalaxyInstance* gi, RasterPixel* rp, QVector3D isp
         cnt++;
 
         rp->setI( Util::floor(rp->I()));
-    }
 
-//        if (rand()%100==1)
-  //      qDebug() << "average: " << cnt << "curstep: " << avgStep/(float)cnt;
+     //   if (QVector3D::dotProduct(p-camera, dir)<0)
+    //        break;
+
+    }
+//    rp->setI( rp->I()/avgStep*1);
+
+    //    if (rand()%100==1)
+     //   qDebug() << "average: " << cnt << "curstep: " << avgStep/(float)cnt << "  lengthj : " << length;
 
 
 

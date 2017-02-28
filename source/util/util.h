@@ -60,7 +60,7 @@ public:
         return QVector3D( max(0.0f, v.x()), max(0.0f,v.y()), max(0.0f,v.z())  );
     }
 
-    static bool IntersectSphere(QVector3D o, QVector3D d, QVector3D r,QVector3D& isp1,QVector3D& isp2, float& t0, float& t1) {
+    static bool IntersectSphere(QVector3D o, QVector3D d, QVector3D r,QVector3D& isp1,QVector3D& isp2, double& t0, double& t1) {
 
         r.setX(1.0/(r.x()*r.x()));
         r.setY(1.0/(r.y()*r.y()));
@@ -71,11 +71,11 @@ public:
         QVector3D rO = QVector3D(o.x()*r.x(), o.y()*r.y(), o.z()*r.z());
 
 
-        float A = QVector3D::dotProduct(d,rD);
-        float B = 2.0*(QVector3D::dotProduct(d, rO));
-        float C = QVector3D::dotProduct(o, rO) - 1.0;
+        double A = QVector3D::dotProduct(d,rD);
+        double B = 2.0*(QVector3D::dotProduct(d, rO));
+        double C = QVector3D::dotProduct(o, rO) - 1.0;
 
-        float S = (B*B - 4.0f*A*C);
+        double S = (B*B - 4.0f*A*C);
 
         if (S<=0) {
             isp1 = QVector3D(0,0,0);
@@ -85,8 +85,8 @@ public:
             return false;
         }
 
-        t0 =  (-B - sqrt(S))/(2*A);
-        t1 =  (-B + sqrt(S))/(2*A);
+        t0 =  (-B - sqrt(S))/(2.0*A);
+        t1 =  (-B + sqrt(S))/(2.0*A);
 
         isp1 = o+d*t0;
         isp2 = o+d*t1;

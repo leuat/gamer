@@ -77,6 +77,7 @@ void RenderQueue::Update()
     if (m_current->rasterizer().getState() == Rasterizer::State::done) {
         PostRendering();
         m_queue.removeAll(m_current);
+        delete m_current;
         m_current = nullptr;
     }
 
@@ -95,6 +96,8 @@ void RenderQueue::Abort()
     if (m_current!=nullptr)
         m_current->rasterizer().Abort();
 
+    for (RenderQueueItem* rq : m_queue)
+        delete rq;
     m_queue.clear();
     m_current = nullptr;
 

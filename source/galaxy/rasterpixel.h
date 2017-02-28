@@ -10,6 +10,8 @@ public:
     float winding, radius;
     float z;
     float tmp;
+    QVector3D dir;
+    float step;
     QVector3D P;
 
     void Add(RasterPixel* o);
