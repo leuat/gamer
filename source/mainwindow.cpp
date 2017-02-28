@@ -87,7 +87,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 //    m_renderingParams.camera().setCamera(QVector3D(0.1,0,0));
 //    m_renderingParams.camera().setUp(QVector3D(0,1,0));
-      m_renderingParams.camera().setTarget(QVector3D(0,0,0));
+    //  m_renderingParams.camera().setTarget(QVector3D(0,0,0));
 
 
 //    ui->leRayStep->setVisible(false);
