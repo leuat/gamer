@@ -95,7 +95,7 @@ public:
     }
 
     static float smoothstep(float edge0, float edge1, float x);
-    static float clamp(float val, float min, float max);
+    static float clamp(float val, const float min, const float max);
     static QVector3D clamp(QVector3D val, float min, float max);
 
     static void drawBox(QImage* backImage, QImage* img, int i, int j, int size, QRgb color) {

@@ -135,7 +135,7 @@ void MainWindow::PopulateCmbComponentTypes() {
     //ui->cmbComponentType->clear();
     if (m_curComponentParams != nullptr) {
         if (ui->cmbComponentType->count()==0)
-          ui->cmbComponentType->addItems(QStringList() << "bulge" << "disk" << "dust" << "stars" << "dust2");
+          ui->cmbComponentType->addItems(QStringList() << "bulge" << "disk" << "dust" << "stars" << "dust2" <<  "stars small");
         //int idx = ui->cmbComponentType->findData(m_curComponentParams->className());
         ui->cmbComponentType->setCurrentText(m_curComponentParams->className());
     }

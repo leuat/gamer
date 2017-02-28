@@ -422,7 +422,6 @@ void Rasterizer::getIntensity(GalaxyInstance* gi, RasterPixel* rp, QVector3D isp
     QVector3D p = origin;
     rp->scale = step;
 
-
     QVector3D camera = m_renderingParams->camera().camera() - gi->position();
     int cnt = 0;
     float avgStep = 0;
@@ -433,48 +432,29 @@ void Rasterizer::getIntensity(GalaxyInstance* gi, RasterPixel* rp, QVector3D isp
 //        m_renderingParams->setRayStep(0.005);
     }
     rp->dir = dir;
-    while(QVector3D::dotProduct(p-origin,(isp2-origin).normalized())<length + step)
-    {
-        float curStep = Util::clamp((p-camera).length()*m_renderingParams->rayStep(), minRayStep, 0.05);
-//            curStep = m_renderingParams->rayStep();
-        step = curStep;
-        avgStep +=step;
 
-        float modifier = 0;
-//        if (1==0)
+    QVector3D ll = (isp2-origin).normalized();
+
+    while(QVector3D::dotProduct(p-origin,ll)<length + step)
+    {
+        step = Util::clamp(pow((p-camera).length(),1)*m_renderingParams->rayStep(), minRayStep, 0.01);
+
         rp->step = step;
 
-        if (QVector3D::dotProduct(p-camera, dir)<0)
-            step = step + QVector3D::dotProduct(p-camera, dir);
+//        if (QVector3D::dotProduct(p-camera, dir)<0)
+//            step = step + QVector3D::dotProduct(p-camera, dir);
 
-
+//        if (1==2)
         for ( GalaxyComponent* gc : g->components()) {
             if (gc->getComponentParams().active()==1)
             {
-                ///  GalaxyComponent* c = g->com
-                // Only if directed forwards
-                if (QVector3D::dotProduct(p-camera, dir)>0)
-                    if (gc->getComponentParams().className()!="bulge") {
-                        rp->radius = gc->getRadius(p, rp->P, rp->z, gi);
-                        rp->z = gc->getHeightModulation(rp->z);
-                        // BULGEN er problemet for faen. jaja.
-//                       float hmod = m_renderingParams->rayStep() + (1-rp->z)*0.01;
-                       //curStep = max(min(curStep, hmod), m_renderingParams->rayStep());
-  //                     curStep += (1-rp->z)*0.01;
-    //                   step = curStep;
-                       modifier = max(modifier, gc->calculateIntensity( rp, p, gi, step*200));
-                    }
-
-                if (gc->getComponentParams().className()=="bulge") {
-    //                rp->setI( rp->I() + QVector3D(1,1,1)*step*100);
-                    modifier = max(gc->calculateIntensity( rp, p, gi, step*200.0), modifier);
-                }
+                rp->radius = gc->getRadius(p, rp->P, rp->z, gi);
+                rp->z = gc->getHeightModulation(rp->z);
+                gc->calculateIntensity( rp, p, gi, step*200.0);
             }
         }
 
-//        curStep+= 0.1*exp(-modifier*1.0);
 
-        step = curStep;
         p=p-dir*step;
         cnt++;
 
@@ -486,8 +466,8 @@ void Rasterizer::getIntensity(GalaxyInstance* gi, RasterPixel* rp, QVector3D isp
     }
 //    rp->setI( rp->I()/avgStep*1);
 
-    //    if (rand()%100==1)
-     //   qDebug() << "average: " << cnt << "curstep: " << avgStep/(float)cnt << "  lengthj : " << length;
+//        if (rand()%1000==1)
+//        qDebug() << "average: " << cnt << "curstep: " << avgStep/(float)cnt << "  lengthj : " << length;
 
 
 

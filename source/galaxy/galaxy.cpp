@@ -29,6 +29,9 @@ GalaxyComponent* Galaxy::instantiate(QString className) {
     if (className=="stars")
         ngc = (GalaxyComponent*)new GalaxyComponentStars();
 
+    if (className=="stars small")
+        ngc = (GalaxyComponent*)new GalaxyComponentStarsSmall();
+
     if (ngc==nullptr) {
         qDebug() << "Error: could not instantiate :" << className;
     }

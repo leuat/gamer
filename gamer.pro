@@ -16,7 +16,7 @@ DEFINES += NO_OPENGL
 QMAKE_LFLAGS +=  -fopenmp
 #QMAKE_LFLAGS +=  -lopengl32
 #QMAKE_CXXFLAGS += -m32
-QMAKE_CXXFLAGS += -Ofast #-ffast-math  -march=native -mtune=native
+QMAKE_CXXFLAGS += -Ofast -O3 -ffast-math  -march=native -mtune=native
 LIBS += -LD:C:\Qt\Qt5.6.2\Tools\mingw492_32\i686-w64-mingw32\lib\ -lopengl32
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = Gamer

@@ -25,10 +25,16 @@ float GalaxyComponentBulge::calculateIntensity(RasterPixel* rp, QVector3D& p, Ga
 
 float GalaxyComponentBulge::getHeightModulation(float height)
 {
+    return 1;
     float rho_0 = m_componentParams.strength();
     float rad = (height+0.01f)*m_componentParams.r0();
 
     return rho_0 * (pow(rad,-0.855)*exp(-pow(rad,1/4.0f)) -0.05f)*0.1;
+}
+
+float GalaxyComponentBulge::getRadius(const QVector3D &p, QVector3D &P, float &dott, GalaxyInstance *gi)
+{
+    return 0;
 }
 
 void GalaxyComponentDisk::componentIntensity(RasterPixel* rp, QVector3D& p, float ival) {
@@ -105,6 +111,7 @@ void GalaxyComponentDust2::componentIntensity(RasterPixel* rp, QVector3D& p, flo
 
 
 void GalaxyComponentStars::componentIntensity(RasterPixel* rp, QVector3D& r, float ival) {
+
     float perlinnoise = abs(m_galaxyParams->noise()->octave_noise_3d(6,m_componentParams.ks(),0.01f*m_componentParams.scale()*100,r.x(),r.y(),r.z()));
 
     float addNoise = 0;
@@ -123,6 +130,19 @@ void GalaxyComponentStars::componentIntensity(RasterPixel* rp, QVector3D& r, flo
 }
 
 
+
+inline void GalaxyComponentStarsSmall::componentIntensity(RasterPixel* rp, QVector3D& r, float ival) {
+
+
+    if (rand()%(int)m_componentParams.scale()==0) {
+        float val = pow((rand()%10),m_componentParams.noiseTilt());
+        rp->setI(rp->I() +  ival * val * m_spectrum->spectrum() *rp->scale);
+        return;
+    }
+    return;
+
+
+}
 
 
 

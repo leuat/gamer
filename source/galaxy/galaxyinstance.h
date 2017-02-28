@@ -37,7 +37,7 @@ public:
     void setRotmat(const QQuaternion &rotmat);
     QVector3D position() const;
     void setPosition(const QVector3D &position);
-    QVector3D orientation() const;
+    QVector3D& orientation();
     void setOrientation(const QVector3D &orientation);
 
 

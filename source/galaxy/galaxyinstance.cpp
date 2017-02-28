@@ -9,7 +9,7 @@ void GalaxyInstance::SetGalaxy(Galaxy* g) {
     m_galaxy = g;
     m_galaxyName = m_galaxy->galaxyParams().name(); }
 
-QVector3D GalaxyInstance::orientation() const
+QVector3D& GalaxyInstance::orientation()
 {
     return m_orientation;
 }
