@@ -107,7 +107,7 @@ void Rasterizer::ReleaseBuffers()
 }
 
 
-void Rasterizer::prepareRenderList() {
+void Rasterizer::PrepareRenderList() {
     m_renderList.resize(m_renderingParams->size() * m_renderingParams->size());
     for (int i = 0; i < m_renderingParams->size() * m_renderingParams->size(); i++)
         m_renderList[i] = i;
@@ -124,7 +124,7 @@ void Rasterizer::setNewSize(int s)
         return;
 
     m_renderingParams->setSize(s);
-    prepareBuffer();
+    PrepareBuffer();
 }
 
 /*    void SetupStars() {
@@ -144,7 +144,7 @@ void Rasterizer::setNewSize(int s)
 
         }
 */
-void Rasterizer::prepareBuffer()
+void Rasterizer::PrepareBuffer()
 {
     // Do not changes buffers if rendering!
 
@@ -198,8 +198,8 @@ void Rasterizer::Prepare() {
         gi->GetGalaxy()->SetupComponents(m_renderingParams);
     }
 
-    prepareBuffer();
-    prepareRenderList();
+    PrepareBuffer();
+    PrepareRenderList();
 
     m_renderingParams->camera().setupViewmatrix();
 }
@@ -425,7 +425,7 @@ void Rasterizer::getIntensity(GalaxyInstance* gi, RasterPixel* rp, QVector3D isp
     QVector3D camera = m_renderingParams->camera().camera() - gi->position();
     int cnt = 0;
     float avgStep = 0;
-    float minRayStep = 0.0005;
+    float minRayStep = 0.001;
 //    minRayStep = 0.05;
     if (m_isPreview) {
         minRayStep = 0.01;

@@ -12,6 +12,7 @@ private:
     void PrintUsage();
     void RenderSingleGalaxy(QStringList param);
     void RenderSkybox(QStringList param);
+    void RenderFits(QStringList param);
     QVector3D fromList(QStringList* lst, int i1, int i2, int i3);
 
 

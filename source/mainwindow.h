@@ -9,7 +9,7 @@
 #include "source/galaxy/renderingparams.h"
 #include "source/galaxy/galaxy.h"
 #include "source/galaxy/galaxycomponent.h"
-
+#include "source/galaxy/hpxrasterizer.h"
 namespace Ui {
 class MainWindow;
 }

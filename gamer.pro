@@ -12,16 +12,20 @@ QT += gui
 #QMAKE_CXX = g++-6b
 #CONFIG -= c++11
 QMAKE_CXXFLAGS+= -fopenmp
-DEFINES += NO_OPENGL
+DEFINES += NO_OPENGL USE_HEALPIX
 QMAKE_LFLAGS +=  -fopenmp
 #QMAKE_LFLAGS +=  -lopengl32
 #QMAKE_CXXFLAGS += -m32
 QMAKE_CXXFLAGS += -Ofast -O3 -ffast-math  -march=native -mtune=native
 LIBS += -LD:C:\Qt\Qt5.6.2\Tools\mingw492_32\i686-w64-mingw32\lib\ -lopengl32
+LIBS += -L/Users/nicolaasgroeneboom/work/code/lib/Healpix_3.31/src/cxx/osx/lib -lhealpix_cxx -lfftpack -lc_utils -lcxxsupport
+LIBS += -L/Users/nicolaasgroeneboom/work/code/lib/cfitsio -lcfitsio
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = Gamer
 TEMPLATE = app
 INCLUDEPATH += .
+INCLUDEPATH += /Users/nicolaasgroeneboom/work/code/lib/Healpix_3.31/src/cxx/osx/include
+
 #CONFIG+= static
 SOURCES += \
     source/galaxy/rasterizer.cpp \
@@ -53,6 +57,7 @@ SOURCES += \
     source/galaxy/renderqueue.cpp \
     source/consolerenderer.cpp \
     source/galaxy/rasterthread.cpp \
+    source/galaxy/hpxrasterizer.cpp
 
 HEADERS  += \
     source/galaxy/rasterizer.h \
@@ -85,7 +90,8 @@ HEADERS  += \
     source/galaxy/renderqueue.h \
     source/consolerenderer.h \
     source/galaxy/rasterthread.h \
-    source/galaxy/rasterizeromp.h
+    source/galaxy/rasterizeromp.h \
+    source/galaxy/hpxrasterizer.h
 
 FORMS    += mainwindow.ui \
     dialogrendererhelp.ui \

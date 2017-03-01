@@ -55,6 +55,9 @@ public:
         return distribution(generator);
     }
 
+    static QVector3D fromSpherical(float r, float t, float p) {
+        return QVector3D( r*sin(t)*cos(p), r*sin(t)*sin(p), r*cos(t)  );
+    }
 
     static QVector3D floor(const QVector3D v) {
         return QVector3D( max(0.0f, v.x()), max(0.0f,v.y()), max(0.0f,v.z())  );
@@ -171,6 +174,24 @@ public:
     }
     static QVector3D maxQvector3D(const QVector3D a, const QVector3D b) {
         return QVector3D(max(a.x(), b.x()),max(a.y(), b.y()),max(a.z(), b.z()));
+    }
+
+    inline static bool Mollweide(QVector3D& out, float i, float j, float l0, float R, float size) {
+
+        float x = 4*R*sqrt(2)*(2*i/(float)size-1);
+        float yy = j*2 - size/2;
+        float y = R*sqrt(2)*(2*yy/(float)size-1);
+
+
+        float t = asin(y/(R*sqrt(2.0)));
+        out = QVector3D( asin( (2.0*t + sin(2.0*t))/M_PI),l0 + M_PI*x / (2*R*sqrt(2.0)*cos(t)),0  );
+        out.setX(out.x()+M_PI/2);
+        out.setY(-out.y()*0.5);
+        if (out.y()>-M_PI && out.y()<M_PI)
+            return true;
+
+        return false;
+
     }
 
 };

@@ -79,11 +79,11 @@ protected:
         ReleaseBuffers();
     }
 
-    void ReleaseBuffers();
+    virtual void ReleaseBuffers();
 
-    void prepareRenderList();
+    virtual void PrepareRenderList();
     void setNewSize(int s);
-    void prepareBuffer();
+    virtual void PrepareBuffer();
     void Prepare();
     void RenderStars();
 
@@ -100,13 +100,13 @@ protected:
     Galaxy* AddGalaxy(GalaxyInstance* gi);
 
     void CopyFrom(Rasterizer* from);
-    virtual void RenderPixels();
     void RenderPixelsOMP();
+    virtual void RenderPixels();
     virtual void AssembleImage();
     virtual void Render();
     void RenderDirect();
     void InitializeRendering();
-    QVector3D setupCamera(int idx);
+    virtual QVector3D setupCamera(int idx);
     QVector3D renderPixel(QVector3D dir, QVector<GalaxyInstance*> gals);
     void getIntensity(GalaxyInstance* gi, RasterPixel* rp, QVector3D isp1, QVector3D isp2);
 		

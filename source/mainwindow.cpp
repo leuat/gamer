@@ -17,10 +17,14 @@
 #include "source/util/random.h"
 #include "source/galaxy/rasterthread.h"
 //#include <QListData>
+#ifdef USE_HEALPIX
+#include <healpix_map.h>
+#endif
 
 
 
-float MainWindow::m_version = 1.02;
+
+float MainWindow::m_version = 1.03;
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -93,7 +97,6 @@ MainWindow::MainWindow(QWidget *parent) :
 //    ui->leRayStep->setVisible(false);
 //    ui->lblRaystep->setVisible(false);
 
-
 }
 
 MainWindow::~MainWindow()
@@ -162,7 +165,7 @@ void MainWindow::PopulateImageSize()
 
     ui->cmbPreviewSize->addItems(l);
 
-    l = QStringList() << "OpenMP" <<"Threaded";
+    l = QStringList() << "OpenMP" <<"Threaded" << "Healpix";
 
     ui->cmbRenderer->addItems(l);
 
@@ -1140,6 +1143,10 @@ void MainWindow::on_cmbRenderer_currentIndexChanged(const QString &arg1)
     if (arg1=="Threaded"){
         m_rastGalaxy = new RasterThread(m_rastGalaxy);
         m_rastScene = new RasterThread(m_rastScene);
+    }
+    if (arg1=="Healpix"){
+        m_rastGalaxy = new HPXRasterizer(m_rastGalaxy);
+        m_rastScene = new HPXRasterizer(m_rastScene);
     }
     if (m_sceneMode)
         m_rasterizer = m_rastScene;

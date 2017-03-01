@@ -4,7 +4,9 @@
 #include <QVector3D>
 #include <QImage>
 #include <QRgb>
-
+#ifdef USE_HEALPIX
+#include <healpix_map.h>
+#endif
 
 
 class Buffer2D
@@ -27,10 +29,15 @@ public:
 
     void DrawBox(Buffer2D* backImage, const int i, const int j, const int size, QVector3D val);
     void ToColorBuffer(QImage* image, QImage* shadowImage, float exposure, float gamma, float saturation);
+    void ToColorBuffer(QImage* image, float exposure, float gamma, float saturation);
     void fill(const QVector3D v);
     void SaveFits(QString filename);
     void RenderStars(int noStars, int baseSize, int sizeSpread, float strength);
     QByteArray* toQByteArray(int no);
+
+#ifdef USE_HEALPIX
+    void MollweideProjection(Healpix_Map<float>& map);
+#endif
 
     void Add(Buffer2D* other);
     void CopyTo(Buffer2D* to);

@@ -84,6 +84,20 @@ void Buffer2D::ToColorBuffer(QImage *image, QImage* shadowImage, float exposure,
     }
 }
 
+void Buffer2D::ToColorBuffer(QImage *image, float exposure, float gamma, float saturation)
+{
+    #pragma omp for
+        for (int i=0;i<m_size;i++) {
+            for (int j=0;j<m_size;j++) {
+                QColor c = PostProcess(Get(i,j), exposure, gamma, saturation);
+                QColor c2 = QColor(c.blue(), c.green(), c.red());
+                image->setPixel(i,j,c.rgb());
+            }
+        }
+    }
+
+
+
 int Buffer2D::size() const
 {
     return m_size;
@@ -169,7 +183,24 @@ QByteArray *Buffer2D::toQByteArray(int no)
    return ba;
 
 }
+#ifdef USE_HEALPIX
+void Buffer2D::MollweideProjection(Healpix_Map<float>& map)
+{
+    int size = m_size;
+    QVector3D op;
+    for (int i=0;i<size;i++)
+        for (int j=0;j<size;j++) {
+            if (Util::Mollweide(op, i,j,0,1, size))
+            {
+                pointing p = pointing(op.x(), op.y());
+                float val = map[map.ang2pix(p) ];
+                Set(i,j,QVector3D(1,1,1)*val);
+                //Set(i,j,QVector3D(i,2*j,0));
+            }
+        }
 
+}
+#endif
 void Buffer2D::Add(Buffer2D *other)
 {
     if (other->size() != m_size) {

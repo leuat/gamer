@@ -5,6 +5,11 @@
 #include "thread"
 #include "source/galaxy/rasterthread.h"
 
+#ifdef USE_HEALPIX
+#include <healpix_map_fitsio.h>
+#include <healpix_map.h>
+#endif
+
 using namespace std;
 
 void ConsoleRenderer::PrintUsage()
@@ -14,6 +19,7 @@ void ConsoleRenderer::PrintUsage()
     cout << "   - galaxy : renders a single galaxy with (example) parameters: " << endl;
     cout << "       [ method = omp/thread ] [ camera = 1 0 0  ] [ target = 0 0 0  ] [ up = 0 1 0 ] [ fov = 90 ]  [ exposure = 1 ] [ gamma = 1 ] [ saturation = 1 ] [ ray step = 0.025 ] [ galaxy gax file ] [ size = 256 ] [ filename = test{.png} ] " << endl;
     cout << "   - skybox [ method = omp/thread ] [ Renderingparams ] [ galaxy file ] [ png size ] " << endl;
+    cout << "   - renderhpix [ hpx fits file ] [ size ] [ out file ]";
     cout << endl;
 
 
@@ -170,6 +176,22 @@ void ConsoleRenderer::RenderSkybox(QStringList param)
 
 }
 
+void ConsoleRenderer::RenderFits(QStringList param)
+{
+    Healpix_Map<float> map(0,RING);
+    qDebug() << param[1];
+    read_Healpix_map_from_fits(param[1].toStdString(),map,1,2);
+
+    int size = param[2].toInt();
+    Buffer2D buf =Buffer2D(size);
+    buf.MollweideProjection(map);
+
+    QImage img(size,size,QImage::Format_ARGB32);
+
+    buf.ToColorBuffer(&img,1.0,1.8,1.0);
+    img.save(param[3]);
+}
+
 QVector3D ConsoleRenderer::fromList(QStringList *lst, int i1, int i2, int i3)
 {
     return QVector3D( (*lst)[i1].toFloat(),(*lst)[i2].toFloat(),(*lst)[i3].toFloat() );
@@ -190,6 +212,11 @@ ConsoleRenderer::ConsoleRenderer(int argc, char *argv[])
     }
     if (aLst[0].toLower() == "skybox") {
         RenderSkybox(aLst);
+        exit(0);
+    }
+
+    if (aLst[0].toLower() == "renderhpx") {
+        RenderFits(aLst);
         exit(0);
     }
 
