@@ -40,13 +40,13 @@ void RasterThread::RenderPixels()
         int idx = m_renderList[ k ];
 
         QVector3D dir = setupCamera(idx);
-        QVector3D I = renderPixel(dir, m_galaxies);
+        RasterPixel rp = renderPixel(dir, m_galaxies);
         m_percentDone+=delta;
 
         int i = idx%(int)m_renderingParams->size();
         int j = (idx-i)/(int)m_renderingParams->size();
 
-        m_renderBuffer->DrawBox(m_backBuffer, i,j, boxSize, I);
+        m_renderBuffer->DrawBox(m_backBuffer, i,j, boxSize, rp.I());
 
     }
 

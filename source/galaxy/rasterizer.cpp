@@ -290,13 +290,13 @@ void Rasterizer::RenderPixelsOMP()
         int idx = m_renderList[ k ];
 
         QVector3D dir = setupCamera(idx);
-        QVector3D I = renderPixel(dir, m_galaxies);
+        RasterPixel rp = renderPixel(dir, m_galaxies);
         m_percentDone+=delta;
 
         int i = idx%(int)m_renderingParams->size();
         int j = (idx-i)/(int)m_renderingParams->size();
 
-        m_renderBuffer->DrawBox(m_backBuffer, i,j, boxSize, I);
+        m_renderBuffer->DrawBox(m_backBuffer, i,j, boxSize, rp.I());
 
     }
 
@@ -368,7 +368,7 @@ QVector3D Rasterizer::setupCamera(int idx) {
     return m_renderingParams->camera().coord2ray(i,j, m_renderingParams->size());
 }
 
-QVector3D Rasterizer::renderPixel(QVector3D dir, QVector<GalaxyInstance*> gals) {
+RasterPixel Rasterizer::renderPixel(QVector3D dir, QVector<GalaxyInstance*> gals) {
     QVector3D isp1, isp2;
     RasterPixel rp;// = new RasterPixel();
 
@@ -398,7 +398,8 @@ QVector3D Rasterizer::renderPixel(QVector3D dir, QVector<GalaxyInstance*> gals) 
             getIntensity(gi, &rp, isp1, isp2);
 
     }
-    return rp.I()*0.01/m_renderingParams->rayStep();
+    rp.setI(rp.I()*0.01/m_renderingParams->rayStep());
+    return rp;
 /*    rp->I()*=.01/m_renderingParams->rayStep();
 
     QVector3D I = rp->I();

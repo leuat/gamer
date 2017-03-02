@@ -1,6 +1,16 @@
 #include "hpxrasterizer.h"
 #include "source/util/util.h"
 
+bool HPXRasterizer::onlyDust() const
+{
+    return m_onlyDust;
+}
+
+void HPXRasterizer::setOnlyDust(bool onlyDust)
+{
+    m_onlyDust = onlyDust;
+}
+
 HPXRasterizer::HPXRasterizer()
 {
 
@@ -33,10 +43,13 @@ void HPXRasterizer::PrepareBuffer()
 
 void HPXRasterizer::ReleaseBuffers()
 {
+    m_imageShadowBuffer = nullptr;
     if (m_imageBuffer)
         delete m_imageBuffer;
     if (m_renderBuffer)
         delete m_renderBuffer;
+
+
     if (m_map)
         delete m_map;
 }
@@ -59,18 +72,30 @@ void HPXRasterizer::RenderPixels()
     float delta = 1.0/(float)size;
     m_percentDone = 0;
 
+    m_rotMatrix = QQuaternion::fromEulerAngles(QVector3D(90,0,0));
+
 #pragma omp parallel for
     for (int k=0;k<size;k++) {
         if (m_abort)
             continue;
         int idx = m_renderList[ k ];
 
-        QVector3D dir = setupCamera(idx);
-        QVector3D I = renderPixel(dir, m_galaxies);
+        QVector3D dir = m_rotMatrix*setupCamera(idx);
+//        dir = m_rotMatrix*dir;
+/*        float tmp = dir.x();
+        dir.setX(dir.y());
+        dir.setY(tmp);*/
+        RasterPixel rp = renderPixel(dir, m_galaxies);
         m_percentDone+=delta;
 
-
-        (*m_map)[idx] = 1/3.0*(I.x() + I.y() + I.z());
+        float sum = 1/3.0*(rp.I().x() + rp.I().y() + rp.I().z());
+//        if (!m_onlyDust)
+          (*m_map)[idx] = sum;
+  /*      else {
+            if (rp.dust.length()>0)
+            (*m_map)[idx] = 10-sum;
+            //else (*m_map)[idx] = 0;
+        }*/
         //(*m_map)[idx] = idx/100.0;
         //m_renderBuffer->DrawBox(m_backBuffer, i,j, boxSize, I);
 
@@ -83,12 +108,8 @@ void HPXRasterizer::RenderPixels()
 
 QVector3D HPXRasterizer::setupCamera(int idx)
 {
-/*    int i = idx%(int)m_renderingParams->size();
-    int j = (idx-i)/(int)m_renderingParams->size();
-    return m_renderingParams->camera().coord2ray(i,j, m_renderingParams->size());
-  */
-    pointing p = m_map->pix2ang(idx);
-    return Util::fromSpherical(1, p.phi -M_PI/2, p.theta+ M_PI/2);
+    vec3 p = m_map->pix2vec(idx);
+    return QVector3D(p.x, p.y, p.z);
 }
 
 void HPXRasterizer::AssembleImage()
@@ -101,4 +122,5 @@ void HPXRasterizer::AssembleImage()
                                   m_renderingParams->gamma(),
                                   m_renderingParams->saturation());
 
+    m_imageShadowBuffer = m_imageBuffer;
 }

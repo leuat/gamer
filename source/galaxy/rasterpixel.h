@@ -13,6 +13,7 @@ public:
     QVector3D dir;
     float step;
     QVector3D P;
+    QVector3D dust = QVector3D(0,0,0);
 
     void Add(RasterPixel* o);
     float scale = 1;

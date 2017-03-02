@@ -42,3 +42,9 @@ class GalaxyComponentDust2 : GalaxyComponent {
     void componentIntensity(RasterPixel* rp, QVector3D& r, float ival) override;
 
 };
+
+class GalaxyComponentDustPositive : GalaxyComponent {
+
+    void componentIntensity(RasterPixel* rp, QVector3D& r, float ival) override;
+
+};

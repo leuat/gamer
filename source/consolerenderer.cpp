@@ -19,7 +19,7 @@ void ConsoleRenderer::PrintUsage()
     cout << "   - galaxy : renders a single galaxy with (example) parameters: " << endl;
     cout << "       [ method = omp/thread ] [ camera = 1 0 0  ] [ target = 0 0 0  ] [ up = 0 1 0 ] [ fov = 90 ]  [ exposure = 1 ] [ gamma = 1 ] [ saturation = 1 ] [ ray step = 0.025 ] [ galaxy gax file ] [ size = 256 ] [ filename = test{.png} ] " << endl;
     cout << "   - skybox [ method = omp/thread ] [ Renderingparams ] [ galaxy file ] [ png size ] " << endl;
-    cout << "   - renderhpix [ hpx fits file ] [ size ] [ out file ]";
+    cout << "   - renderhpix [ hpx fits file ] [ size ] [ out file ] [ exposure ] [ gamma ] [ saturation ]";
     cout << endl;
 
 
@@ -188,7 +188,7 @@ void ConsoleRenderer::RenderFits(QStringList param)
 
     QImage img(size,size,QImage::Format_ARGB32);
 
-    buf.ToColorBuffer(&img,1.0,1.8,1.0);
+    buf.ToColorBuffer(&img,param[4].toFloat(),param[5].toFloat(),param[6].toFloat());
     img.save(param[3]);
 }
 
