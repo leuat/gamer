@@ -25,16 +25,14 @@ void HPXRasterizer::PrepareBuffer()
 
 
     int size = m_renderingParams->size();
-    if (m_imageBuffer == nullptr || m_imageBuffer->width() != size) {
+    if (m_imageBuffer == nullptr || m_imageBuffer->width() != size || m_map==nullptr ||
+            m_map->Nside()  != m_renderingParams->nside() ) {
         ReleaseBuffers();
         m_imageBuffer = new QImage(size,size,QImage::Format_ARGB32);
         m_renderBuffer = new Buffer2D(size);
-        qDebug() << m_nside;
         m_map = new Healpix_Map<float>();//m_nside, RING);
-        m_map->SetNside(m_nside, RING);
-        qDebug() << "Done allocating!";
+        m_map->SetNside(m_renderingParams->nside(), RING);
     }
-
     m_imageBuffer->fill(QColor(0,0,0));
     m_renderBuffer->fill(QVector3D(0,0,0));
 
@@ -48,15 +46,18 @@ void HPXRasterizer::ReleaseBuffers()
         delete m_imageBuffer;
     if (m_renderBuffer)
         delete m_renderBuffer;
-
-
     if (m_map)
         delete m_map;
+
+
+    m_imageBuffer = nullptr;
+    m_renderBuffer = nullptr;
+    m_map = nullptr;
 }
 
 void HPXRasterizer::PrepareRenderList()
 {
-    int size = 12*pow(m_nside,2);
+    int size = 12*pow(m_renderingParams->nside(),2);
     m_renderList.resize(size);
     for (int i = 0; i < size; i++)
         m_renderList[i] = i;
@@ -68,7 +69,7 @@ void HPXRasterizer::PrepareRenderList()
 
 void HPXRasterizer::RenderPixels()
 {
-    int size = 12*pow(m_nside,2);
+    int size = 12*pow(m_renderingParams->nside(),2);
     float delta = 1.0/(float)size;
     m_percentDone = 0;
 

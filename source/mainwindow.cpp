@@ -82,7 +82,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(loop()));
-    timer->start(25);
+    timer->start(50);
     ui->myGLWidget->setRedraw(true);
     setWindowTitle("Gamer " + QString::number(m_version));
 
@@ -157,6 +157,9 @@ void MainWindow::PopulateImageSize()
 {
     ui->cmbImageSize->clear();
     ui->cmbPreviewSize->clear();
+    ui->cmbRenderer->clear();
+    ui->cmbNside->clear();
+
     QStringList l = QStringList() << "16" <<"32" << "48" << "64" << "80" << "96" << "128"
                     << "256" << "384" <<  "512" << "768" << "1024"
                     << "1200" << "1600" << "2048";
@@ -168,6 +171,11 @@ void MainWindow::PopulateImageSize()
     l = QStringList() << "OpenMP" <<"Threaded" << "Healpix";
 
     ui->cmbRenderer->addItems(l);
+
+    l = QStringList() << "8" <<"16" << "32" << "64" << "128" << "256" << "512" << "1024" << "2048";
+
+    ui->cmbNside->addItems(l);
+
 
 }
 
@@ -325,6 +333,9 @@ void MainWindow::UpdateRenderingParamsGUI()
 {
 //    qDebug() << m_renderingParams.size();
     ui->cmbImageSize->setCurrentText(QString::number(m_renderingParams.size()));
+    ui->cmbNside->setCurrentText(QString::number(m_renderingParams.nside()));
+    ui->cmbRenderer->setCurrentText(m_renderingParams.renderType());
+
     ui->cmbPreviewSize->setCurrentText(QString::number(m_renderingParams.previewSize()));
     ui->leRayStep->setText( QString::number(m_renderingParams.rayStep()));
     ui->leGalaxyDir->setText(m_renderingParams.galaxyDirectory());
@@ -344,6 +355,9 @@ void MainWindow::UpdateRenderingParamsGUI()
 
 void MainWindow::UpdateRenderingParamsData()
 {
+
+    m_renderingParams.setNside(ui->cmbNside->currentText().toInt());
+    m_renderingParams.setRenderType(ui->cmbRenderer->currentText());
     m_renderingParams.setSize(ui->cmbImageSize->currentText().toInt());
     m_renderingParams.setPreviewSize(ui->cmbPreviewSize->currentText().toInt());
     m_renderingParams.setRayStep(ui->leRayStep->text().toFloat());
@@ -1165,4 +1179,9 @@ void MainWindow::on_leComponentName_editingFinished()
 {
     UpdateComponentsData();
     PopulateCmbComponents();
+}
+
+void MainWindow::on_cmbNside_activated(const QString &arg1)
+{
+    UpdateRenderingParamsData();
 }

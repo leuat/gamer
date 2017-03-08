@@ -104,6 +104,11 @@ void Rasterizer::ReleaseBuffers()
     if (m_starsBuffer)
         delete m_starsBuffer;
 
+    m_imageBuffer = nullptr;
+    m_renderBuffer = nullptr;
+    m_imageShadowBuffer = nullptr;
+    m_starsBuffer = nullptr;
+
 }
 
 

@@ -183,6 +183,8 @@ private slots:
 
     void on_leComponentName_editingFinished();
 
+    void on_cmbNside_activated(const QString &arg1);
+
 private:
     Ui::MainWindow *ui;
     Rasterizer* m_rasterizer = nullptr; // Pointer to the current rasterizer

@@ -77,6 +77,7 @@ protected:
         wait();
         Clear();
         ReleaseBuffers();
+
     }
 
     virtual void ReleaseBuffers();

@@ -1732,7 +1732,7 @@
       <property name="geometry">
        <rect>
         <x>40</x>
-        <y>200</y>
+        <y>230</y>
         <width>111</width>
         <height>16</height>
        </rect>
@@ -1758,13 +1758,48 @@
       <property name="geometry">
        <rect>
         <x>210</x>
-        <y>200</y>
+        <y>230</y>
         <width>151</width>
         <height>26</height>
        </rect>
       </property>
       <property name="toolTip">
        <string>Choose between OpenMP and QThreaded rendering</string>
+      </property>
+     </widget>
+     <widget class="QComboBox" name="cmbNside">
+      <property name="geometry">
+       <rect>
+        <x>210</x>
+        <y>190</y>
+        <width>151</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="toolTip">
+       <string>Image size squared used for preview</string>
+      </property>
+      <property name="toolTipDuration">
+       <number>-1</number>
+      </property>
+      <property name="statusTip">
+       <string/>
+      </property>
+      <property name="whatsThis">
+       <string>Huh?</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_46">
+      <property name="geometry">
+       <rect>
+        <x>40</x>
+        <y>190</y>
+        <width>151</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Healpix NSide</string>
       </property>
      </widget>
     </widget>

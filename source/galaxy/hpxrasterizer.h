@@ -8,11 +8,11 @@
 
 class HPXRasterizer: public Rasterizer
 {
+
 #ifdef USE_HEALPIX
     Healpix_Map<float>* m_map = nullptr;//(0,RING);
     QQuaternion m_rotMatrix;
     bool m_onlyDust = true;
-    int m_nside = 32;
     int m_nsidePreview = 32;
 #endif
 
@@ -21,6 +21,18 @@ public:
     HPXRasterizer();
     HPXRasterizer(Rasterizer* rp) : Rasterizer(rp) { }
     HPXRasterizer(RenderingParams* rp) : Rasterizer(rp) { }
+
+    ~HPXRasterizer() {
+        m_mutex.lock();
+        m_abort = true;
+        m_condition.wakeOne();
+        m_mutex.unlock();
+        wait();
+        Clear();
+        ReleaseBuffers();
+
+    }
+
 
     void PrepareBuffer() override;
     void ReleaseBuffers() override;

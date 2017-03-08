@@ -33,6 +33,26 @@ void RenderingParams::setRayStep(float rayStep)
     m_rayStep = rayStep;
 }
 
+QString RenderingParams::renderType() const
+{
+    return m_renderType;
+}
+
+void RenderingParams::setRenderType(const QString &renderType)
+{
+    m_renderType = renderType;
+}
+
+int RenderingParams::nside() const
+{
+    return m_nside;
+}
+
+void RenderingParams::setNside(int nside)
+{
+    m_nside = nside;
+}
+
 Spectra& RenderingParams::spectra()
 {
     return m_spectra;

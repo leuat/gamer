@@ -17,6 +17,8 @@ public:
     void setRayStep(float rayStep);
 
     int m_size = 128; // pixels
+    int m_nside = 32;
+    QString m_renderType;
     int m_previewSize = 64;
     float m_exposure = 1;
     float m_gamma = 1;
@@ -43,6 +45,7 @@ public:
         s << cp.m_starStrength << cp.m_rayStep << cp.m_galaxyDirectory << cp.m_sceneDirectory << cp.m_currentGalaxy << cp.m_sceneMode;
         s << cp.m_imageDirectory;
         s << cp.m_spectra;
+        s << cp.m_nside << cp.m_renderType;
         return s;
     }
 
@@ -55,6 +58,8 @@ public:
         s >> cp.m_starStrength >> cp.m_rayStep >> cp.m_galaxyDirectory >> cp.m_sceneDirectory >> cp.m_currentGalaxy;
         s >> cp.m_sceneMode >> cp.m_imageDirectory;
         s >> cp.m_spectra;
+        s >> cp.m_nside >> cp.m_renderType;
+
         return s;
     }
     void Save(QString filename);
@@ -97,6 +102,12 @@ public:
     void setImageDirectory(const QString &imageDirectory);
 
     Spectra& spectra();
+
+    int nside() const;
+    void setNside(int nside);
+
+    QString renderType() const;
+    void setRenderType(const QString &renderType);
 
 private:
     float m_idx;
