@@ -24,7 +24,8 @@
 
 
 
-float MainWindow::m_version = 1.03;
+float MainWindow::m_version = 1.04;
+
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -32,6 +33,15 @@ MainWindow::MainWindow(QWidget *parent) :
 {
 
     ui->setupUi(this);
+
+
+/*    QList<QWidget*> list = this->findChildren<QWidget*>();
+    for (QWidget* w : list)
+        w->setPalette(this->palette());
+
+
+       */
+
     Util::path = QCoreApplication::applicationDirPath() + "/../../";
 #if defined(Q_OS_WIN)
     Util::path = QCoreApplication::applicationDirPath() +"/";
@@ -85,6 +95,8 @@ MainWindow::MainWindow(QWidget *parent) :
     timer->start(50);
     ui->myGLWidget->setRedraw(true);
     setWindowTitle("Gamer " + QString::number(m_version));
+
+
 
 
 //    ui->btnSkybox->setVisible(false);

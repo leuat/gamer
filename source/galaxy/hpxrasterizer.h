@@ -11,10 +11,10 @@ class HPXRasterizer: public Rasterizer
 
 #ifdef USE_HEALPIX
     Healpix_Map<float>* m_map = nullptr;//(0,RING);
+#endif
     QQuaternion m_rotMatrix;
     bool m_onlyDust = true;
     int m_nsidePreview = 32;
-#endif
 
 public:
 

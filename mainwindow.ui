@@ -13,6 +13,11 @@
     <height>815</height>
    </rect>
   </property>
+  <property name="font">
+   <font>
+    <family>MS Sans Serif</family>
+   </font>
+  </property>
   <property name="windowTitle">
    <string>Gamer 1.0</string>
   </property>
@@ -179,6 +184,7 @@
       </property>
       <property name="font">
        <font>
+        <family>MS Sans Serif</family>
         <pointsize>24</pointsize>
        </font>
       </property>
@@ -197,6 +203,7 @@
       </property>
       <property name="font">
        <font>
+        <family>MS Sans Serif</family>
         <pointsize>24</pointsize>
        </font>
       </property>
@@ -2018,7 +2025,7 @@
      <x>0</x>
      <y>0</y>
      <width>1215</width>
-     <height>22</height>
+     <height>20</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuRender">

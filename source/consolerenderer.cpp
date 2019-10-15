@@ -178,6 +178,8 @@ void ConsoleRenderer::RenderSkybox(QStringList param)
 
 void ConsoleRenderer::RenderFits(QStringList param)
 {
+#ifdef USE_HEALPIX
+
     Healpix_Map<float> map(0,RING);
     qDebug() << param[1];
     read_Healpix_map_from_fits(param[1].toStdString(),map,1,2);
@@ -190,6 +192,7 @@ void ConsoleRenderer::RenderFits(QStringList param)
 
     buf.ToColorBuffer(&img,param[4].toFloat(),param[5].toFloat(),param[6].toFloat());
     img.save(param[3]);
+#endif
 }
 
 QVector3D ConsoleRenderer::fromList(QStringList *lst, int i1, int i2, int i3)

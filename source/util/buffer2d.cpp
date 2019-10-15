@@ -73,7 +73,7 @@ void Buffer2D::ToColorBuffer(QImage *image, QImage* shadowImage, float exposure,
     }
 
 
-#pragma omp for
+#pragma omp parallel for
     for (int i=0;i<m_size;i++) {
         for (int j=0;j<m_size;j++) {
             QColor c = PostProcess(Get(i,j), exposure, gamma, saturation);

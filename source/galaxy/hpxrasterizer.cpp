@@ -22,7 +22,7 @@ void HPXRasterizer::PrepareBuffer()
         qDebug() << "RETURNING STILL RENDERING";
         return;
     }
-
+#ifdef USE_HEALPIX
 
     int size = m_renderingParams->size();
     if (m_imageBuffer == nullptr || m_imageBuffer->width() != size || m_map==nullptr ||
@@ -35,7 +35,7 @@ void HPXRasterizer::PrepareBuffer()
     }
     m_imageBuffer->fill(QColor(0,0,0));
     m_renderBuffer->fill(QVector3D(0,0,0));
-
+#endif
 
 }
 
@@ -46,6 +46,8 @@ void HPXRasterizer::ReleaseBuffers()
         delete m_imageBuffer;
     if (m_renderBuffer)
         delete m_renderBuffer;
+#ifdef USE_HEALPIX
+
     if (m_map)
         delete m_map;
 
@@ -53,6 +55,7 @@ void HPXRasterizer::ReleaseBuffers()
     m_imageBuffer = nullptr;
     m_renderBuffer = nullptr;
     m_map = nullptr;
+#endif
 }
 
 void HPXRasterizer::PrepareRenderList()
@@ -74,6 +77,7 @@ void HPXRasterizer::RenderPixels()
     m_percentDone = 0;
 
     m_rotMatrix = QQuaternion::fromEulerAngles(QVector3D(90,0,0));
+#ifdef USE_HEALPIX
 
 #pragma omp parallel for
     for (int k=0;k<size;k++) {
@@ -103,18 +107,26 @@ void HPXRasterizer::RenderPixels()
     }
 
     m_abort = false;
-
+#endif
 
 }
 
 QVector3D HPXRasterizer::setupCamera(int idx)
 {
+#ifdef USE_HEALPIX
+
     vec3 p = m_map->pix2vec(idx);
     return QVector3D(p.x, p.y, p.z);
+#else
+    return QVector3D();
+#endif
+
 }
 
 void HPXRasterizer::AssembleImage()
 {
+#ifdef USE_HEALPIX
+
     m_renderBuffer->MollweideProjection(*m_map);
 
 
@@ -124,4 +136,5 @@ void HPXRasterizer::AssembleImage()
                                   m_renderingParams->saturation());
 
     m_imageShadowBuffer = m_imageBuffer;
+#endif
 }

@@ -11,15 +11,19 @@ QT += gui
 #lQMAKE_CC = gcc-6
 #QMAKE_CXX = g++-6b
 #CONFIG -= c++11
-QMAKE_CXXFLAGS+= -fopenmp
-DEFINES += NO_OPENGL USE_HEALPIX
+QMAKE_CXXFLAGS+= -fopenmp -openmp
+DEFINES += NO_OPENGL #USE_HEALPIX
+#LIBS += -L/Users/nicolaasgroeneboom/work/code/lib/Healpix_3.31/src/cxx/osx/lib -lhealpix_cxx -lfftpack -lc_utils -lcxxsupport
+#LIBS += -L/Users/nicolaasgroeneboom/work/code/lib/cfitsio -lcfitsio
+
+
+
 QMAKE_LFLAGS +=  -fopenmp
 #QMAKE_LFLAGS +=  -lopengl32
 #QMAKE_CXXFLAGS += -m32
 QMAKE_CXXFLAGS += -Ofast -O3 -ffast-math  -march=native -mtune=native
 LIBS += -LD:C:\Qt\Qt5.6.2\Tools\mingw492_32\i686-w64-mingw32\lib\ -lopengl32
-LIBS += -L/Users/nicolaasgroeneboom/work/code/lib/Healpix_3.31/src/cxx/osx/lib -lhealpix_cxx -lfftpack -lc_utils -lcxxsupport
-LIBS += -L/Users/nicolaasgroeneboom/work/code/lib/cfitsio -lcfitsio
+
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = Gamer
 TEMPLATE = app

@@ -155,7 +155,7 @@ void GalaxyComponentStars::componentIntensity(RasterPixel* rp, QVector3D& r, flo
 
 
 
-inline void GalaxyComponentStarsSmall::componentIntensity(RasterPixel* rp, QVector3D& r, float ival) {
+void GalaxyComponentStarsSmall::componentIntensity(RasterPixel* rp, QVector3D& r, float ival) {
 
 
     if (rand()%(int)m_componentParams.scale()==0) {

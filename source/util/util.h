@@ -17,6 +17,7 @@
 #include <QElapsedTimer>
 #include <QTextStream>
 #include <QDebug>
+#define M_PI 3.14159265
 
 //#include "random.h"
 
