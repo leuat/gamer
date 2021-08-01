@@ -174,9 +174,9 @@ void MainWindow::PopulateImageSize()
 
     QStringList l = QStringList() << "16" <<"32" << "48" << "64" << "80" << "96" << "128"
                     << "256" << "384" <<  "512" << "768" << "1024"
-                    << "1200" << "1600" << "2048";
+                    << "1200" << "1600" << "2048" << "4096" <<  "8192";
     ui->cmbImageSize->addItems(l);
-    l = QStringList() << "16" <<"32" << "48" << "64" << "80" << "96";
+    l = QStringList() << "16" <<"32" << "48" << "64" << "80" << "96" << "128";
 
     ui->cmbPreviewSize->addItems(l);
 
@@ -184,7 +184,7 @@ void MainWindow::PopulateImageSize()
 
     ui->cmbRenderer->addItems(l);
 
-    l = QStringList() << "8" <<"16" << "32" << "64" << "128" << "256" << "512" << "1024" << "2048";
+    l = QStringList() << "8" <<"16" << "32" << "64" << "128" << "256" << "512" << "1024" << "2048"<< "4096"<< "8192";
 
     ui->cmbNside->addItems(l);
 
