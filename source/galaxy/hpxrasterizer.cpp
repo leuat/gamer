@@ -30,7 +30,7 @@ void HPXRasterizer::PrepareBuffer()
         ReleaseBuffers();
         m_imageBuffer = new QImage(size,size,QImage::Format_ARGB32);
         m_renderBuffer = new Buffer2D(size);
-        m_map = new Healpix_Map<float>();//m_nside, RING);
+        m_map = new Healpix_Map<double>();//m_nside, RING);
         m_map->SetNside(m_renderingParams->nside(), RING);
     }
     m_imageBuffer->fill(QColor(0,0,0));
@@ -73,7 +73,7 @@ void HPXRasterizer::PrepareRenderList()
 void HPXRasterizer::RenderPixels()
 {
     int size = 12*pow(m_renderingParams->nside(),2);
-    float delta = 1.0/(float)size;
+    double delta = 1.0/(double)size;
     m_percentDone = 0;
 
     m_rotMatrix = QQuaternion::fromEulerAngles(QVector3D(90,0,0));
@@ -87,13 +87,13 @@ void HPXRasterizer::RenderPixels()
 
         QVector3D dir = m_rotMatrix*setupCamera(idx);
 //        dir = m_rotMatrix*dir;
-/*        float tmp = dir.x();
+/*        double tmp = dir.x();
         dir.setX(dir.y());
         dir.setY(tmp);*/
         RasterPixel rp = renderPixel(dir, m_galaxies);
         m_percentDone+=delta;
 
-        float sum = 1/3.0*(rp.I().x() + rp.I().y() + rp.I().z());
+        double sum = 1/3.0*(rp.I().x() + rp.I().y() + rp.I().z());
 //        if (!m_onlyDust)
           (*m_map)[idx] = sum;
   /*      else {

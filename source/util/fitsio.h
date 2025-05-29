@@ -15,11 +15,11 @@
     public:
         FitsIO();
 
-        static void SaveFloat(QString filename, int no, Buffer2D* buffer) {
+        static void Savedouble(QString filename, int no, Buffer2D* buffer) {
             FitsHeader header;
 
             header.Add("SIMPLE  = ","T");
-            header.Add("BITPIX  = ","-" + QString::number(sizeof(float)*8));
+            header.Add("BITPIX  = ","-" + QString::number(sizeof(double)*8));
             header.Add("NAXIS   = ","2");
             header.Add("NAXIS1  = ","" + QString::number(buffer->size()));
             header.Add("NAXIS2  = ","" + QString::number(buffer->size()));
@@ -54,8 +54,8 @@
             GMessages::Message("Saved fits to '" +filename +"'.");
 
         }
-/*            public void ReadFloat(Buffer2D buffer, BinaryReader reader) {
-                byte[] data = new byte[buffer.buffer.Length * sizeof(float)];
+/*            public void Readdouble(Buffer2D buffer, BinaryReader reader) {
+                byte[] data = new byte[buffer.buffer.Length * sizeof(double)];
                 reader.Read (data, 0, data.Length);
                 byte[] b = new byte[4];
                 for (int i=0;i<buffer.buffer.Length;i++) {
@@ -76,7 +76,7 @@
                 for (int j=0;j<8;j++)
                     b[j] = data[8*i + 7-j];
 
-                buffer.buffer[i] = (float)BitConverter.ToDouble(b,0);
+                buffer.buffer[i] = (double)BitConverter.toFloat(b,0);
             }
         }
 
@@ -86,10 +86,10 @@
                 using (BinaryReader reader = new BinaryReader(File.Open(fname, FileMode.Open))) {
                     reader.Read(header.data, 0, header.data.Length);
                     header.ExtractParams();
-                    buffer = new Buffer2D((int)header.getParamFloat("naxis1"), (int)header.getParamFloat("naxis2"));
-                    int bpx = (int)header.getParamFloat("bitpix");
+                    buffer = new Buffer2D((int)header.getParamdouble("naxis1"), (int)header.getParamdouble("naxis2"));
+                    int bpx = (int)header.getParamdouble("bitpix");
                     if (bpx==-32)
-                        ReadFloat(buffer, reader);
+                        Readdouble(buffer, reader);
                     else
                     if (bpx==-64)
                         ReadDouble(buffer, reader);

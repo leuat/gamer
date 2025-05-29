@@ -16,8 +16,8 @@ public:
     QVector3D& up();
     void setUp(const QVector3D &up);
 
-    float perspective() const;
-    void setPerspective(float perspective);
+    double perspective() const;
+    void setPerspective(double perspective);
 
     QMatrix4x4& rotMatrix();
     void setRotMatrix(const QMatrix4x4 &rotMatrix);
@@ -25,7 +25,7 @@ public:
     QVector3D m_camera = QVector3D(3,3,3.0);
     QVector3D m_target = QVector3D(0,0,0);
     QVector3D m_up = QVector3D(0,1,0);
-    float m_perspective = 70;
+    double m_perspective = 70;
 
 
     friend QDataStream& operator << ( QDataStream & s, GamerCamera& gc) {
@@ -53,17 +53,17 @@ public:
 
     void TranslateXY(QVector3D& delta);
 
-    void ZoomXY(float delta);
+    void ZoomXY(double delta);
 
-    void RotateUp(float r);
+    void RotateUp(double r);
 
     QMatrix4x4 GetRotationMatrix();
     void setupViewmatrix();
 
-    void RotateVertical(float angle);
-    void RotateHorisontal(float angle);
+    void RotateVertical(double angle);
+    void RotateHorisontal(double angle);
 
-    QVector3D coord2ray(float x, float y, float width);
+    QVector3D coord2ray(double x, double y, double width);
 
 
     QMatrix4x4& viewMatrix();

@@ -1,5 +1,4 @@
 #pragma once
-#include <QGLWidget>
 #include <QOpenGLWidget>
 #include <QOpenGLFunctions>
 #include <QImage>

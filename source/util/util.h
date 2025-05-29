@@ -31,37 +31,36 @@
 }
 
 
-using namespace std;
 
 class Util {
 
 public:
-    static void Tokenize(const string& str,
-                         vector<string>& tokens,
-                         const string& delimiters = " ");
+    static void Tokenize(const std::string& str,
+                         std::vector<std::string>& tokens,
+                         const std::string& delimiters = " ");
 
 
-    static void string2char(string s, char* to);
-    static string toString(double d, string param);
-    static string toString(double d);
-    static string toString(int d);
-    static const char* read_textfile(string filename);
-    static void verify_file(string filename);
-    static bool verify_file_bool(string filename);
-    static string trim(string s);
+    static void string2char(std::string s, char* to);
+    static std::string toString(double d, std::string param);
+    static std::string toString(double d);
+    static std::string toString(int d);
+    static const char* read_textfile(std::string filename);
+    static void verify_file(std::string filename);
+    static bool verify_file_bool(std::string filename);
+    static std::string trim(std::string s);
     static QString path;
-    static float floatRandom(const float & min, const float & max) {
+    static double doubleRandom(const double & min, const double & max) {
         static std::mt19937 generator;
-        std::uniform_real_distribution<float> distribution(min, max);
+        std::uniform_real_distribution<double> distribution(min, max);
         return distribution(generator);
     }
 
-    static QVector3D fromSpherical(float r, float t, float p) {
+    static QVector3D fromSpherical(double r, double t, double p) {
         return QVector3D( r*sin(t)*cos(p), r*sin(t)*sin(p), r*cos(t)  );
     }
 
     static QVector3D floor(const QVector3D v) {
-        return QVector3D( max(0.0f, v.x()), max(0.0f,v.y()), max(0.0f,v.z())  );
+        return QVector3D( fmax(0.0f, v.x()), fmax(0.0f,v.y()), fmax(0.0f,v.z())  );
     }
 
     static bool IntersectSphere(QVector3D o, QVector3D d, QVector3D r,QVector3D& isp1,QVector3D& isp2, double& t0, double& t1) {
@@ -98,15 +97,15 @@ public:
         return true;
     }
 
-    static float smoothstep(float edge0, float edge1, float x);
-    static float clamp(float val, const float min, const float max);
-    static QVector3D clamp(QVector3D val, float min, float max);
+    static double smoothstep(double edge0, double edge1, double x);
+    static double clamp(double val, const double min, const double max);
+    static QVector3D clamp(QVector3D val, double min, double max);
 
     static void drawBox(QImage* backImage, QImage* img, int i, int j, int size, QRgb color) {
         int imageSize = img->width();
         QRgb mark = QColor(1,1,1).rgba();
-        for (int x=max(0, i-size/2);x<=min(imageSize-1, i+size/2);x++)
-            for (int y=max(0, j-size/2);y<=min(imageSize-1, j+size/2);y++) {
+        for (int x=fmax(0, i-size/2);x<=fmin(imageSize-1, i+size/2);x++)
+            for (int y=fmax(0, j-size/2);y<=fmin(imageSize-1, j+size/2);y++) {
                 QColor col = QColor::fromRgba(backImage->pixel(x,y));
                 if (col.red()==0) {
                     img->setPixel(x,y,color);
@@ -174,17 +173,17 @@ public:
         return str;
     }
     static QVector3D maxQvector3D(const QVector3D a, const QVector3D b) {
-        return QVector3D(max(a.x(), b.x()),max(a.y(), b.y()),max(a.z(), b.z()));
+        return QVector3D(fmax(a.x(), b.x()),fmax(a.y(), b.y()),fmax(a.z(), b.z()));
     }
 
-    inline static bool Mollweide(QVector3D& out, float i, float j, float l0, float R, float size) {
+    inline static bool Mollweide(QVector3D& out, double i, double j, double l0, double R, double size) {
 
-        float x = 4*R*sqrt(2)*(2*i/(float)size-1);
-        float yy = j*2 - size/2;
-        float y = R*sqrt(2)*(2*yy/(float)size-1);
+        double x = 4*R*sqrt(2)*(2*i/(double)size-1);
+        double yy = j*2 - size/2;
+        double y = R*sqrt(2)*(2*yy/(double)size-1);
 
 
-        float t = asin(y/(R*sqrt(2.0)));
+        double t = asin(y/(R*sqrt(2.0)));
         out = QVector3D( asin( (2.0*t + sin(2.0*t))/M_PI),l0 + M_PI*x / (2*R*sqrt(2.0)*cos(t)),0  );
         out.setX(out.x()+M_PI/2);
         out.setY(-out.y()*0.5);

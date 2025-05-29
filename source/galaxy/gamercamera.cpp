@@ -36,12 +36,12 @@ void GamerCamera::setUp(const QVector3D &up)
     m_up = up;
 }
 
-float GamerCamera::perspective() const
+double GamerCamera::perspective() const
 {
     return m_perspective;
 }
 
-void GamerCamera::setPerspective(float perspective)
+void GamerCamera::setPerspective(double perspective)
 {
     m_perspective = perspective;
 }
@@ -100,11 +100,11 @@ void GamerCamera::TranslateXY(QVector3D& delta) {
     m_target = m_target + d;
 }
 
-void GamerCamera::ZoomXY(float delta) {
+void GamerCamera::ZoomXY(double delta) {
     m_camera = m_camera - (m_camera-m_target).normalized()*delta;
 }
 
-void GamerCamera::RotateUp(float r) {
+void GamerCamera::RotateUp(double r) {
     QVector3D d = (m_camera-m_target).normalized();
     QVector3D right = QVector3D::crossProduct(d, m_up).normalized();
     m_up = QVector3D::crossProduct(right, d).normalized();
@@ -163,7 +163,7 @@ QMatrix4x4 GamerCamera::GetRotationMatrix() {
 
 }
 
-void GamerCamera::RotateVertical(float angle) {
+void GamerCamera::RotateVertical(double angle) {
     QVector3D d = m_camera - m_target;
     QVector3D side = QVector3D::crossProduct( m_up, d);
     QQuaternion q = QQuaternion::fromAxisAndAngle(side,angle);
@@ -172,7 +172,7 @@ void GamerCamera::RotateVertical(float angle) {
     d = m_camera - m_target;
     m_up = QVector3D::crossProduct(d, side).normalized();
 }
-void GamerCamera::RotateHorisontal(float angle) {
+void GamerCamera::RotateHorisontal(double angle) {
     QVector3D d = m_camera - m_target;
     QVector3D side = QVector3D::crossProduct(m_up, d).normalized();
     QQuaternion q = QQuaternion::fromAxisAndAngle(m_up, angle);
@@ -207,7 +207,7 @@ void GamerCamera::setupViewmatrix() {
 
 }
 
-QVector3D GamerCamera::coord2ray(float x, float y, float width) {
+QVector3D GamerCamera::coord2ray(double x, double y, double width) {
     double xx = x / (width  * 0.5) - 1.0;
     double yy = y / (width * 0.5) - 1.0;
 
@@ -217,14 +217,14 @@ QVector3D GamerCamera::coord2ray(float x, float y, float width) {
 }
 
 
-/*QVector3D GamerCamera::coord2ray(float x, float y, float width) {
+/*QVector3D GamerCamera::coord2ray(double x, double y, double width) {
 
-    float aspect_ratio = 1;
-    float FOV = m_perspective / 360.0f * 2 * M_PI; // convert to radians
-    float dx=tan(FOV*0.5f)*(x/(width/2.0)-1.0f)/aspect_ratio;
-    float dy=tan(FOV*0.5f)*(1.0- y/(width/2.0));
+    double aspect_ratio = 1;
+    double FOV = m_perspective / 360.0f * 2 * M_PI; // convert to radians
+    double dx=tan(FOV*0.5f)*(x/(width/2.0)-1.0f)/aspect_ratio;
+    double dy=tan(FOV*0.5f)*(1.0- y/(width/2.0));
 
-    float f = 10;
+    double f = 10;
 
     QVector3D Pfar = QVector3D(dx*f, dy*f, f);
     QVector3D res = m_viewMatrix*Pfar;

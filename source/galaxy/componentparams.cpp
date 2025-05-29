@@ -1,111 +1,111 @@
 #include "source/galaxy/componentparams.h"
 
-float ComponentParams::strength() const
+double ComponentParams::strength() const
 {
     return m_strength;
 }
 
-void ComponentParams::setStrength(float strength)
+void ComponentParams::setStrength(double strength)
 {
     m_strength = strength;
 }
 
-float ComponentParams::arm() const
+double ComponentParams::arm() const
 {
     return m_arm;
 }
 
-void ComponentParams::setArm(float arm)
+void ComponentParams::setArm(double arm)
 {
     m_arm = arm;
 }
 
-float ComponentParams::z0() const
+double ComponentParams::z0() const
 {
     return m_z0;
 }
 
-void ComponentParams::setZ0(float z0)
+void ComponentParams::setZ0(double z0)
 {
     m_z0 = z0;
 }
 
-float ComponentParams::r0() const
+double ComponentParams::r0() const
 {
     return m_r0;
 }
 
-void ComponentParams::setR0(float r0)
+void ComponentParams::setR0(double r0)
 {
     m_r0 = r0;
 }
 
-float ComponentParams::delta() const
+double ComponentParams::delta() const
 {
     return m_delta;
 }
 
-void ComponentParams::setDelta(float delta)
+void ComponentParams::setDelta(double delta)
 {
     m_delta = delta;
 }
 
-float ComponentParams::winding() const
+double ComponentParams::winding() const
 {
     return m_winding;
 }
 
-void ComponentParams::setWinding(float winding)
+void ComponentParams::setWinding(double winding)
 {
     m_winding = winding;
 }
 
-float ComponentParams::scale() const
+double ComponentParams::scale() const
 {
     return m_scale;
 }
 
-void ComponentParams::setScale(float scale)
+void ComponentParams::setScale(double scale)
 {
     m_scale = scale;
 }
 
-float ComponentParams::noiseOffset() const
+double ComponentParams::noiseOffset() const
 {
     return m_noiseOffset;
 }
 
-void ComponentParams::setNoiseOffset(float noiseOffset)
+void ComponentParams::setNoiseOffset(double noiseOffset)
 {
     m_noiseOffset = noiseOffset;
 }
 
-float ComponentParams::noiseTilt() const
+double ComponentParams::noiseTilt() const
 {
     return m_noiseTilt;
 }
 
-void ComponentParams::setNoiseTilt(float noiseTilt)
+void ComponentParams::setNoiseTilt(double noiseTilt)
 {
     m_noiseTilt = noiseTilt;
 }
 
-float ComponentParams::ks() const
+double ComponentParams::ks() const
 {
     return m_ks;
 }
 
-void ComponentParams::setKs(float ks)
+void ComponentParams::setKs(double ks)
 {
     m_ks = ks;
 }
 
-float ComponentParams::active() const
+double ComponentParams::active() const
 {
     return m_active;
 }
 
-void ComponentParams::setActive(float active)
+void ComponentParams::setActive(double active)
 {
     m_active = active;
 }
@@ -120,12 +120,12 @@ void ComponentParams::setSpectrum(const QString &spectrum)
     m_spectrum = spectrum;
 }
 
-float ComponentParams::inner() const
+double ComponentParams::inner() const
 {
     return m_inner;
 }
 
-void ComponentParams::setInner(float inner)
+void ComponentParams::setInner(double inner)
 {
     m_inner = inner;
 }

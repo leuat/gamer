@@ -11,22 +11,22 @@ class GalaxyParams {
 public:
     QString m_name = "NewGalaxy";
     QVector3D m_axis = QVector3D(1,1,1);
-    float m_bulgeDust = 0.025f;
+    double m_bulgeDust = 0.025f;
     QVector3D m_bulgeAxis = QVector3D(1,1,1);
 
-    float m_windingB = 0.5f;
-    float m_windingN = 4;
-    float m_noArms = 2;
-    float m_arm1 = 0;
-    float m_arm2 = M_PI;
-    float m_arm3 = 2*M_PI;
-    float m_arm4 = 3*M_PI;
+    double m_windingB = 0.5f;
+    double m_windingN = 4;
+    double m_noArms = 2;
+    double m_arm1 = 0;
+    double m_arm2 = M_PI;
+    double m_arm3 = 2*M_PI;
+    double m_arm4 = 3*M_PI;
 
 
-    float m_innerTwirl = 0;
+    double m_innerTwirl = 0;
 
-    float m_warpAmplitude;
-    float m_warpScale;
+    double m_warpAmplitude;
+    double m_warpScale;
 
     friend QDataStream& operator << ( QDataStream & s, const GalaxyParams& gp) {
         s << gp.m_name << gp.m_axis << gp.m_bulgeDust << gp.m_bulgeAxis << gp.m_windingB << gp.m_windingN;
@@ -46,32 +46,32 @@ private:
 
     int m_randShiftX, m_randShiftY;
 
-    float m_diskStarModifier;
+    double m_diskStarModifier;
     Noise* m_noise = nullptr;
 
 
 public:
     GalaxyParams();
-    float bulgeDust() const;
-    void setBulgeDust(float bulgeDust);
+    double bulgeDust() const;
+    void setBulgeDust(double bulgeDust);
     QVector3D& axis();
     void setAxis(const QVector3D &axis);
-    float arm1() const;
-    void setArm1(float arm1);
-    float arm2() const;
-    void setArm2(float arm2);
-    float arm3() const;
-    void setArm3(float arm3);
-    float arm4() const;
-    void setArm4(float arm4);
-    float noArms() const;
-    void setNoArms(float noArms);
-    float windingB() const;
-    void setWindingB(float windingB);
-    float windingN() const;
-    void setWindingN(float windingN);
-    float innerTwirl() const;
-    void setInnerTwirl(float innerTwirl);
+    double arm1() const;
+    void setArm1(double arm1);
+    double arm2() const;
+    void setArm2(double arm2);
+    double arm3() const;
+    void setArm3(double arm3);
+    double arm4() const;
+    void setArm4(double arm4);
+    double noArms() const;
+    void setNoArms(double noArms);
+    double windingB() const;
+    void setWindingB(double windingB);
+    double windingN() const;
+    void setWindingN(double windingN);
+    double innerTwirl() const;
+    void setInnerTwirl(double innerTwirl);
     QVector3D& bulgeAxis();
     void setBulgeAxis(const QVector3D &bulgeAxis);
     QString name() const;

@@ -26,14 +26,14 @@ public:
         generator.seed(std::time(0));
     }
 
-    static float nextFloat(const float & min, const float & max) {
-        // Random float between min and max
-        std::uniform_real_distribution<float> distribution(min,max);
+    static double nextdouble(const double & min, const double & max) {
+        // Random double between min and max
+        std::uniform_real_distribution<double> distribution(min,max);
         return distribution(generator);
     }
-    static float nextFloat() {
-        // Random float between 0 and 1
-        std::uniform_real_distribution<float> distribution(0,1);
+    static double nextdouble() {
+        // Random double between 0 and 1
+        std::uniform_real_distribution<double> distribution(0,1);
         return distribution(generator);
     }
     static double nextDouble(const double & min, const double & max) {
@@ -67,10 +67,10 @@ public:
         return distribution(generator);
     }
 #ifdef QT_VERSION
-    static QVector3D nextQVector3D(float min, float max) {
-        float x = nextFloat(min, max);
-        float y = nextFloat(min, max);
-        float z = nextFloat(min, max);
+    static QVector3D nextQVector3D(double min, double max) {
+        double x = nextdouble(min, max);
+        double y = nextdouble(min, max);
+        double z = nextdouble(min, max);
         return QVector3D(x,y,z);
     }
 #endif

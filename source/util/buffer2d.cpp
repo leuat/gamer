@@ -51,8 +51,8 @@ void Buffer2D::Set(const int i, const QVector3D& v)
 
 void Buffer2D::DrawBox(Buffer2D* backImage,  const int i, const int j, const int size, QVector3D val) {
     QVector3D mark = QVector3D(1,1,1);
-    for (int x=max(0, i-size/2);x<=min(m_size-1, i+size/2);x++)
-        for (int y=max(0, j-size/2);y<=min(m_size-1, j+size/2);y++) {
+    for (int x=std::max(0, i-size/2);x<=std::min(m_size-1, i+size/2);x++)
+        for (int y=std::max(0, j-size/2);y<=std::min(m_size-1, j+size/2);y++) {
             QVector3D refval = backImage->Get(x,y);
             if (refval.x()==0) {
                 Set(x,y,val);
@@ -62,7 +62,7 @@ void Buffer2D::DrawBox(Buffer2D* backImage,  const int i, const int j, const int
         }
 }
 
-void Buffer2D::ToColorBuffer(QImage *image, QImage* shadowImage, float exposure, float gamma, float saturation)
+void Buffer2D::ToColorBuffer(QImage *image, QImage* shadowImage, double exposure, double gamma, double saturation)
 {
     if (image->width()!=m_size || shadowImage->width() != m_size) {
         qDebug() << "ERROR! Color buffer and render buffer not equal size!";
@@ -84,7 +84,7 @@ void Buffer2D::ToColorBuffer(QImage *image, QImage* shadowImage, float exposure,
     }
 }
 
-void Buffer2D::ToColorBuffer(QImage *image, float exposure, float gamma, float saturation)
+void Buffer2D::ToColorBuffer(QImage *image, double exposure, double gamma, double saturation)
 {
     #pragma omp for
         for (int i=0;i<m_size;i++) {
@@ -103,7 +103,7 @@ int Buffer2D::size() const
     return m_size;
 }
 
-QColor Buffer2D::PostProcess(const QVector3D &val, float exposure, float gamma, float saturation)
+QColor Buffer2D::PostProcess(const QVector3D &val, double exposure, double gamma, double saturation)
 {
     QVector3D v = val;
 
@@ -112,14 +112,14 @@ QColor Buffer2D::PostProcess(const QVector3D &val, float exposure, float gamma, 
     v.setY(pow(v.y(), gamma));
     v.setZ(pow(v.z(), gamma));
 
-    float center = (v.x() + v.y() + v.z())/3.0;
+    double center = (v.x() + v.y() + v.z())/3.0;
     QVector3D tmp (center-v.x(), center-v.y(), center-v.z());
     v.setX(center - saturation*tmp.x());
     v.setY(center - saturation*tmp.y());
     v.setZ(center - saturation*tmp.z());
 
 
-     float s = 10;
+     double s = 10;
      QVector3D c = Util::clamp(v*s, 0, 255);
      return QColor(c.z(), c.y(),c.x());
 
@@ -137,7 +137,7 @@ void Buffer2D::fill(const QVector3D v)
         m_buffer[i] = v;
 }
 
-void Buffer2D::RenderStars(int noStars, int baseSize, int sizeSpread, float strength)
+void Buffer2D::RenderStars(int noStars, int baseSize, int sizeSpread, double strength)
 {
     fill(QVector3D(0,0,0));
 
@@ -146,16 +146,16 @@ void Buffer2D::RenderStars(int noStars, int baseSize, int sizeSpread, float stre
         int y = rand() % m_size;
 
 
-        float cx = min ((double)rand()/(double)RAND_MAX + 0.6 ,1.0);
-        float cy = min ((float)rand()/(float)RAND_MAX + 0.6f ,cx);
-        float cz = min ((double)rand()/(double)RAND_MAX + 0.6 ,1.0);
+        double cx = std::fmin ((double)rand()/(double)RAND_MAX + 0.6 ,1.0);
+        double cy =std::fmin ((double)rand()/(double)RAND_MAX + 0.6f ,cx);
+        double cz = std::fmin ((double)rand()/(double)RAND_MAX + 0.6 ,1.0);
 
 
-        float sz = max(Random::nextGaussian(baseSize, sizeSpread), baseSize/3.0);
+        double sz = std::fmax(Random::nextGaussian(baseSize, sizeSpread), baseSize/3.0);
 
 
         int asz = (int)(sz*m_size)/245.0;
-        float ss = sz*abs (Random::nextGaussian(strength, strength));
+        double ss = sz*abs (Random::nextGaussian(strength, strength));
 //        ss = strength;
 
         //qDebug() << "asz: " << asz;
@@ -177,14 +177,14 @@ QByteArray *Buffer2D::toQByteArray(int no)
     QByteArray* ba = new QByteArray();
     for (int i=0;i<m_size;i++)
         for (int j=0;j<m_size;j++) {
-            float val = Get(j, m_size-1-i)[no];
-            ba->append((const char*)(&val), sizeof(float));
+            double val = Get(j, m_size-1-i)[no];
+            ba->append((const char*)(&val), sizeof(double));
         }
    return ba;
 
 }
 #ifdef USE_HEALPIX
-void Buffer2D::MollweideProjection(Healpix_Map<float>& map)
+void Buffer2D::MollweideProjection(Healpix_Map<double>& map)
 {
     int size = m_size;
     QVector3D op;
@@ -193,7 +193,7 @@ void Buffer2D::MollweideProjection(Healpix_Map<float>& map)
             if (Util::Mollweide(op, i,j,0,1, size))
             {
                 pointing p = pointing(op.x(), op.y());
-                float val = map[map.ang2pix(p) ];
+                double val = map[map.ang2pix(p) ];
                 Set(i,j,QVector3D(1,1,1)*val);
                 //Set(i,j,QVector3D(i,2*j,0));
             }
@@ -227,12 +227,12 @@ void Buffer2D::RenderGaussian(int i, int j, int w, QVector3D cs)
         for (int y = -w/2; y<w/2;y++) {
             int xx = i + x;
             int yy = j + y;
-            float dx =x/(float)w;
-            float dy = y/(float)w;
+            double dx =x/(double)w;
+            double dy = y/(double)w;
             if (xx>=0 && xx<m_size && yy>=0 && yy<m_size) {
-                float d = (dx*dx + dy*dy);
-                float ss = 0.01f;
-                float v = exp (-d/ss);
+                double d = (dx*dx + dy*dy);
+                double ss = 0.01f;
+                double v = exp (-d/ss);
                 QVector3D val = Util::maxQvector3D(v*cs, Get(xx,yy));
                 Set(xx,yy,val);
                 //	buffer[ xx + yy*_width] = Mathf.Max (buffer[xx+yy*_width], v*s);

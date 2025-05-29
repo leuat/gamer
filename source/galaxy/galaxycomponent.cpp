@@ -28,7 +28,7 @@ void GalaxyComponent::Initialize(ComponentParams* cp, GalaxyParams* gp) {
 }
 
 
-void GalaxyComponent::componentIntensity(RasterPixel* rp, QVector3D& p, float ival )  {
+void GalaxyComponent::componentIntensity(RasterPixel* rp, QVector3D& p, double ival )  {
     qDebug() << "GALAXYCOMPONENT: COMPONENTINTENSITY SHOULD NEVER BE CALLED";
     // Dummy stuff to ignore warnings
     rp->setI(p);
@@ -42,27 +42,27 @@ void GalaxyComponent::setGalaxyParam(GalaxyParams* gp) {
 
 
 
-float GalaxyComponent::calculateIntensity(RasterPixel* rp, QVector3D& p,
-                                         GalaxyInstance* gi, const float weight) {
+double GalaxyComponent::calculateIntensity(RasterPixel* rp, QVector3D& p,
+                                         GalaxyInstance* gi, const double weight) {
     QVector3D P;
     m_currentGI = gi;
-//    float z = 1;
-//    float m_currentRadius;
+//    double z = 1;
+//    double m_currentRadius;
 //    m_currentRadius = getRadius(p, P, z, gi);
 //    z = getHeightModulation(z);
-//    float z = rp->z;
-//    float m_currentRadius = rp->radius;
+//    double z = rp->z;
+//    double m_currentRadius = rp->radius;
 
-    float armVal = 1;
-    float m_winding = 0;
+    double armVal = 1;
+    double m_winding = 0;
     if (rp->z>0.01)
     {
 
-        float intensity = getRadialIntensity(rp->radius);
+        double intensity = getRadialIntensity(rp->radius);
         if (intensity>0.1) intensity = 0.1;
         if (intensity >0.001) {
 
-            float scale = 1;
+            double scale = 1;
             scale = pow(Util::smoothstep(0, 1.0f*m_componentParams.inner(), rp->radius), 4);
 
             if (m_componentParams.arm()!=0) {
@@ -76,7 +76,7 @@ float GalaxyComponent::calculateIntensity(RasterPixel* rp, QVector3D& p,
 //            rp->radius = m_currentRadius;
 
             // equation 5 from the paper
-            float val = (m_componentParams.strength())*scale*armVal*rp->z*intensity*gi->intensityScale();
+            double val = (m_componentParams.strength())*scale*armVal*rp->z*intensity*gi->intensityScale();
             if (val * weight > 0.0005) {
                 componentIntensity(rp, p, val * weight);
                 return val;

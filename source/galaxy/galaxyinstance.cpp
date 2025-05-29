@@ -39,22 +39,22 @@ void GalaxyInstance::setRotmat(const QQuaternion &rotmat)
     m_rotmat = rotmat;
 }
 
-float GalaxyInstance::redshift() const
+double GalaxyInstance::redshift() const
 {
     return m_redshift;
 }
 
-void GalaxyInstance::setRedshift(float redshift)
+void GalaxyInstance::setRedshift(double redshift)
 {
     m_redshift = redshift;
 }
 
-float GalaxyInstance::intensityScale() const
+double GalaxyInstance::intensityScale() const
 {
     return m_intensityScale;
 }
 
-void GalaxyInstance::setIntensityScale(float intensityScale)
+void GalaxyInstance::setIntensityScale(double intensityScale)
 {
     m_intensityScale = intensityScale;
 }
@@ -70,7 +70,7 @@ void GalaxyInstance::setupQuaternions() {
     m_rotmat = QQuaternion::rotationTo(QVector3D(0,1,0),m_orientation);
 }
 
-GalaxyInstance::GalaxyInstance(Galaxy* g, QString n, QVector3D p, QVector3D o, float ins, float rs) {
+GalaxyInstance::GalaxyInstance(Galaxy* g, QString n, QVector3D p, QVector3D o, double ins, double rs) {
     m_galaxy = g;
     m_position = p;
     m_galaxyName = n;

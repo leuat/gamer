@@ -6,7 +6,6 @@
 #include <QApplication>
 #include <QDebug>
 
-using namespace std;
 
 
 

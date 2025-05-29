@@ -4,20 +4,20 @@
 
 QString Util::path = "";
 
-void Util::Tokenize(const string& str,
-                      vector<string>& tokens,
-                      const string& delimiters)
+void Util::Tokenize(const std::string& str,
+                      std::vector<std::string>& tokens,
+                      const std::string& delimiters)
 {
   // Skip delimiters at beginning.
-  string s = str;
+  std::string s = str;
   int wn= s.find(13);
   if (wn!=-1) s.erase(wn,1);
   
-  string::size_type lastPos = s.find_first_not_of(delimiters, 0);
+  std::string::size_type lastPos = s.find_first_not_of(delimiters, 0);
   // Find first "non-delimiter".
-  string::size_type pos     = s.find_first_of(delimiters, lastPos);
+  std::string::size_type pos     = s.find_first_of(delimiters, lastPos);
   
-  while (string::npos != pos || string::npos != lastPos)
+  while (std::string::npos != pos || std::string::npos != lastPos)
     {
       // Found a token, add it to the vector.
       tokens.push_back(s.substr(lastPos, pos - lastPos));
@@ -31,9 +31,9 @@ void Util::Tokenize(const string& str,
 
 
   
-const char* Util::read_textfile(string filename) {
-  ifstream f(filename.c_str(), ios::in);
-  string cnt, sum;
+const char* Util::read_textfile(std::string filename) {
+  std::ifstream f(filename.c_str(), std::ios::in);
+  std::string cnt, sum;
   sum = "";
   while(!f.eof()) {
     f >> cnt; 
@@ -44,20 +44,21 @@ const char* Util::read_textfile(string filename) {
 }
 
 
-void Util::verify_file(string filename) {
-  ifstream f(filename.c_str(), ios::in | ios::binary);
+void Util::verify_file(std::string filename) {
+  std::ifstream f(filename.c_str(), std::ios::in | std::ios::binary);
   if (!f.is_open())
-    throw string("Unable to find file: " + filename);
+    throw std::string("Unable to find file: " + filename);
   f.close();
 }
-bool Util::verify_file_bool(string filename) {
-  ifstream f(filename.c_str(), ios::in | ios::binary);
+bool Util::verify_file_bool(std::string filename) {
+  std::ifstream f(filename.c_str(), std::ios::in | std::ios::binary);
   if (!f.is_open())
     return false;
   f.close();
   return true;
 }
 
+using namespace std;
 
 string Util::trim(string strin)
 {
@@ -72,13 +73,13 @@ string Util::trim(string strin)
   return str;
 }    
 
-float Util::clamp(float val, const float mi, const float ma) {
+double Util::clamp(double val, const double mi, const double ma) {
     val = min(ma, val);
     val = max(mi, val);
     return val;
 }
 
-QVector3D Util::clamp(const QVector3D val, const float min, const float max)
+QVector3D Util::clamp(const QVector3D val, const double min, const double max)
 {
     QVector3D v = val;
     v.setX(clamp(val.x(),min,max));
@@ -110,7 +111,7 @@ QString Util::getFileName(QString dir, QString baseName, QString type)
 
 
 
-float Util::smoothstep(float edge0, float edge1, float x)
+double Util::smoothstep(double edge0, double edge1, double x)
 {
     // Scale, bias and saturate x to 0..1 range
     x = clamp((x - edge0) / (edge1 - edge0), 0.0, 1.0);

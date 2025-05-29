@@ -73,7 +73,7 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event)
 
     int dx = event->x() - m_lastPos.x();
     int dy = event->y() - m_lastPos.y();
-    float strength = 0.5;
+    double strength = 0.5;
     bool hasModifier = QApplication::keyboardModifiers().testFlag(Qt::AltModifier);
     if (event->buttons() & Qt::LeftButton && !hasModifier) {
         m_RenderingParams->camera().RotateVertical(strength*dy);

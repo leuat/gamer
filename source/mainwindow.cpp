@@ -1,6 +1,5 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "glwidget.h"
 #include <QDebug>
 #include <QGridLayout>
 #include <QStringList>
@@ -24,7 +23,7 @@
 
 
 
-float MainWindow::m_version = 1.04;
+double MainWindow::m_version = 1.04;
 
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -53,6 +52,9 @@ MainWindow::MainWindow(QWidget *parent) :
 
     m_rastGalaxy = new Rasterizer(&m_renderingParams);
     m_rastScene = new Rasterizer(&m_renderingParams);
+
+
+    m_rasterizer = m_rastGalaxy;
 
     ui->myGLWidget->setRenderingParams(&m_renderingParams);
     GMessages::Initialize(ui->lstMessages);
@@ -196,7 +198,7 @@ void MainWindow::PopulateGalaxyList()
 
 
 //    qDebug() << Util::path;
-    QDirIterator it(Util::path + m_renderingParams.galaxyDirectory(),
+    QDirIterator it(m_renderingParams.galaxyDirectory(),
                     QStringList() << "*.gax", QDir::Files, QDirIterator::Subdirectories);
     ui->lstGalaxies->clear();
     ui->lstSceneGalaxies->clear();
@@ -367,13 +369,17 @@ void MainWindow::UpdateRenderingParamsGUI()
 
 void MainWindow::UpdateRenderingParamsData()
 {
-
+    if (isFirst) {
+        isFirst = false;
+        return;
+    }
     m_renderingParams.setNside(ui->cmbNside->currentText().toInt());
     m_renderingParams.setRenderType(ui->cmbRenderer->currentText());
     m_renderingParams.setSize(ui->cmbImageSize->currentText().toInt());
     m_renderingParams.setPreviewSize(ui->cmbPreviewSize->currentText().toInt());
     m_renderingParams.setRayStep(ui->leRayStep->text().toFloat());
-    m_rasterizer->setNewSize(m_renderingParams.size());
+    if (m_rasterizer!=nullptr)
+        m_rasterizer->setNewSize(m_renderingParams.size());
     m_renderingParams.setGalaxyDirectory(ui->leGalaxyDir->text());
     m_renderingParams.setSceneDirectory(ui->leSceneDir->text());
     m_renderingParams.setImageDirectory(ui->leImageDir->text());
@@ -476,8 +482,11 @@ void MainWindow::RenderDirect()
 
 void MainWindow::RenderPreview(int size)
 {
+    if (m_rasterizer==nullptr)
+        return;
+
     int oldSize = m_renderingParams.size();
-    float oldStep = m_renderingParams.rayStep();
+    double oldStep = m_renderingParams.rayStep();
     m_renderingParams.setRayStep(0.025);
     m_rasterizer->setNewSize(size);
     RenderDirect();
@@ -551,6 +560,7 @@ void MainWindow::EnableGUIEditing(bool value)
 void MainWindow::SaveGalaxy()
 {
     QString filename = m_renderingParams.galaxyDirectory() + m_galaxy.galaxyParams().name() + ".gax";
+
     m_galaxy.Save(filename);
 }
 
@@ -624,9 +634,9 @@ void MainWindow::loop()
 
     // ETA time
     if (curRast->getState()==Rasterizer::State::rendering) {
-        float time = curRast->getTimer().elapsed();
-        float percentage = curRast->getPercentDone();
-        float timeLeft = time/(percentage) - time;
+        double time = curRast->getTimer().elapsed();
+        double percentage = curRast->getPercentDone();
+        double timeLeft = time/(percentage) - time;
         ui->lblEta->setText("ETA: " + Util::MilisecondToString(timeLeft));
     }
     else
@@ -739,7 +749,7 @@ void MainWindow::on_cmbSpectrum_activated(const QString &arg1)
 
 void MainWindow::on_leGalaxyName_editingFinished()
 {
-    QFile file (Util::path +m_renderingParams.galaxyDirectory() + m_galaxy.galaxyParams().name() + ".gax");
+    QFile file (m_renderingParams.galaxyDirectory() + m_galaxy.galaxyParams().name() + ".gax");
     file.remove();
     UpdateGalaxyData();
     PopulateGalaxyList();
@@ -802,7 +812,7 @@ void MainWindow::on_actionRender_triggered()
     Render(false);
 }
 
-void MainWindow::on_cmbImageSize_activated(const QString &arg1)
+void MainWindow::on_cmbImageSize_activated(int index)
 {
     UpdateRenderingParamsData();
 }
@@ -873,17 +883,17 @@ void MainWindow::on_hsSaturation_sliderMoved(int position)
 
 void MainWindow::on_btnSaveImage_clicked()
 {
-    QString baseFile = Util::getFileName(Util::path + m_renderingParams.imageDirectory(),"Image","png");
+    QString baseFile = Util::getFileName(m_renderingParams.imageDirectory(),"Image","png");
     QString filename = m_renderingParams.imageDirectory() +
             baseFile +".png";
     if (ui->chkSaveFits->isChecked()) {
-        FitsIO::SaveFloat(Util::path + m_renderingParams.imageDirectory() + baseFile + "_red.fits", 0, m_rasterizer->getRenderBuffer());
-        FitsIO::SaveFloat(Util::path + m_renderingParams.imageDirectory() + baseFile + "_green.fits", 1, m_rasterizer->getRenderBuffer());
-        FitsIO::SaveFloat(Util::path + m_renderingParams.imageDirectory() + baseFile + "_blue.fits", 2, m_rasterizer->getRenderBuffer());
+        FitsIO::Savedouble(m_renderingParams.imageDirectory() + baseFile + "_red.fits", 0, m_rasterizer->getRenderBuffer());
+        FitsIO::Savedouble(m_renderingParams.imageDirectory() + baseFile + "_green.fits", 1, m_rasterizer->getRenderBuffer());
+        FitsIO::Savedouble(m_renderingParams.imageDirectory() + baseFile + "_blue.fits", 2, m_rasterizer->getRenderBuffer());
     }
-//      FitsIO::SaveFloat(m_renderingParams.imageDirectory() +"test.fits", 0, m_rasterizer->getRenderBuffer());
+//      FitsIO::Savedouble(m_renderingParams.imageDirectory() +"test.fits", 0, m_rasterizer->getRenderBuffer());
 
-    m_rasterizer->getImageShadowBuffer()->save(Util::path + filename);
+    m_rasterizer->getImageShadowBuffer()->save(filename);
     GMessages::Message("Galaxy png saved to " + filename);
 
 }
@@ -910,7 +920,7 @@ void MainWindow::on_btnDelete_clicked()
     int ret = msgBox.exec();
     if (ret==QMessageBox::Ok) {
         QString filename= m_renderingParams.galaxyDirectory() + gax;
-        QFile file (Util::path +filename);
+        QFile file (filename);
         file.remove();
         PopulateGalaxyList();
     }
@@ -1139,11 +1149,11 @@ void MainWindow::on_btnCreateScene_clicked()
     if (m_galaxies.size()==0)
         return;
     int N = ui->leNoGalaxies->text().toInt();
-    float boxSize = ui->leBoxSize->text().toFloat();
+    double boxSize = ui->leBoxSize->text().toFloat();
     for (int i=0;i<N;i++) {
         Galaxy* g = m_galaxies[ rand()%m_galaxies.size() ];
-        QVector3D orientation = QVector3D( Random::nextFloat(-1,1), Random::nextFloat(-1,1), Random::nextFloat(-1,1)).normalized();
-        QVector3D pos = QVector3D( Random::nextFloat(-1,1), Random::nextFloat(-1,1), Random::nextFloat(-1,1));
+        QVector3D orientation = QVector3D( Random::nextdouble(-1,1), Random::nextdouble(-1,1), Random::nextdouble(-1,1)).normalized();
+        QVector3D pos = QVector3D( Random::nextdouble(-1,1), Random::nextdouble(-1,1), Random::nextdouble(-1,1));
         if (i!=0)
             pos*=boxSize;
 
@@ -1160,17 +1170,17 @@ void MainWindow::on_btnCreateScene_clicked()
 }
 
 
-void MainWindow::on_cmbRenderer_currentIndexChanged(const QString &arg1)
+void MainWindow::on_cmbRenderer_currentIndexChanged(int arg1)
 {
-    if (arg1 =="OpenMP") {
+    if (arg1 ==0) {
         m_rastGalaxy = new Rasterizer(m_rastGalaxy);
         m_rastScene = new Rasterizer(m_rastScene);
     }
-    if (arg1=="Threaded"){
+    if (arg1==1){
         m_rastGalaxy = new RasterThread(m_rastGalaxy);
         m_rastScene = new RasterThread(m_rastScene);
     }
-    if (arg1=="Healpix"){
+    if (arg1==2){
         m_rastGalaxy = new HPXRasterizer(m_rastGalaxy);
         m_rastScene = new HPXRasterizer(m_rastScene);
     }
@@ -1193,7 +1203,18 @@ void MainWindow::on_leComponentName_editingFinished()
     PopulateCmbComponents();
 }
 
-void MainWindow::on_cmbNside_activated(const QString &arg1)
+void MainWindow::on_cmbNside_activated(int index)
 {
     UpdateRenderingParamsData();
 }
+
+
+
+
+
+void MainWindow::on_cmbPreviewSize_activated(int index)
+{
+    UpdateRenderingParamsData();
+
+}
+

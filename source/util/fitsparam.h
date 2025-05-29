@@ -26,7 +26,7 @@ public:
         bool isEnd = false;
 
         QString getParam(QString name);
-        float getParamFloat(QString name);
+        double getParamdouble(QString name);
         void ExtractParams();
         FitsHeader();
         void Add(QString name, QString value);

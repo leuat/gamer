@@ -44,16 +44,16 @@ void RenderQueue::PostRendering() {
             baseFile +".png";
 
 /*    if (ui->chkSaveFits->isChecked()) {
-        FitsIO::SaveFloat(m_renderingParams.imageDirectory() + baseFile + "_red.fits", 0, m_rasterizer->getRenderBuffer());
-        FitsIO::SaveFloat(m_renderingParams.imageDirectory() + baseFile + "_green.fits", 1, m_rasterizer->getRenderBuffer());
-        FitsIO::SaveFloat(m_renderingParams.imageDirectory() + baseFile + "_blue.fits", 2, m_rasterizer->getRenderBuffer());
+        FitsIO::Savedouble(m_renderingParams.imageDirectory() + baseFile + "_red.fits", 0, m_rasterizer->getRenderBuffer());
+        FitsIO::Savedouble(m_renderingParams.imageDirectory() + baseFile + "_green.fits", 1, m_rasterizer->getRenderBuffer());
+        FitsIO::Savedouble(m_renderingParams.imageDirectory() + baseFile + "_blue.fits", 2, m_rasterizer->getRenderBuffer());
     }
-//      FitsIO::SaveFloat(m_renderingParams.imageDirectory() +"test.fits", 0, m_rasterizer->getRenderBuffer());
+//      FitsIO::Savedouble(m_renderingParams.imageDirectory() +"test.fits", 0, m_rasterizer->getRenderBuffer());
 */
 
 
 //    m_rasterizer.getImageShadowBuffer()->save(filename);
-    m_current->rasterizer().getImageShadowBuffer()->save(Util::path + filename);
+    m_current->rasterizer().getImageShadowBuffer()->save(filename);
     GMessages::Message("Galaxy png saved to " + filename);
 
 }
@@ -138,21 +138,21 @@ void RenderQueue::RenderSkybox(Rasterizer* rasterizer, RenderingParams rendering
     planes[4] = QVector3D(1,0,0);
     planes[5] = QVector3D(-1,0,0);
 
-    ups[0] = QVector3D(0,-1,0);
-    ups[1] = QVector3D(0,-1,0);
-    ups[2] = QVector3D(0,0,1);
-    ups[3] = QVector3D(0,0,-1);
-    ups[4] = QVector3D(0,-1,0);
-    ups[5] = QVector3D(0,-1,0);
+    ups[0] = QVector3D(0,1,0);
+    ups[1] = QVector3D(0,1,0);
+    ups[2] = QVector3D(0,0,-1);
+    ups[3] = QVector3D(0,0,1);
+    ups[4] = QVector3D(0,1,0);
+    ups[5] = QVector3D(0,1,0);
 
     QVector<QString> names;
     names.resize(6);
     names[0] ="Z-";
     names[1] ="Z+";
-    names[2] ="Y+";
-    names[3] ="Y-";
-    names[4] ="X+";
-    names[5] ="X-";
+    names[2] ="Y-";
+    names[3] ="Y+";
+    names[4] ="X-";
+    names[5] ="X+";
 
     //m_renderingParams.camera().setRotMatrix();
     RenderingParams reset = renderingParams;

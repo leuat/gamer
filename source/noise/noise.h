@@ -7,7 +7,6 @@
 #include <QVector>
 #include <QVector3D>
 
-using namespace std;
 
 /*
  * Parent class for noise modules. Currently only implemented as perlin & simplex noise.
@@ -36,8 +35,8 @@ public:
     double get(const double x, const double y, const double z, const double per, const double f);
     double get( const double x, const double y);
     double* generateSpectralWeights(double lacunarity, int octaves, double h, double frequency);
-    double getRidgedMf(QVector3D p, float frequency, int octaves, float lacunarity, float offset, float gain);
-    void calculate_statistics(double N, string filename);
+    double getRidgedMf(QVector3D p, double frequency, int octaves, double lacunarity, double offset, double gain);
+    void calculate_statistics(double N, std::string filename);
 
     virtual double raw_2d(const double& x, const double& y) = 0;
     virtual double raw_3d(const double& x, const double& y, const double& z) = 0;

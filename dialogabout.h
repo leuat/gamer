@@ -12,7 +12,7 @@ class DialogAbout : public QDialog
     Q_OBJECT
 
 public:
-    explicit DialogAbout(float v, QWidget *parent = 0);
+    explicit DialogAbout(double v, QWidget *parent = 0);
     ~DialogAbout();
 
 private:

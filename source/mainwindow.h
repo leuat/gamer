@@ -87,7 +87,7 @@ private slots:
 
     void on_actionRender_triggered();
 
-    void on_cmbImageSize_activated(const QString &arg1);
+    void on_cmbImageSize_activated(int index);
 
     void on_leRayStep_editingFinished();
 
@@ -175,7 +175,7 @@ private slots:
 
 
 
-    void on_cmbRenderer_currentIndexChanged(const QString &arg1);
+    void on_cmbRenderer_currentIndexChanged(int index);
 
 
 
@@ -183,7 +183,11 @@ private slots:
 
     void on_leComponentName_editingFinished();
 
-    void on_cmbNside_activated(const QString &arg1);
+    void on_cmbNside_activated(int index);
+
+
+
+    void on_cmbPreviewSize_activated(int index);
 
 private:
     Ui::MainWindow *ui;
@@ -191,18 +195,19 @@ private:
     Rasterizer* m_rastGalaxy = nullptr;
     Rasterizer* m_rastScene = nullptr;
     RenderQueue m_renderQueue;
+    bool isFirst = true;
     RenderingParams m_renderingParams;
     Galaxy m_galaxy;
     QVector<Galaxy*> m_galaxies;
 
-    static float m_version;
+    static double m_version;
     ComponentParams* m_curComponentParams = nullptr;
     ComponentSpectrum* m_curComponentSpectrum = nullptr;
     QBasicTimer m_timer;
     bool m_sceneMode = false;
     State m_state = State::Idle;
 
-    float m_postSliderScale = 30;
+    double m_postSliderScale = 30;
 
     void PrepareNewGalaxy();
 
@@ -251,7 +256,7 @@ public slots:
    void loop();
 
 public:
-   static float Version() {
+   static double Version() {
        return m_version;
    }
 

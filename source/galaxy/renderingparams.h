@@ -13,22 +13,22 @@ public:
     GamerCamera& camera();
     void setCamera(const GamerCamera &camera);
 
-    float rayStep() const;
-    void setRayStep(float rayStep);
+    double rayStep() const;
+    void setRayStep(double rayStep);
 
     int m_size = 128; // pixels
     int m_nside = 32;
     QString m_renderType;
     int m_previewSize = 64;
-    float m_exposure = 1;
-    float m_gamma = 1;
-    float m_saturation = 1;
-    float m_detailLevel = 0.01;
-    float m_noiseDetail = 1;
+    double m_exposure = 1;
+    double m_gamma = 1;
+    double m_saturation = 1;
+    double m_detailLevel = 0.01;
+    double m_noiseDetail = 1;
     int m_noStars=0;
-    float m_starSize=1, m_starSizeSpread=1;
-    float m_starStrength = 1;
-    float m_rayStep = 0.001;
+    double m_starSize=1, m_starSizeSpread=1;
+    double m_starStrength = 1;
+    double m_rayStep = 0.001;
     QVector3D color = QVector3D(1,1,1);
     QString m_galaxyDirectory = "galaxies/";
     QString m_sceneDirectory = "scenes/";
@@ -77,26 +77,26 @@ public:
     QString currentGalaxy() const;
     void setCurrentGalaxy(const QString &currentGalaxy);
 
-    float exposure() const;
-    void setExposure(float exposure);
+    double exposure() const;
+    void setExposure(double exposure);
 
-    float gamma() const;
-    void setGamma(float gamma);
+    double gamma() const;
+    void setGamma(double gamma);
 
-    float saturation() const;
-    void setSaturation(float saturation);
+    double saturation() const;
+    void setSaturation(double saturation);
 
     int noStars() const;
     void setNoStars(int noStars);
 
-    float starSize() const;
-    void setStarSize(float starSize);
+    double starSize() const;
+    void setStarSize(double starSize);
 
-    float starSizeSpread() const;
-    void setStarSizeSpread(float starSizeSpread);
+    double starSizeSpread() const;
+    void setStarSizeSpread(double starSizeSpread);
 
-    float starStrength() const;
-    void setStarStrength(float starStrength);
+    double starStrength() const;
+    void setStarStrength(double starStrength);
 
     QString imageDirectory() const;
     void setImageDirectory(const QString &imageDirectory);
@@ -110,13 +110,13 @@ public:
     void setRenderType(const QString &renderType);
 
 private:
-    float m_idx;
-    float m_idxCount;
-    float m_divide;
+    double m_idx;
+    double m_idxCount;
+    double m_divide;
     GamerCamera m_camera;// = new GamerCamera();
     QVector3D direction;
 
-    float m_seed;
+    double m_seed;
     //int no_procs;
 
     //bool continuousPostprocessing=true;
@@ -124,13 +124,13 @@ private:
 
     QString m_currentScene = "";
 
-    float m_rayStepPreview;
-    float m_rayStepNormal;
-    float m_wavelength;
+    double m_rayStepPreview;
+    double m_rayStepNormal;
+    double m_wavelength;
 
-    float m_bufferSize;
+    double m_bufferSize;
 
-    float m_randomize_spectra;
+    double m_randomize_spectra;
 
 
 

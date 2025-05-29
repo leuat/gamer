@@ -14,12 +14,12 @@ void RasterPixel::Add(RasterPixel* o) {
     m_I += o->I();
 }
 
-float RasterPixel::getScale() const
+double RasterPixel::getScale() const
 {
     return scale;
 }
 
-void RasterPixel::setScale(float value)
+void RasterPixel::setScale(double value)
 {
     scale = value;
 }
@@ -31,7 +31,7 @@ RasterPixel::RasterPixel(RasterPixel* o) {
 RasterPixel::RasterPixel() {
 }
 
-void RasterPixel::Floor(float f) {
+void RasterPixel::Floor(double f) {
     if (m_I.x()<f) m_I.setX(f);
     if (m_I.y()<f) m_I.setY(f);
     if (m_I.z()<f) m_I.setZ(f);

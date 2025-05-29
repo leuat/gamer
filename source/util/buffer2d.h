@@ -14,7 +14,7 @@ class Buffer2D
     QVector<QVector3D> m_buffer;
     int m_size;
 
-    QColor PostProcess(const QVector3D& v, float exposure, float gamma, float saturation);
+    QColor PostProcess(const QVector3D& v, double exposure, double gamma, double saturation);
 
 public:
     ~Buffer2D();
@@ -28,15 +28,15 @@ public:
     QVector3D Get(const int i);
 
     void DrawBox(Buffer2D* backImage, const int i, const int j, const int size, QVector3D val);
-    void ToColorBuffer(QImage* image, QImage* shadowImage, float exposure, float gamma, float saturation);
-    void ToColorBuffer(QImage* image, float exposure, float gamma, float saturation);
+    void ToColorBuffer(QImage* image, QImage* shadowImage, double exposure, double gamma, double saturation);
+    void ToColorBuffer(QImage* image, double exposure, double gamma, double saturation);
     void fill(const QVector3D v);
     void SaveFits(QString filename);
-    void RenderStars(int noStars, int baseSize, int sizeSpread, float strength);
+    void RenderStars(int noStars, int baseSize, int sizeSpread, double strength);
     QByteArray* toQByteArray(int no);
 
 #ifdef USE_HEALPIX
-    void MollweideProjection(Healpix_Map<float>& map);
+    void MollweideProjection(Healpix_Map<double>& map);
 #endif
 
     void Add(Buffer2D* other);

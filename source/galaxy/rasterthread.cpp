@@ -31,7 +31,7 @@ void RasterThread::RenderPixels()
         return;
     }
     int size = m_to - m_from;
-    float delta = 1.0/(float)size;
+    double delta = 1.0/(double)size;
     m_percentDone = 0;
     int boxSize = m_renderingParams->size()/60;
     for (int k=m_from;k<m_to;k++) {
@@ -78,16 +78,16 @@ Rasterizer::State RasterThread::getState()
 
 }
 
-float RasterThread::getPercentDone() const
+double RasterThread::getPercentDone() const
 {
     if (m_threads.size()==0)
         return m_percentDone;
 
-    float p = 0;
+    double p = 0;
     for (RasterThread* rt : m_threads)
         p+=rt->getPercentDone();
 
-    return p/(float)m_threads.size();
+    return p/(double)m_threads.size();
 
 }
 

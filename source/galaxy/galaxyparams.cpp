@@ -1,11 +1,11 @@
 #include "source/galaxy/galaxyparams.h"
 
-float GalaxyParams::bulgeDust() const
+double GalaxyParams::bulgeDust() const
 {
     return m_bulgeDust;
 }
 
-void GalaxyParams::setBulgeDust(float bulgeDust)
+void GalaxyParams::setBulgeDust(double bulgeDust)
 {
     m_bulgeDust = bulgeDust;
 }
@@ -20,82 +20,82 @@ void GalaxyParams::setAxis(const QVector3D &axis)
     m_axis = axis;
 }
 
-float GalaxyParams::arm1() const
+double GalaxyParams::arm1() const
 {
     return m_arm1;
 }
 
-void GalaxyParams::setArm1(float arm1)
+void GalaxyParams::setArm1(double arm1)
 {
     m_arm1 = arm1;
 }
 
-float GalaxyParams::arm2() const
+double GalaxyParams::arm2() const
 {
     return m_arm2;
 }
 
-void GalaxyParams::setArm2(float arm2)
+void GalaxyParams::setArm2(double arm2)
 {
     m_arm2 = arm2;
 }
 
-float GalaxyParams::arm3() const
+double GalaxyParams::arm3() const
 {
     return m_arm3;
 }
 
-void GalaxyParams::setArm3(float arm3)
+void GalaxyParams::setArm3(double arm3)
 {
     m_arm3 = arm3;
 }
 
-float GalaxyParams::arm4() const
+double GalaxyParams::arm4() const
 {
     return m_arm4;
 }
 
-void GalaxyParams::setArm4(float arm4)
+void GalaxyParams::setArm4(double arm4)
 {
     m_arm4 = arm4;
 }
 
-float GalaxyParams::noArms() const
+double GalaxyParams::noArms() const
 {
     return m_noArms;
 }
 
-void GalaxyParams::setNoArms(float noArms)
+void GalaxyParams::setNoArms(double noArms)
 {
     m_noArms = noArms;
 }
 
-float GalaxyParams::windingB() const
+double GalaxyParams::windingB() const
 {
     return m_windingB;
 }
 
-void GalaxyParams::setWindingB(float windingB)
+void GalaxyParams::setWindingB(double windingB)
 {
     m_windingB = windingB;
 }
 
-float GalaxyParams::windingN() const
+double GalaxyParams::windingN() const
 {
     return m_windingN;
 }
 
-void GalaxyParams::setWindingN(float windingN)
+void GalaxyParams::setWindingN(double windingN)
 {
     m_windingN = windingN;
 }
 
-float GalaxyParams::innerTwirl() const
+double GalaxyParams::innerTwirl() const
 {
     return m_innerTwirl;
 }
 
-void GalaxyParams::setInnerTwirl(float innerTwirl)
+void GalaxyParams::setInnerTwirl(double innerTwirl)
 {
     m_innerTwirl = innerTwirl;
 }

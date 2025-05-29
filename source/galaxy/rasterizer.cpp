@@ -25,7 +25,7 @@ void Rasterizer::setState(const State &state)
     m_state = state;
 }
 
-float Rasterizer::getPercentDone() const
+double Rasterizer::getPercentDone() const
 {
     return m_percentDone;
 }
@@ -125,6 +125,9 @@ void Rasterizer::PrepareRenderList() {
 
 void Rasterizer::setNewSize(int s)
 {
+
+    if (m_renderingParams==nullptr)
+        return;
     if (s == m_renderingParams->size())
         return;
 
@@ -190,7 +193,7 @@ void Rasterizer::Prepare() {
     for (GalaxyInstance* gi : m_galaxies)
         gi->setPosition(gi->position() - m_renderingParams->camera().camera());
 
-    qSort(m_galaxies.begin(), m_galaxies.end(),  galaxySort);
+    std::sort(m_galaxies.begin(), m_galaxies.end(),  galaxySort);
 
     for (GalaxyInstance* gi : m_galaxies) {
 //        qDebug() << gi->position().length();
@@ -223,7 +226,7 @@ void Rasterizer::RenderStars()
 
 
 
-Galaxy* Rasterizer::AddGalaxy(QString file, QVector3D position, QVector3D orientation, float iscale, float redshift, QString name) {
+Galaxy* Rasterizer::AddGalaxy(QString file, QVector3D position, QVector3D orientation, double iscale, double redshift, QString name) {
     Galaxy* g = new Galaxy();
     g->Load(file);
     if (g!=nullptr)
@@ -280,9 +283,9 @@ void Rasterizer::RenderPixels() {
 void Rasterizer::RenderPixelsOMP()
 {
     int size = pow(m_renderingParams->size(),2);
-    float delta = 1.0/(float)size;
+    double delta = 1.0/(double)size;
     m_percentDone = 0;
-    int boxSize = min(m_renderingParams->size()/60, 4);
+    int boxSize = fmin(m_renderingParams->size()/60, 4);
     if (m_isPreview)
         boxSize = 1;
 
@@ -325,19 +328,19 @@ void Rasterizer::AssembleImage()
 
 
 
-/*		public void GenerateGalaxyList(int N, float size, string[] galaxies) {
+/*		public void GenerateGalaxyList(int N, double size, string[] galaxies) {
             for (int i=0;i<N;i++) {
                 Vector3 p = new Vector3();
-                p.x = (float)((Util.rnd.NextDouble()-0.5)*size);
-                p.y = (float)((Util.rnd.NextDouble()-0.5)*size);
-                p.z = (float)((Util.rnd.NextDouble()-0.5)*size);
+                p.x = (double)((Util.rnd.NextDouble()-0.5)*size);
+                p.y = (double)((Util.rnd.NextDouble()-0.5)*size);
+                p.z = (double)((Util.rnd.NextDouble()-0.5)*size);
                 Vector4 orient = new Vector3();
-                orient.x = (float)((Util.rnd.NextDouble()-0.5));
-                orient.y = (float)((Util.rnd.NextDouble()-0.5));
-                orient.z = (float)((Util.rnd.NextDouble()-0.5));
+                orient.x = (double)((Util.rnd.NextDouble()-0.5));
+                orient.y = (double)((Util.rnd.NextDouble()-0.5));
+                orient.z = (double)((Util.rnd.NextDouble()-0.5));
                 orient = orient.normalized;
                 string n = galaxies[Util.rnd.Next()%galaxies.Length];
-                AddGalaxy(Settings.GalaxyDirectory + n  + ".xml", p, orient, 0.5f + (float)Util.rnd.NextDouble(), 1, n);
+                AddGalaxy(Settings.GalaxyDirectory + n  + ".xml", p, orient, 0.5f + (double)Util.rnd.NextDouble(), 1, n);
 
             }
 
@@ -430,8 +433,8 @@ void Rasterizer::getIntensity(GalaxyInstance* gi, RasterPixel* rp, QVector3D isp
 
     QVector3D camera = m_renderingParams->camera().camera() - gi->position();
     int cnt = 0;
-    float avgStep = 0;
-    float minRayStep = 0.001;
+    double avgStep = 0;
+    double minRayStep = 0.001;
 //    minRayStep = 0.05;
     if (m_isPreview) {
         minRayStep = 0.01;
@@ -473,7 +476,7 @@ void Rasterizer::getIntensity(GalaxyInstance* gi, RasterPixel* rp, QVector3D isp
 //    rp->setI( rp->I()/avgStep*1);
 
 //        if (rand()%1000==1)
-//        qDebug() << "average: " << cnt << "curstep: " << avgStep/(float)cnt << "  lengthj : " << length;
+//        qDebug() << "average: " << cnt << "curstep: " << avgStep/(double)cnt << "  lengthj : " << length;
 
 
 

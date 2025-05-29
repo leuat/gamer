@@ -23,12 +23,12 @@ void RenderingParams::setCamera(const GamerCamera &camera)
     m_camera = camera;
 }
 
-float RenderingParams::rayStep() const
+double RenderingParams::rayStep() const
 {
     return m_rayStep;
 }
 
-void RenderingParams::setRayStep(float rayStep)
+void RenderingParams::setRayStep(double rayStep)
 {
     m_rayStep = rayStep;
 }
@@ -68,32 +68,32 @@ void RenderingParams::setImageDirectory(const QString &imageDirectory)
     m_imageDirectory = imageDirectory;
 }
 
-float RenderingParams::starStrength() const
+double RenderingParams::starStrength() const
 {
     return m_starStrength;
 }
 
-void RenderingParams::setStarStrength(float starStrength)
+void RenderingParams::setStarStrength(double starStrength)
 {
     m_starStrength = starStrength;
 }
 
-float RenderingParams::starSizeSpread() const
+double RenderingParams::starSizeSpread() const
 {
     return m_starSizeSpread;
 }
 
-void RenderingParams::setStarSizeSpread(float starSizeSpread)
+void RenderingParams::setStarSizeSpread(double starSizeSpread)
 {
     m_starSizeSpread = starSizeSpread;
 }
 
-float RenderingParams::starSize() const
+double RenderingParams::starSize() const
 {
     return m_starSize;
 }
 
-void RenderingParams::setStarSize(float starSize)
+void RenderingParams::setStarSize(double starSize)
 {
     m_starSize = starSize;
 }
@@ -108,32 +108,32 @@ void RenderingParams::setNoStars(int noStars)
     m_noStars = noStars;
 }
 
-float RenderingParams::saturation() const
+double RenderingParams::saturation() const
 {
     return m_saturation;
 }
 
-void RenderingParams::setSaturation(float saturation)
+void RenderingParams::setSaturation(double saturation)
 {
     m_saturation = saturation;
 }
 
-float RenderingParams::gamma() const
+double RenderingParams::gamma() const
 {
     return m_gamma;
 }
 
-void RenderingParams::setGamma(float gamma)
+void RenderingParams::setGamma(double gamma)
 {
     m_gamma = gamma;
 }
 
-float RenderingParams::exposure() const
+double RenderingParams::exposure() const
 {
     return m_exposure;
 }
 
-void RenderingParams::setExposure(float exposure)
+void RenderingParams::setExposure(double exposure)
 {
     m_exposure = exposure;
 }

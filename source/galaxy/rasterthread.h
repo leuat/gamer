@@ -25,7 +25,7 @@ public:
     void RenderPixels() override;
     void AssembleImage() override;
     State getState() override;
-    float getPercentDone() const override;
+    double getPercentDone() const override;
     void Abort() override;
 
 

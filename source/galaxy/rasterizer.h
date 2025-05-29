@@ -24,7 +24,7 @@ public:
 
 protected:
     QVector<GalaxyInstance*> m_galaxies;
-    RenderingParams* m_renderingParams;
+    RenderingParams* m_renderingParams = nullptr;
 
     QVector<int> m_renderList;
     QImage* m_imageBuffer = nullptr;
@@ -45,7 +45,7 @@ protected:
     QMutex m_mutex;
     QWaitCondition m_condition;
 
-    float m_percentDone = 0;
+    double m_percentDone = 0;
     QElapsedTimer m_timer;
 
 protected:
@@ -96,7 +96,7 @@ protected:
         m_state = State::aborting;
         GMessages::Message("Aborting threaded rendering!");
     }
-    Galaxy* AddGalaxy(QString file, QVector3D position, QVector3D orientation, float iscale, float redshift, QString name);
+    Galaxy* AddGalaxy(QString file, QVector3D position, QVector3D orientation, double iscale, double redshift, QString name);
 
     Galaxy* AddGalaxy(GalaxyInstance* gi);
 
@@ -115,7 +115,7 @@ protected:
     RenderingParams* getRenderingParams();
     virtual State getState();
     void setState(const State &state);
-    virtual float getPercentDone() const;
+    virtual double getPercentDone() const;
     QImage *getImageShadowBuffer() const;
     QElapsedTimer getTimer() const;
     Buffer2D *getRenderBuffer() const;

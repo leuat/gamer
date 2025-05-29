@@ -7,7 +7,7 @@ FitsParam::FitsParam(FitsHeader* fh, int pos) {
             if (fh->data[i]=='/')
                 break;
             if (fh->data[i]!=' ')
-                d+=fh->data[i];
+                d+=QChar(fh->data[i]);
         }
         d = d.trimmed();
         if (!d.contains("=")) {
@@ -27,7 +27,7 @@ QString FitsHeader::getParam(QString name) {
             return fp.value;
     return "0";
 }
-float FitsHeader::getParamFloat(QString name) {
+double FitsHeader::getParamdouble(QString name) {
     return getParam(name).toFloat();
 }
 void FitsHeader::ExtractParams() {

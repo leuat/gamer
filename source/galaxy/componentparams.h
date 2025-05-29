@@ -9,18 +9,18 @@ public:
     QString m_className = "bulge";
     QString m_spectrum = "White";
     QString m_name = "New component";
-    float m_strength = 1;
-    float m_arm = 0.5;
-    float m_z0 = 0.02;
-    float m_r0 = 0.5;
-    float m_inner = 0.0;
-    float m_active = 1;
-    float m_delta = 0;
-    float m_winding = 0.1;
-    float m_scale = 1;
-    float m_noiseOffset = 0;
-    float m_noiseTilt = 1;
-    float m_ks = 1;
+    double m_strength = 1;
+    double m_arm = 0.5;
+    double m_z0 = 0.02;
+    double m_r0 = 0.5;
+    double m_inner = 0.0;
+    double m_active = 1;
+    double m_delta = 0;
+    double m_winding = 0.1;
+    double m_scale = 1;
+    double m_noiseOffset = 0;
+    double m_noiseTilt = 1;
+    double m_ks = 1;
 
 
 
@@ -43,7 +43,7 @@ public:
         return s;
     }
 
-    ComponentParams(float s, float a, float z, float r0) { //, CGraph* g) {
+    ComponentParams(double s, double a, double z, double r0) { //, CGraph* g) {
         m_strength = s;
         m_arm = a;
         m_z0 = z;
@@ -59,32 +59,32 @@ public:
     }
     QString className() const;
     void setClassName(const QString &className);
-    float strength() const;
-    void setStrength(float strength);
-    float arm() const;
-    void setArm(float arm);
-    float z0() const;
-    void setZ0(float z0);
-    float r0() const;
-    void setR0(float r0);
-    float delta() const;
-    void setDelta(float delta);
-    float winding() const;
-    void setWinding(float winding);
-    float scale() const;
-    void setScale(float scale);
-    float noiseOffset() const;
-    void setNoiseOffset(float noiseOffset);
-    float noiseTilt() const;
-    void setNoiseTilt(float noiseTilt);
-    float ks() const;
-    void setKs(float ks);
-    float active() const;
-    void setActive(float active);
+    double strength() const;
+    void setStrength(double strength);
+    double arm() const;
+    void setArm(double arm);
+    double z0() const;
+    void setZ0(double z0);
+    double r0() const;
+    void setR0(double r0);
+    double delta() const;
+    void setDelta(double delta);
+    double winding() const;
+    void setWinding(double winding);
+    double scale() const;
+    void setScale(double scale);
+    double noiseOffset() const;
+    void setNoiseOffset(double noiseOffset);
+    double noiseTilt() const;
+    void setNoiseTilt(double noiseTilt);
+    double ks() const;
+    void setKs(double ks);
+    double active() const;
+    void setActive(double active);
     QString spectrum() const;
     void setSpectrum(const QString &spectrum);
-    float inner() const;
-    void setInner(float inner);
+    double inner() const;
+    void setInner(double inner);
     QString name() const;
     void setName(const QString &name);
 };

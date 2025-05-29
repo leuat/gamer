@@ -172,7 +172,7 @@ Galaxy* Galaxy::Clone() {
 
 void Galaxy::Save(QString filename)
 {
-    QFile file(Util::path + filename);
+    QFile file(filename);
     if(!file.open(QIODevice::WriteOnly)) {
         qDebug() << "Could not open " << filename;
         return;
@@ -189,7 +189,7 @@ void Galaxy::Save(QString filename)
 
 
 bool Galaxy::Load(QString filename) {
-    QFile file(Util::path + filename);
+    QFile file(filename);
     if(!file.open(QIODevice::ReadOnly)) {
         qDebug() << "Could not open " << filename;
         return false;

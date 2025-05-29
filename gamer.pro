@@ -4,10 +4,9 @@
 #
 #-------------------------------------------------
 
-QT += core gui
+QT += core gui openglwidgets
 QT += opengl
 QT += gui
-
 #lQMAKE_CC = gcc-6
 #QMAKE_CXX = g++-6b
 #CONFIG -= c++11
@@ -105,3 +104,4 @@ RESOURCES += \
     gamerresources.qrc
 
 DISTFILES +=
+ui8y76

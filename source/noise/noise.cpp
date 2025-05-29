@@ -78,7 +78,7 @@ double* Noise::generateSpectralWeights (double lacunarity,
 //
 // Not really used, but could be useful for nice dust patterns
 //
-double Noise::getRidgedMf(QVector3D p, float frequency, int octaves, float lacunarity, float offset, float gain)
+double Noise::getRidgedMf(QVector3D p, double frequency, int octaves, double lacunarity, double offset, double gain)
 {
     double value = 0.0;
     double weight = 1.0;
@@ -146,11 +146,11 @@ void Noise::calculate_statistics(double N, std::string filename) {
     standard_deviation = sqrt(standard_deviation/N);
 
     if (filename != "") {
-        ofstream f( filename.c_str(), ios::out);
+        std::ofstream f( filename.c_str(), std::ios::out);
         for (int i=0;i<50000;i++) {
             double s = 0.159516413;
             double val = get((double)i*s, 0.121+i*s*0.341,0.4312+i*s*0.1231 + 0.64123);
-            f << i << " " << val << endl;
+            f << i << " " << val << std::endl;
         }
         f.close();
 

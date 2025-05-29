@@ -10,6 +10,7 @@
 #include <healpix_map.h>
 #endif
 
+
 using namespace std;
 
 void ConsoleRenderer::PrintUsage()
@@ -80,12 +81,12 @@ void ConsoleRenderer::RenderSingleGalaxy(QStringList param)
         int curP = (m_rasterizer->getPercentDone()*1000.0);
         if (curP!=prevP) {
 
-            float time = ttimer.elapsed();
-            float percentage = m_rasterizer->getPercentDone();
-            float timeLeft = time/(percentage) - time;
+            double time = ttimer.elapsed();
+            double percentage = m_rasterizer->getPercentDone();
+            double timeLeft = time/(percentage) - time;
             QString t;
-            t.sprintf("%2.1f", curP*0.1);
-            cout << "\r[ " << t.toStdString() <<  "% ]  with ETA in " << Util::MilisecondToString(timeLeft).toStdString() <<   std::flush;
+//            t.sprintf("%2.1f", curP*0.1);
+            cout << "\r[ " << QString::number(curP*0.1).toStdString() <<  "% ]  with ETA in " << Util::MilisecondToString(timeLeft).toStdString() <<   std::flush;
             prevP = curP;
 
         }
@@ -151,12 +152,12 @@ void ConsoleRenderer::RenderSkybox(QStringList param)
             int curP = (rast->getPercentDone()*1000.0);
             if (curP!=prevP) {
 
-                float time = ttimer.elapsed();
-                float percentage = rast->getPercentDone();
-                float timeLeft = time/(percentage) - time;
+                double time = ttimer.elapsed();
+                double percentage = rast->getPercentDone();
+                double timeLeft = time/(percentage) - time;
                 QString t;
-                t.sprintf("%2.1f", curP*0.1);
-                cout << "\r[ " << t.toStdString() <<  "% ]  with ETA in " << Util::MilisecondToString(timeLeft).toStdString() <<   std::flush;
+                //t.sprintf("%2.1f", curP*0.1);
+                cout << "\r[ " << QString::number(curP*0.1).toStdString() <<  "% ]  with ETA in " << Util::MilisecondToString(timeLeft).toStdString() <<   std::flush;
                 prevP = curP;
 
             }
@@ -180,7 +181,7 @@ void ConsoleRenderer::RenderFits(QStringList param)
 {
 #ifdef USE_HEALPIX
 
-    Healpix_Map<float> map(0,RING);
+    Healpix_Map<double> map(0,RING);
     qDebug() << param[1];
     read_Healpix_map_from_fits(param[1].toStdString(),map,1,2);
 
